@@ -1,8 +1,19 @@
 # Bolt Gameserver Sample
 
-This sample demonstrates how to integrate Bolt's gameserver infrastructure into your game.
+<div align="center" style="display:flex;justify-content:center;margin-bottom:20px">
+  <img src="https://res.cloudinary.com/dugcmkito/image/upload/v1744996368/hero_charge_2x_c891ec5252.png" alt="Bolt Charge Hero" height="250px">
+</div>
+
+<br>
+<br>
+
+This sample backend demonstrates how to integrate Bolt's gameserver infrastructure into your game. 
 
 **Prerequisites:** Make sure you have fully onboarded onto Bolt Charge by [following this guide.](https://help.bolt.com/products/bolt-charge/charge-setup/) It should take approximately 5 minutes.
+
+**Language Support:** Looking for a different language or a particular server SDK? You can easily clone, copy, or paste URL this lightweight repo into your favorite copilot tool and it should do a good job replicating the interfaces for you. 
+
+If you have questions or need additional support please reach out to us in our [discord server](https://discord.gg/BSUp9qjtnc) and we would be happy to assist!
 
 ## API Keys
 
