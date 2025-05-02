@@ -6,7 +6,7 @@
 
 <br>
 
-This sample backend code snippets to demonstrate how to integrate Bolt's SDK into your game server. 
+Sample backend code snippets to demonstrate how to integrate Bolt's SDK into your game server. 
 
 **Prerequisites:** Make sure you have fully onboarded onto Bolt Charge by [following this guide.](https://help.bolt.com/products/bolt-charge/charge-setup/) It should take approximately 5 minutes.
 
