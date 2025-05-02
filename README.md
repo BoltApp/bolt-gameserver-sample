@@ -1,10 +1,9 @@
 # Bolt Gameserver Sample
 
 <div align="center" style="display:flex;justify-content:center;margin-bottom:20px">
-  <img src="https://res.cloudinary.com/dugcmkito/image/upload/v1744996368/hero_charge_2x_c891ec5252.png" alt="Bolt Charge Hero" height="250px">
+  <img src="https://www.bolt.com/assets/images/components/FooterCallout/callout-rebrand-lightning.svg" alt="Bolt Charge Hero" height="250px">
 </div>
 
-<br>
 <br>
 
 This sample backend demonstrates how to integrate Bolt's gameserver infrastructure into your game. 
