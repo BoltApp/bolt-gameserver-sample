@@ -1,6 +1,6 @@
-import { BoltClient } from "./client";
-import { ProductsAPI } from "./endpoints/products";
-import { SubscriptionsAPI } from "./endpoints/subscriptions";
+import { BoltClient } from "./src/client";
+import { ProductsAPI } from "./src/endpoints/products";
+import { SubscriptionsAPI } from "./src/endpoints/subscriptions";
 
 export class BoltSDK {
   public subscriptions: SubscriptionsAPI;
