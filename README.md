@@ -1,12 +1,12 @@
 # Bolt Gameserver Sample
 
-<div align="center" style="display:flex;justify-content:center;margin-bottom:20px">
-  <img src="https://www.bolt.com/assets/images/components/FooterCallout/callout-rebrand-lightning.svg" alt="Bolt Charge Hero" height="250px">
-</div>
+⚠️ **Note:** We will be updating this repo with a fully featured demo in the very near future.
 
-<br>
+<img src="https://www.bolt.com/assets/images/components/FooterCallout/callout-rebrand-lightning.svg" alt="Bolt Charge Hero" />
 
 Sample backend code snippets to demonstrate how to integrate Bolt's SDK into your game server. 
+
+
 
 **Prerequisites:** Make sure you have fully onboarded onto Bolt Charge by [following this guide.](https://help.bolt.com/products/bolt-charge/charge-setup/) It should take approximately 5 minutes.
 
