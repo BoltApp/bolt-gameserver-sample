@@ -1,11 +1,13 @@
-import { BoltClient } from '../client';
-import { Subscription } from '../types';
+import { BoltClient } from "../client";
+import { Subscription } from "../types";
 
 export class SubscriptionsAPI {
   constructor(private client: BoltClient) {}
 
   async getAllSubscriptionsForUser(email: string): Promise<Subscription[]> {
-    const response = await this.client.instance.get(`/subscriptions?emails=${email}`);
+    const response = await this.client.instance.get(
+      `/subscriptions?emails=${email}`
+    );
     return response.data;
   }
 
