@@ -1,6 +1,8 @@
 import { createRootRoute, Link, Outlet } from "@tanstack/react-router";
 import { TanStackRouterDevtools } from "@tanstack/router-devtools";
 
+import GameLogo from "../assets/Character_l_Sample01.png";
+
 export const rootRoute = createRootRoute({
   component: () => (
     <>
@@ -9,7 +11,8 @@ export const rootRoute = createRootRoute({
           <div className="nav-container">
             <div className="nav-brand">
               <Link to="/" className="nav-brand-link">
-                🎮 Game Brand
+                <img src={GameLogo} alt="Game Logo" className="nav-logo" />
+                Knights of Valor
               </Link>
             </div>
             <div className="nav-links">
@@ -17,7 +20,7 @@ export const rootRoute = createRootRoute({
                 to="/store"
                 className="nav-link"
                 activeProps={{ className: "active" }}>
-                Coin Store
+                Royal Treasury
               </Link>
             </div>
           </div>
@@ -73,7 +76,7 @@ export const rootRoute = createRootRoute({
           </div>
         </footer>
       </div>
-      <TanStackRouterDevtools />
+      {/* <TanStackRouterDevtools /> */}
     </>
   ),
 });
