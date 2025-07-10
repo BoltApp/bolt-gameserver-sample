@@ -20,7 +20,7 @@ export function MicroTransactionStore() {
     });
     setSelectedPackage(pkg.id);
 
-    const result = await Charge.checkout(pkg.bceLink);
+    const result = await Charge.checkout(pkg.checkoutLink);
 
     if (result.status === "success") {
       console.log(

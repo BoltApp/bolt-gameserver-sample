@@ -10,7 +10,7 @@ export interface GemPackage {
   scale?: number // Scale for the image position
   offsetY?: number // Offset for the image position
   offsetX?: number // Offset for the image position
-  bceLink: string // Bolt Checkout link for the package
+  checkoutLink: string
   popular?: boolean
   savings?: string
   tier: PackageTier // Medieval tier system
