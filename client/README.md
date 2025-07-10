@@ -43,3 +43,7 @@ A medieval-themed game store demo built with Preact, TypeScript, and Vite, showc
 ### Payment Integration
 
 - **[@boltpay/bolt-js](https://www.npmjs.com/package/@boltpay/bolt-js)** - Bolt payment SDK
+
+## Assets
+
+You can a license of [GUI Pro - Simple & Casual](https://assetstore.unity.com/packages/2d/gui/icons/gui-pro-simple-casual-203399) assets used in this demo store from the Unity Asset Store.
