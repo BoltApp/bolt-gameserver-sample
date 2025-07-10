@@ -1,7 +1,7 @@
 import { useState } from "preact/hooks";
 import "./MicroTransactionStore.css";
-import type { CoinPackage } from "./types";
-import { coinPackages } from "./packages";
+import type { GemPackage } from "./types";
+import { gemPackages } from "../packages";
 import { MicroTransactionCard } from "../components/MicroTransactionCard";
 import TreasuryRoomBg from "../assets/treasury-room.png";
 
@@ -10,7 +10,7 @@ import { Charge } from "@boltpay/bolt-js";
 export function MicroTransactionStore() {
   const [selectedPackage, setSelectedPackage] = useState<string | null>(null);
 
-  const handlePackageClick = async (pkg: CoinPackage) => {
+  const handlePackageClick = async (pkg: GemPackage) => {
     console.log("Package clicked:", {
       id: pkg.id,
       name: pkg.name,
@@ -20,9 +20,17 @@ export function MicroTransactionStore() {
     });
     setSelectedPackage(pkg.id);
 
-    const transaction = await Charge.checkout(pkg.bceLink);
+    const result = await Charge.checkout(pkg.bceLink);
 
-    console.log("Purchase completed for:", pkg.name, transaction.reference);
+    if (result.status === "success") {
+      console.log(
+        "Purchase completed for:",
+        pkg.name,
+        result.payload.reference
+      );
+    } else {
+      console.log("Purchase cancelled:");
+    }
     setSelectedPackage(null);
   };
   return (
@@ -34,7 +42,7 @@ export function MicroTransactionStore() {
         </div>
 
         <div className="coin-packages-grid">
-          {coinPackages.map((pkg) => (
+          {gemPackages.map((pkg) => (
             <MicroTransactionCard
               key={pkg.id}
               package={pkg}

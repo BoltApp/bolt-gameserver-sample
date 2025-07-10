@@ -9,7 +9,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@boltpay/bolt-js": "0.8.0",
+    "@boltpay/bolt-js": "0.0.9-beta.1",
     "@tanstack/react-router": "^1.124.0",
     "classnames": "^2.5.1",
     "preact": "^10.26.9"

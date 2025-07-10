@@ -1,8 +1,8 @@
 import className from "classnames";
-import type { CoinPackage } from "../pages/types";
+import type { GemPackage } from "../pages/types";
 import Gem from "../assets/itemicon_diamond_blue.png";
 import Star from "../assets/star.png";
-import FlashEffect from "..//assets/Image_Effect_Rotate_0.png";
+import FlashEffect from "..//assets/Image_Effect_Rotate_1.png";
 
 const formatCoins = (coins: number) => {
   return new Intl.NumberFormat("en-US").format(coins);
@@ -16,9 +16,9 @@ const formatPrice = (price: number) => {
 };
 
 interface MicroTransactionCardProps {
-  package: CoinPackage;
+  package: GemPackage;
   selected: boolean;
-  onClick: (pkg: CoinPackage) => void;
+  onClick: (pkg: GemPackage) => void;
 }
 
 export function MicroTransactionCard({
@@ -46,12 +46,7 @@ export function MicroTransactionCard({
         src={FlashEffect}
         alt="Flash Effect"
         style={`
-          z-index: -1;
-          opacity: 0.0;
-          position: absolute;
-          width: 150%;
-          top: 10px;
-          left: -25%;
+
           `}
       />
       <img className="product-image" src={pkg.imageUrl} alt={pkg.name} />

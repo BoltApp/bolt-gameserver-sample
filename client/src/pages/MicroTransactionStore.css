@@ -1,5 +1,3 @@
-/* Medieval Gem Store CSS */
-
 .coin-store {
   color: var(--color-text);
   font-family: "Cinzel", serif;
@@ -195,8 +193,18 @@
   margin-left: 0.5rem;
 }
 
-.coins-display strong {
+.flash-effect {
+  z-index: -1;
+  opacity: 0;
+  position: absolute;
+  width: 150%;
+  top: 5%;
+  left: -25%;
 }
+
+/* .coin-package:hover .flash-effect {
+  opacity: 0.1;
+} */
 
 .bonus-amount {
   color: var(--color-tan-light);
