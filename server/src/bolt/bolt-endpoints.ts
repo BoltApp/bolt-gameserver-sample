@@ -1,6 +1,6 @@
 import axios, { AxiosInstance } from 'axios';
 
-export class BoltClient {
+export class BoltEndpoints {
   private client: AxiosInstance;
 
   constructor(apiKey: string, publishableKey: string, baseURL = 'https://api.bolt.com/v1/') {
