@@ -1,28 +1,32 @@
 import Database from 'better-sqlite3';
 import path from 'path';
-import { User, UserProfile, Product, TransactionReceipt } from './types/shared';
+import type { User, UserProfile, Product, TransactionReceipt, Amount } from './types/shared';
 
 export interface DatabaseUser extends User{
   createdAt: string;
   updatedAt: string;
 }
 
-export interface DatabaseUserProfile extends Omit<UserProfile, 'username'> {
+export interface DatabaseUserProfile extends Omit<UserProfile, 'username' | 'email'> {
+  id: string;
+  userId: string;
+  gems: number;
   createdAt: string;
   updatedAt: string;
 }
 
 export interface DatabaseProduct extends Product {
+  id: number;
   createdAt: string;
   updatedAt: string;
 }
 
 export interface DatabaseTransaction {
-  id: string;
+  id: number;
   userId: string;
   boltReference: string;
-  status: 'pending' | 'completed' | 'failed' | 'refunded';
-  totalAmount: number;
+  status: 'pending' | 'authorized' | 'failed' | 'refunded';
+  totalAmount: Amount;
   acknowledged: boolean;
   createdAt: string;
   updatedAt: string;
@@ -30,8 +34,8 @@ export interface DatabaseTransaction {
 
 export interface TransactionProduct {
   id: number;
-  transactionId: string;
-  productId: string;
+  transactionId: number;
+  productId: number;
   quantity: number;
   price: number;
 }
@@ -74,11 +78,17 @@ export class DatabaseService {
     // Products table
     this.db.exec(`
       CREATE TABLE IF NOT EXISTS products (
-        id TEXT PRIMARY KEY,
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
         name TEXT NOT NULL,
+        tier TEXT NOT NULL,
         description TEXT NOT NULL,
         image TEXT NOT NULL,
+        sku TEXT UNIQUE NOT NULL,
         price REAL NOT NULL,
+        category TEXT NOT NULL DEFAULT 'gem_package',
+        gemAmount INTEGER,
+        savings TEXT,
+        popular BOOLEAN DEFAULT 0,
         createdAt TEXT NOT NULL DEFAULT (datetime('now')),
         updatedAt TEXT NOT NULL DEFAULT (datetime('now'))
       )
@@ -87,9 +97,9 @@ export class DatabaseService {
     // Transactions table
     this.db.exec(`
       CREATE TABLE IF NOT EXISTS transactions (
-        id TEXT PRIMARY KEY,
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
         userId TEXT NOT NULL,
-        boltReference TEXT NOT NULL,
+        boltReference TEXT UNIQUE NOT NULL,
         status TEXT NOT NULL DEFAULT 'pending',
         totalAmount REAL NOT NULL,
         acknowledged BOOLEAN NOT NULL DEFAULT 0,
@@ -103,8 +113,8 @@ export class DatabaseService {
     this.db.exec(`
       CREATE TABLE IF NOT EXISTS transaction_products (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
-        transactionId TEXT NOT NULL,
-        productId TEXT NOT NULL,
+        transactionId INTEGER NOT NULL,
+        productId INTEGER NOT NULL,
         quantity INTEGER NOT NULL,
         price REAL NOT NULL,
         FOREIGN KEY (transactionId) REFERENCES transactions(id) ON DELETE CASCADE,
@@ -143,6 +153,11 @@ export class DatabaseService {
   getUserByUsername(username: string): DatabaseUser | undefined {
     const stmt = this.db.prepare('SELECT * FROM users WHERE username = ?');
     return stmt.get(username) as DatabaseUser | undefined;
+  }
+
+  getUserByEmail(email: string): DatabaseUser | undefined {
+    const stmt = this.db.prepare('SELECT * FROM users WHERE email = ?');
+    return stmt.get(email) as DatabaseUser | undefined;
   }
 
   updateUser(id: string, updates: Partial<Omit<DatabaseUser, 'id' | 'createdAt' | 'updatedAt'>>): boolean {
@@ -209,17 +224,35 @@ export class DatabaseService {
   }
 
   // Product operations
-  createProduct(product: Omit<DatabaseProduct, 'createdAt' | 'updatedAt'>): DatabaseProduct {
+  createProduct(product: Omit<DatabaseProduct, 'id' | 'createdAt' | 'updatedAt'>): DatabaseProduct {
     const now = new Date().toISOString();
     const stmt = this.db.prepare(`
-      INSERT INTO products (id, name, description, image, price, createdAt, updatedAt)
-      VALUES (?, ?, ?, ?, ?, ?, ?)
+      INSERT INTO products (name, tier, description, image, sku, price, category, gemAmount, savings, popular, createdAt, updatedAt)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     `);
-    stmt.run(product.id, product.name, product.description, product.image, product.price, now, now);
-    return { ...product, createdAt: now, updatedAt: now };
+    const result = stmt.run(
+      product.name, 
+      product.tier, 
+      product.description, 
+      product.image, 
+      product.sku, 
+      product.price, 
+      product.category, 
+      product.gemAmount || null, 
+      product.savings || null, 
+      product.popular ? 1 : 0, // Convert boolean to integer
+      now, 
+      now
+    );
+    return { ...product, id: result.lastInsertRowid as number, createdAt: now, updatedAt: now };
   }
 
-  getProductById(id: string): DatabaseProduct | undefined {
+  getProductBySku(sku: string): DatabaseProduct | undefined {
+    const stmt = this.db.prepare('SELECT * FROM products WHERE sku = ?');
+    return stmt.get(sku) as DatabaseProduct | undefined;
+  }
+
+  getProductById(id: number): DatabaseProduct | undefined {
     const stmt = this.db.prepare('SELECT * FROM products WHERE id = ?');
     return stmt.get(id) as DatabaseProduct | undefined;
   }
@@ -229,7 +262,7 @@ export class DatabaseService {
     return stmt.all() as DatabaseProduct[];
   }
 
-  updateProduct(id: string, updates: Partial<Omit<DatabaseProduct, 'id' | 'createdAt' | 'updatedAt'>>): boolean {
+  updateProduct(id: number, updates: Partial<Omit<DatabaseProduct, 'id' | 'createdAt' | 'updatedAt'>>): boolean {
     const fields = Object.keys(updates);
     if (fields.length === 0) return false;
     
@@ -245,65 +278,109 @@ export class DatabaseService {
     return result.changes > 0;
   }
 
-  deleteProduct(id: string): boolean {
+  deleteProduct(id: number): boolean {
     const stmt = this.db.prepare('DELETE FROM products WHERE id = ?');
     const result = stmt.run(id);
     return result.changes > 0;
   }
 
   // Transaction operations
-  createTransaction(transaction: Omit<DatabaseTransaction, 'createdAt' | 'updatedAt'>): DatabaseTransaction {
+  upsertTransaction(transaction: Omit<DatabaseTransaction, 'id' | 'createdAt' | 'updatedAt'>): DatabaseTransaction {
     const now = new Date().toISOString();
-    const stmt = this.db.prepare(`
-      INSERT INTO transactions (id, userId, boltReference, status, totalAmount, acknowledged, createdAt, updatedAt)
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?)
-    `);
-    stmt.run(
-      transaction.id,
-      transaction.userId,
-      transaction.boltReference,
-      transaction.status,
-      transaction.totalAmount,
-      transaction.acknowledged,
-      now,
-      now
-    );
-    return { ...transaction, createdAt: now, updatedAt: now };
+    
+    // Check if transaction already exists
+    const existing = this.getTransactionByBoltReference(transaction.boltReference);
+    
+    if (existing) {
+      // Update existing transaction
+      const stmt = this.db.prepare(`
+        UPDATE transactions 
+        SET userId = ?, status = ?, totalAmount = ?, acknowledged = ?, updatedAt = ?
+        WHERE boltReference = ?
+      `);
+      stmt.run(
+        transaction.userId,
+        transaction.status,
+        transaction.totalAmount.value,
+        transaction.acknowledged ? 1 : 0,
+        now,
+        transaction.boltReference
+      );
+      return { ...transaction, id: existing.id, createdAt: existing.createdAt, updatedAt: now };
+    } else {
+      // Create new transaction
+      const stmt = this.db.prepare(`
+        INSERT INTO transactions (userId, boltReference, status, totalAmount, acknowledged, createdAt, updatedAt)
+        VALUES (?, ?, ?, ?, ?, ?, ?)
+      `);
+      const result = stmt.run(
+        transaction.userId,
+        transaction.boltReference,
+        transaction.status,
+        transaction.totalAmount.value,
+        transaction.acknowledged ? 1 : 0,
+        now,
+        now
+      );
+      return { ...transaction, id: result.lastInsertRowid as number, createdAt: now, updatedAt: now };
+    }
   }
 
-  getTransactionById(id: string): DatabaseTransaction | undefined {
+  getTransactionById(id: number): DatabaseTransaction | undefined {
     const stmt = this.db.prepare('SELECT * FROM transactions WHERE id = ?');
-    return stmt.get(id) as DatabaseTransaction | undefined;
+    const row = stmt.get(id) as any;
+    if (!row) return undefined;
+    
+    // Convert the numeric totalAmount back to Amount object
+    return {
+      ...row,
+      totalAmount: { value: row.totalAmount, currency: 'USD' },
+      acknowledged: Boolean(row.acknowledged) // Convert back to boolean
+    } as DatabaseTransaction;
   }
 
   getTransactionByBoltReference(boltReference: string): DatabaseTransaction | undefined {
     const stmt = this.db.prepare('SELECT * FROM transactions WHERE boltReference = ?');
-    return stmt.get(boltReference) as DatabaseTransaction | undefined;
+    const row = stmt.get(boltReference) as any;
+    if (!row) return undefined;
+    
+    // Convert the numeric totalAmount back to Amount object
+    return {
+      ...row,
+      totalAmount: { value: row.totalAmount, currency: 'USD' },
+      acknowledged: Boolean(row.acknowledged) // Convert back to boolean
+    } as DatabaseTransaction;
   }
 
-  getTransactionsByUserId(userId: string): DatabaseTransaction[] {
-    const stmt = this.db.prepare('SELECT * FROM transactions WHERE userId = ? ORDER BY createdAt DESC');
-    return stmt.all(userId) as DatabaseTransaction[];
-  }
-
-  updateTransaction(id: string, updates: Partial<Omit<DatabaseTransaction, 'id' | 'createdAt' | 'updatedAt'>>): boolean {
+  updateTransactionByBoltReference(boltReference: string, updates: Partial<Omit<DatabaseTransaction, 'id' | 'boltReference' | 'createdAt' | 'updatedAt'>>): boolean {
     const fields = Object.keys(updates);
     if (fields.length === 0) return false;
     
     const setClause = fields.map(field => `${field} = ?`).join(', ');
-    const values = fields.map(field => (updates as any)[field]);
+    const values = fields.map(field => {
+      const value = (updates as any)[field];
+      // Handle Amount object for totalAmount field
+      if (field === 'totalAmount' && typeof value === 'object' && value.value !== undefined) {
+        return value.value;
+      }
+      // Handle boolean conversion for acknowledged field
+      if (field === 'acknowledged' && typeof value === 'boolean') {
+        return value ? 1 : 0;
+      }
+      return value;
+    });
     
     const stmt = this.db.prepare(`
       UPDATE transactions 
       SET ${setClause}, updatedAt = datetime('now')
-      WHERE id = ?
+      WHERE boltReference = ?
     `);
-    const result = stmt.run(...values, id);
+    const result = stmt.run(...values, boltReference);
     return result.changes > 0;
   }
 
   // Transaction products operations
-  addProductToTransaction(transactionId: string, productId: string, quantity: number, price: number): TransactionProduct {
+  addProductToTransaction(transactionId: number, productId: number, quantity: number, price: number): TransactionProduct {
     const stmt = this.db.prepare(`
       INSERT INTO transaction_products (transactionId, productId, quantity, price)
       VALUES (?, ?, ?, ?)
@@ -318,13 +395,13 @@ export class DatabaseService {
     };
   }
 
-  getTransactionProducts(transactionId: string): TransactionProduct[] {
+  getTransactionProducts(transactionId: number): TransactionProduct[] {
     const stmt = this.db.prepare('SELECT * FROM transaction_products WHERE transactionId = ?');
     return stmt.all(transactionId) as TransactionProduct[];
   }
 
   // Helper method to get full transaction with products
-  getFullTransactionById(id: string): TransactionReceipt | undefined {
+  getFullTransactionById(id: number): TransactionReceipt | undefined {
     const transaction = this.getTransactionById(id);
     if (!transaction) return undefined;
 
@@ -335,11 +412,16 @@ export class DatabaseService {
       const product = this.getProductById(tp.productId);
       if (product) {
         products.push({
-          id: product.id,
+          tier: product.tier,
           name: product.name,
           description: product.description,
+          sku: product.sku,
           image: product.image,
-          price: tp.price // Use the price at time of purchase
+          price: tp.price, // Use the price at time of purchase
+          category: product.category,
+          gemAmount: product.gemAmount,
+          savings: product.savings,
+          popular: product.popular
         });
       }
     }

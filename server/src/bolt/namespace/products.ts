@@ -1,8 +1,12 @@
 import { BoltEndpoints } from "../bolt-endpoints";
-import { Product } from "../bolt-types";
+import type { Product } from "../types";
 
 export class ProductsAPI {
-  constructor(private client: BoltEndpoints) {}
+  private client: BoltEndpoints;
+
+  constructor(client: BoltEndpoints) {
+    this.client = client;
+  }
 
   async getAll(): Promise<Product[]> {
     const response = await this.client.instance.get("/subscriptions/products");

@@ -1,7 +1,6 @@
 import dotenv from 'dotenv'
 import path from 'path'
 
-console.log("file", path.resolve(process.cwd(), '.env.local'))
 dotenv.config({ path: path.resolve(process.cwd(), '.env.local') })
 
 const baseURL = process.env.BOLT_BASE_URL;

@@ -1,24 +1,28 @@
 import { useState } from "preact/hooks";
 import "./MicroTransactionStore.css";
-import type { GemPackage } from "./types";
-import { gemPackages } from "../packages";
+import type { GemPackage } from "../types";
 import { MicroTransactionCard } from "../components/MicroTransactionCard";
 import TreasuryRoomBg from "../assets/treasury-room.png";
 
 import { Charge } from "@boltpay/bolt-js";
+import { useGetAllProducts } from "../endpoints";
 
 export function MicroTransactionStore() {
   const [selectedPackage, setSelectedPackage] = useState<string | null>(null);
+  const { data: gemPackages, isLoading } = useGetAllProducts();
+
+  if (isLoading || !gemPackages) {
+    return <div>Loading...</div>;
+  }
 
   const handlePackageClick = async (pkg: GemPackage) => {
     console.log("Package clicked:", {
-      id: pkg.id,
+      tier: pkg.tier,
       name: pkg.name,
-      coins: pkg.coins,
+      gems: pkg.gemAmount,
       price: pkg.price,
-      totalCoins: pkg.coins + (pkg.bonus || 0),
     });
-    setSelectedPackage(pkg.id);
+    setSelectedPackage(pkg.tier);
 
     const result = await Charge.checkout(pkg.checkoutLink);
 
@@ -44,9 +48,9 @@ export function MicroTransactionStore() {
         <div className="coin-packages-grid">
           {gemPackages.map((pkg) => (
             <MicroTransactionCard
-              key={pkg.id}
+              key={pkg.tier}
               package={pkg}
-              selected={selectedPackage === pkg.id}
+              selected={selectedPackage === pkg.tier}
               onClick={handlePackageClick}
             />
           ))}

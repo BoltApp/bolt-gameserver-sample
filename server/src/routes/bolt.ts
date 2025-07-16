@@ -2,16 +2,16 @@ import { Router } from 'express'
 import { boltApi } from '../bolt'
 import { authenticateToken } from '../middleware/auth'
 import type { 
-  BoltTransactionInput, 
-  TransactionValidationInput, 
-  RestorePurchasesInput,
   ApiResponse 
 } from '../types/shared'
+import type { BoltTransactionWebhook } from '../bolt/types/transaction-webhook'
+import { db } from '../db'
 
 const router = Router()
 
-// Get all products - requires authentication
-router.get('/products', async (req, res) => {
+// TODO: implement SSO for account creation `bolt/universal`
+
+router.get('/products', async (_, res) => {
   try {
     const products = await boltApi.products.getAll()
     res.json(products)
@@ -21,20 +21,54 @@ router.get('/products', async (req, res) => {
   }
 })
 
-// Webhook endpoint for Bolt transactions
-// transaction success.
-// transaction refund
+
+function getPrimaryEmail(user: BoltTransactionWebhook['data']['from_user']): string | undefined {
+  return user?.emails[0]?.address
+}
+
 router.post('/webhook', async (req, res) => {
   try {
-    const { userId, transactionId }: BoltTransactionInput = req.body
 
-    // transactions success.
-    // implement SSO for account creation
+    const input: BoltTransactionWebhook = req.body
+    // should probably save the capture type as well.
+    // TODO: what is input.type vs input.data.status
+    if (input.object === 'transaction') {
+      const userEmail = getPrimaryEmail(input.data.from_user)
+      if (!userEmail) {
+        return res.status(400).json({ error: 'User email is required for transaction' })
+      }
+      const user = db.getUserByEmail(userEmail)
+      if (!user) {
+        return res.status(404).json({ error: 'User not found' })
+      }
 
-    // add gems to user
-    // Handle the transaction logic here
-    console.log(`User ${userId} purchased product ${transactionId}`)
-    
+      // Handle successful authorization
+      db.upsertTransaction({
+        userId: user.id,
+        boltReference: input.data.reference,
+        acknowledged: false,
+        status: input.data.status,
+        totalAmount: {
+          value: input.data.amount.amount,
+          currency: input.data.amount.currency
+        }
+      })
+      console.log(`Transaction ${input.data.reference} processed for user ${user.username}. Status: ${input.data.status}`)
+
+      if (input.type === 'auth') {
+        const boltTransaction = await boltApi.transactions.get(input.data.reference)
+        const sku = boltTransaction.order.cart.items[0].merchant_variant_id
+        const product = await db.getProductBySku(sku)
+  
+        const gems = product?.gemAmount ?? 0
+        console.log(`Adding ${gems} gems for user ${user.username}`)
+  
+        db.addGemsToUser(user.id, gems)
+      }
+    } else if (input.object === 'transaction' && input.type === 'credit') {
+      // Handle refund
+    }
+
     const response: ApiResponse<null> = { success: true }
     res.json(response)
   } catch (error) {
@@ -48,35 +82,15 @@ router.post('/webhook', async (req, res) => {
 // good idea to periodically check or trigger in case webhook fails (check your monitors)
 router.post('/restore-purchases', authenticateToken, async (req, res) => {
   try {
-    const input: RestorePurchasesInput = req.body
-    
-    // TODO: Implement restore purchases logic
-    
-    const response: ApiResponse<null> = { success: true }
-    res.json(response)
-  } catch (error) {
-    console.error('Error restoring purchases:', error)
-    const response: ApiResponse<null> = { success: false, error: 'Failed to restore purchases' }
-    res.status(500).json(response)
-  }
-})
+    // stub
+    const subscriptions = await boltApi.subscriptions.getAllForUser(req.user!.email)
+    const subscriptionOrders = await boltApi.subscriptions.getOrders(subscriptions.map(sub => sub.id))
 
-// param: reference
-// returns user
-// fail: { success: false } | { success: true, user }
-// FE should poll every second
-// Doc: if you support streaming, you should do something else
-router.post('/validate-transaction', authenticateToken, async (req, res) => {
-  try {
-    const input: TransactionValidationInput = req.body
-    
-    // TODO: Implement transaction validation logic
-    
-    const response: ApiResponse<null> = { success: true }
+    const response: ApiResponse<any> = { success: true, data: { subscriptions, subscriptionOrders } }
     res.json(response)
   } catch (error) {
-    console.error('Error validating transaction:', error)
-    const response: ApiResponse<null> = { success: false, error: 'Transaction validation failed' }
+    console.error('Error restoring purchases:', (error as Error).message)
+    const response: ApiResponse<null> = { success: false, error: 'Failed to restore purchases' }
     res.status(500).json(response)
   }
 })

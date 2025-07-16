@@ -1,54 +1,81 @@
 import bcrypt from 'bcryptjs';
 import { db } from './db';
 import { v4 as uuidv4 } from 'uuid';
+import type { Product } from './types/shared';
+
+import dotenv from 'dotenv'
+import path from 'path'
+
+dotenv.config({ path: path.resolve(process.cwd(), '.env.local') })
 
 // Seed the database with initial data
 export async function seedDatabase() {
   console.log('Seeding database...');
 
-  // Create sample products
-  const products = [
+  // Create sample products - matching gem packages from client
+  const products: Product[] = [
     {
-      id: 'gems-small',
-      name: 'Small Gem Pack',
+      tier: 'starter',
+      name: 'Starter Pack',
+      category: 'gem_package',
       description: '100 gems to enhance your gameplay',
       image: '/assets/IconGroup_ShopIcon_Gems_s_0.png',
+      sku: 'gems-100',
+      gemAmount: 100,
       price: 0.99
     },
     {
-      id: 'gems-medium',
-      name: 'Medium Gem Pack',
+      tier: 'bronze',
+      name: 'Bronze Pack',
+      category: 'gem_package',
       description: '500 gems with bonus rewards',
       image: '/assets/IconGroup_ShopIcon_Gems_s_1.png',
+      sku: 'gems-500',
+      gemAmount: 500,
       price: 4.99
     },
     {
-      id: 'gems-large',
-      name: 'Large Gem Pack',
-      description: '1200 gems - best value!',
+      tier: 'silver',
+      name: 'Silver Pack',
+      category: 'gem_package',
+      description: '1400 gems + 200 bonus gems',
       image: '/assets/IconGroup_ShopIcon_Gems_s_2.png',
+      sku: 'gems-1400',
+      gemAmount: 1400,
       price: 9.99
     },
     {
-      id: 'chest-basic',
-      name: 'Basic Treasure Chest',
-      description: 'Contains random rewards and gems',
-      image: '/assets/IconGroup_ShopIcon_Chest.png',
-      price: 1.99
-    },
-    {
-      id: 'gems-mega',
-      name: 'Mega Gem Pack',
-      description: '2500 gems + exclusive bonus',
+      tier: 'gold',
+      name: 'Gold Pack',
+      category: 'gem_package',
+      description: '2500 gems + 500 bonus gems - Most Popular!',
       image: '/assets/IconGroup_ShopIcon_Gems_s_3.png',
+      sku: 'gems-3000',
+      popular: true,
+      gemAmount: 3000,
       price: 19.99
     },
     {
-      id: 'gems-ultimate',
-      name: 'Ultimate Gem Pack',
-      description: '5000 gems + premium rewards',
+      tier: 'platinum',
+      name: 'Platinum Pack',
+      category: 'gem_package',
+      description: '5500 gems + 1500 bonus gems - 25% OFF',
       image: '/assets/IconGroup_ShopIcon_Gems_s_4.png',
+      sku: 'gems-7000',
+      gemAmount: 7000,
+      savings: '25% OFF',
       price: 39.99
+    },
+    {
+      tier: 'diamond',
+      name: 'Diamond Pack',
+      category: 'gem_package',
+      description: '12000 gems + 4000 bonus gems - 33% OFF',
+      image: '/assets/IconGroup_ShopIcon_Gems_s_5.png',
+      sku: 'gems-16000',
+      gemAmount: 16_000,
+      savings: '33% OFF',
+      price: 79.99
     }
   ];
 
@@ -58,23 +85,24 @@ export async function seedDatabase() {
       db.createProduct(product);
       console.log(`Created product: ${product.name}`);
     } catch (error) {
-      console.log(`Product ${product.name} already exists, skipping...`);
+      console.log(`Product ${product.name} already exists, skipping...`, error);
     }
   }
 
   // Create a sample user for testing
   const sampleUserId = uuidv4();
   try {
-    const samplePassword = '123456'
+    const testEmail = process.env.TEST_EMAIL!;
+    const testPassword = process.env.TEST_PASSWORD!;
     const saltRounds = 10;
-    const hashedPassword = await bcrypt.hash(samplePassword, saltRounds);
+    const hashedPassword = await bcrypt.hash(testPassword, saltRounds);
 
     console.log('Creating sample user...');
     db.createUser({
       id: sampleUserId,
       username: 'testuser',
       passwordHash: hashedPassword,
-      email: 'test@example.com'
+      email: testEmail
     });
 
     console.log('Sample user created with ID:', sampleUserId);
@@ -86,7 +114,6 @@ export async function seedDatabase() {
     console.log('Created sample user: testuser', profile);
   } catch (error) {
     console.log('Sample user creation failed, user may already exist:', error);
-    console.log('Sample user already exists, skipping...');
   }
 
   console.log('Database seeding completed!');
@@ -94,6 +121,6 @@ export async function seedDatabase() {
 
 // Run if this file is executed directly
 if (require.main === module) {
+  // db.clearAllData();
   seedDatabase();
-  // db.clearAllData()
 }

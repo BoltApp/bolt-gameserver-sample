@@ -1,10 +1,10 @@
 import className from "classnames";
-import type { GemPackage } from "../pages/types";
-import Gem from "../assets/itemicon_diamond_blue.png";
+import type { GemPackage } from "../types";
 import Star from "../assets/star.png";
 import FlashEffect from "..//assets/Image_Effect_Rotate_1.png";
+import { GemIcon } from "./GemIcon";
 
-const formatCoins = (coins: number) => {
+const formatGems = (coins: number) => {
   return new Intl.NumberFormat("en-US").format(coins);
 };
 
@@ -57,22 +57,14 @@ export function MicroTransactionCard({
           <span>Most Popular</span>
         </div>
       )}
-      {/* {pkg.popular && (
-        <img className="popular-badge" src={Ribbon} alt="Popular Badge" />
-      )} */}
 
       {pkg.savings && <div className="savings-badge">{pkg.savings}</div>}
 
       <div className="coin-package-header">
         <h3>{pkg.name}</h3>
         <div className="coins-display">
-          {formatCoins(pkg.coins + (pkg.bonus ?? 0))}
-          <img src={Gem} alt="Gems Icon" className="icon" />
-          {/* {pkg.bonus && (
-            <div className="bonus-amount">
-              {`+${formatCoins(pkg.bonus)} Bonus`}
-            </div>
-          )} */}
+          {formatGems(pkg.gemAmount ?? 0)}
+          <GemIcon />
         </div>
       </div>
 

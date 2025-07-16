@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction } from 'express'
+import type { Request, Response, NextFunction } from 'express'
 import jwt from 'jsonwebtoken'
 import { db } from '../db'
 import { env } from '../config'
@@ -10,6 +10,7 @@ declare global {
       user?: {
         id: string
         username: string
+        email: string
       }
     }
   }
@@ -28,7 +29,6 @@ export const authenticateToken = (req: Request, res: Response, next: NextFunctio
   try {
     const decoded = jwt.verify(token, JWT_SECRET) as { userId: string, username: string }
     
-    // Verify user still exists in database
     const user = db.getUserById(decoded.userId)
     if (!user) {
       return res.status(401).json({ error: 'Invalid token: user not found' })
@@ -36,6 +36,7 @@ export const authenticateToken = (req: Request, res: Response, next: NextFunctio
 
     req.user = {
       id: decoded.userId,
+      email: user.email,
       username: decoded.username
     }
     
