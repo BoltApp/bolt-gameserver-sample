@@ -263,6 +263,7 @@
   gap: 1.5rem;
   display: flex;
   align-items: center;
+  justify-content: space-between;
   width: 100%;
   max-width: 1200px;
   margin: 0 auto;
@@ -299,6 +300,71 @@
 
 .nav-link.active {
   color: var(--color-nav-accent);
+}
+
+.nav-left {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.nav-user-info {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.nav-loading {
+  color: var(--color-nav-text);
+  font-size: 0.9rem;
+  opacity: 0.7;
+}
+
+.nav-signin-btn {
+  background: var(--color-nav-accent);
+  color: var(--color-nav-bg);
+  border: none;
+  padding: 0.6rem 1.2rem;
+  border-radius: 12px;
+  font-family: "Cinzel", serif;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 0 var(--color-nav-bg), 0 4px 8px rgba(139, 115, 85, 0.3);
+}
+
+.nav-signin-btn:hover {
+  background: var(--color-nav-text);
+  transform: translateY(-1px);
+  box-shadow: 0 3px 0 var(--color-nav-bg), 0 6px 12px rgba(139, 115, 85, 0.4);
+}
+
+.nav-user-profile {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.nav-username {
+  color: var(--color-nav-text);
+  font-family: "Cinzel", serif;
+  font-weight: 600;
+  font-size: 0.9rem;
+  text-shadow: 0 1px 2px rgba(139, 115, 85, 0.8);
+}
+
+.nav-gems {
+  display: flex;
+  gap: 0.5rem;
+  background: var(--color-nav-accent);
+  color: var(--color-nav-bg);
+  padding: 0.4rem 0.8rem;
+  border-radius: 12px;
+  font-family: "Cinzel", serif;
+  font-weight: 700;
+  font-size: 0.9rem;
+  box-shadow: 0 2px 0 var(--color-nav-bg), 0 4px 8px rgba(139, 115, 85, 0.3);
+  border: 1px solid rgba(139, 115, 85, 0.3);
 }
 
 /* Home page specific styling for bright landscape background */
