@@ -3,33 +3,9 @@ import type { ApiResponse, LoginResponse, Product, UserProfile } from '@shared-t
 import type { GemPackage } from './types';
 import { gemConfig } from './configs/products-config';
 import { env } from './configs/env';
+import { authenticatedFetch } from './utils';
 
-const BACKEND_URL = 'http://localhost:3111'
-
-// Helper functions for authentication
-function getAuthHeaders(): HeadersInit {
-  const token = localStorage.getItem('authToken');
-  return token ? { 'Authorization': `Bearer ${token}` } : {};
-}
-
-function authenticatedFetch(url: string, options: RequestInit = {}) {
-  return fetch(url, {
-    ...options,
-    headers: {
-      'Content-Type': 'application/json',
-      ...getAuthHeaders(),
-      ...options.headers,
-    },
-  }).then(response => {
-    if (response.status === 401) {
-      // Token expired, clear it
-      localStorage.removeItem('authToken');
-      // Optionally redirect to login or throw error
-      throw new Error('Authentication expired');
-    }
-    return response;
-  });
-}
+const BACKEND_URL = env.BACKEND_URL;
 
 export function getAllProducts() {
   return fetch(`${BACKEND_URL}/api/products`)
@@ -74,15 +50,15 @@ export function useUserProfile() {
   });
 }
 
-export function login(_username: string, _password: string): Promise<UserProfile> {
+export function login(username: string, password: string): Promise<UserProfile> {
   return fetch(`${BACKEND_URL}/api/auth/login`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({
-      email: env.TEST_EMAIL,
-      password: env.TEST_PASSWORD,
+      email: username,
+      password: password,
     }),
   })
     .then(response => response.json())
@@ -109,7 +85,32 @@ export function useFakeLogin() {
   const queryClient = useQueryClient();
   return useMutation({
     mutationKey: ['login'],
-    mutationFn: () => login('testuser', 'password123'),
+    mutationFn: () => login(env.TEST_EMAIL, env.TEST_PASSWORD),
+    onSuccess: (data) => {
+      queryClient.setQueryData(['userProfile'], data);
+    },
+  });
+}
+
+function validateUser(transactionReference: string): Promise<UserProfile> {
+  if (!transactionReference) {
+    return Promise.reject(new Error('Transaction reference is required'));
+  }
+  return authenticatedFetch(`${BACKEND_URL}/api/user/validate?transaction=${transactionReference}`)
+    .then(response => response.json())
+    .then((response: ApiResponse<UserProfile>) => {
+      if (response.success && response.data) {
+        return response.data;
+      }
+      throw new Error(response.error);
+    });
+}
+export function useValidateUser() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: validateUser,
+    retry: 20,
+    retryDelay: 2000,
     onSuccess: (data) => {
       queryClient.setQueryData(['userProfile'], data);
     },

@@ -26,11 +26,17 @@ function getPrimaryEmail(user: BoltTransactionWebhook['data']['from_user']): str
   return user?.emails[0]?.address
 }
 
+const webhookTypes = ['pending', 'auth', 'capture', 'credit'] as const
+function isWebhookTypeOrGreater(type: BoltTransactionWebhook['type'], input: BoltTransactionWebhook): boolean {
+  const compareIndex = webhookTypes.indexOf(type)
+  const inputIndex = webhookTypes.indexOf(input.type)
+  return inputIndex >= compareIndex
+}
+
 router.post('/webhook', async (req, res) => {
   try {
 
     const input: BoltTransactionWebhook = req.body
-    // should probably save the capture type as well.
     // TODO: what is input.type vs input.data.status
     if (input.object === 'transaction') {
       const userEmail = getPrimaryEmail(input.data.from_user)
@@ -42,11 +48,22 @@ router.post('/webhook', async (req, res) => {
         return res.status(404).json({ error: 'User not found' })
       }
 
-      // Handle successful authorization
+      if (input.type === 'auth') {
+        const boltTransaction = await boltApi.transactions.get(input.data.reference)
+        const sku = boltTransaction.order.cart.items[0].merchant_variant_id
+        const product = await db.getProductBySku(sku)
+  
+        const gems = product?.gemAmount ?? 0
+        if (gems > 0) {
+          console.log(`Adding ${gems} gems for user ${user.username}`)
+          db.addGemsToUser(user.id, gems)
+        }
+      }
+
       db.upsertTransaction({
         userId: user.id,
         boltReference: input.data.reference,
-        acknowledged: false,
+        acknowledged: isWebhookTypeOrGreater('auth', input),
         status: input.data.status,
         totalAmount: {
           value: input.data.amount.amount,
@@ -54,17 +71,6 @@ router.post('/webhook', async (req, res) => {
         }
       })
       console.log(`Transaction ${input.data.reference} processed for user ${user.username}. Status: ${input.data.status}`)
-
-      if (input.type === 'auth') {
-        const boltTransaction = await boltApi.transactions.get(input.data.reference)
-        const sku = boltTransaction.order.cart.items[0].merchant_variant_id
-        const product = await db.getProductBySku(sku)
-  
-        const gems = product?.gemAmount ?? 0
-        console.log(`Adding ${gems} gems for user ${user.username}`)
-  
-        db.addGemsToUser(user.id, gems)
-      }
     } else if (input.object === 'transaction' && input.type === 'credit') {
       // Handle refund
     }
