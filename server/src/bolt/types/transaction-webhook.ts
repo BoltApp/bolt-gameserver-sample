@@ -75,7 +75,7 @@ export interface BoltSubscriptionWebhook {
 
 export interface BoltTransactionWebhook {
   // credit = refund
-  type: 'pending' | 'auth' | 'capture' | 'credit';
+  type: 'pending' | 'auth' | 'capture' | 'credit' | 'failed_payments';
   object: 'transaction';
 
   data: {
