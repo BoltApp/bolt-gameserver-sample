@@ -15,8 +15,9 @@ router.post('/register', async (req, res) => {
       return res.status(400).json({ error: 'Username, password, and email are required' })
     }
 
-    const existingUser = db.getUserByUsername(username)
-    if (existingUser) {
+    const existingUsername = db.getUserByUsername(username)
+    const existingEmail = db.getUserByEmail(email)
+    if (existingEmail || existingUsername) {
       return res.status(400).json({ error: 'User already exists' })
     }
 
