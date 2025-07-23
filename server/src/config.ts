@@ -1,9 +1,3 @@
-import dotenv from 'dotenv'
-import path from 'path'
-
-const currentEnv = process.env.NODE_ENV || 'local'
-dotenv.config({ path: path.resolve(process.cwd(), `.env.${currentEnv}`) })
-
 const baseURL = process.env.BOLT_BASE_URL;
 const apiKey = process.env.BOLT_API_KEY;
 const publishableKey = process.env.BOLT_PUBLISHABLE_KEY;
