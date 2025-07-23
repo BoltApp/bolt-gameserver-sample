@@ -3,11 +3,6 @@ import { db } from './db';
 import { v4 as uuidv4 } from 'uuid';
 import type { Product } from './types/shared';
 
-import dotenv from 'dotenv'
-import path from 'path'
-
-dotenv.config({ path: path.resolve(process.cwd(), '.env.local') })
-
 // Seed the database with initial data
 export async function seedDatabase() {
   console.log('Seeding database...');

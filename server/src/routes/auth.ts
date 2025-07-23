@@ -3,7 +3,7 @@ import bcrypt from 'bcryptjs'
 import { generateToken } from '../middleware/auth'
 import { db } from '../db'
 import { v4 as uuidv4 } from 'uuid'
-import type { ApiResponse, LoginResponse, UserProfile } from '@shared-types'
+import type { ApiResponse, LoginResponse, UserProfile } from '../types/shared'
 
 const router = Router()
 
