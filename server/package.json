@@ -2,7 +2,7 @@
   "name": "bolt-gameserver-sample",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "dist/index.js",
   "engines": {
     "node": ">=20.6.0"
   },
@@ -10,7 +10,7 @@
     "node": "20.6.0"
   },
   "scripts": {
-    "start": "tsx src/index.ts",
+    "start:staging": "tsx --env-file=.env.staging src/index.ts",
     "seed": "tsx --env-file=.env.local src/seed.ts",
     "dev": "tsx watch --env-file=.env.local src/index.ts"
   },
