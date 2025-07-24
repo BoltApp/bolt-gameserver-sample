@@ -29,9 +29,6 @@ router.post('/webhook', verifySignature, async (req, res) => {
         return res.status(200)
       }
 
-      // Bolt uses email as the primary identifier.
-      // It is recommended to ensure you have accounts linked via Bolt SSO
-      // https://help.bolt.com/dashboard/account/merchant-single-sign-on/
       const user = db.getUserByEmail(userEmail)
       if (!user) {
         return res.status(200)
