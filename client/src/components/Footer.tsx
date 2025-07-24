@@ -17,11 +17,11 @@ export function Footer() {
         </div>
         <div className="footer-links">
           <a
-            href="https://help.bolt.com"
+            href="https://github.com/BoltApp/bolt-gameserver-sample"
             target="_blank"
             rel="noopener noreferrer"
             className="footer-link">
-            Help Docs
+            Github
           </a>
           <a
             href="https://github.com/BoltApp/bolt-frontend-sdk"

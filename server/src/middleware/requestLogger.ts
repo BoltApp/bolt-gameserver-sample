@@ -1,6 +1,6 @@
 import type { Request, Response, NextFunction } from 'express'
 
-export const requestLogger = (req: Request, res: Response, next: NextFunction) => {
+export const requestLogger = (req: Request, _: Response, next: NextFunction) => {
   const timestamp = new Date().toISOString()
   const method = req.method
   const fullUrl = req.originalUrl
