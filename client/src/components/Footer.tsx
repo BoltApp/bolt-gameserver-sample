@@ -21,7 +21,7 @@ export function Footer() {
             target="_blank"
             rel="noopener noreferrer"
             className="footer-link">
-            Github
+            GitHub
           </a>
           <a
             href="https://github.com/BoltApp/bolt-frontend-sdk"
