@@ -1,51 +1,40 @@
 import { Router } from 'express'
 import { boltApi } from '../bolt'
-import { authenticateToken } from '../middleware/auth'
 import type { 
   ApiResponse 
 } from '../types/shared'
 import type { BoltTransactionWebhook } from '../bolt/types/transaction-webhook'
 import { db } from '../db'
+import { verifySignature } from '../bolt/middleware'
 
 const router = Router()
 
-// TODO: implement SSO for account creation `bolt/universal`
-
-router.get('/products', async (_, res) => {
-  try {
-    const products = await boltApi.products.getAll()
-    res.json(products)
-  } catch (error) {
-    console.error('Error fetching products:', error)
-    res.status(500).json({ error: 'Failed to fetch products' })
-  }
-})
-
-
-function getPrimaryEmail(user: BoltTransactionWebhook['data']['from_user']): string | undefined {
-  return user?.emails[0]?.address
+function getPrimaryEmail(user: BoltTransactionWebhook['data']['from_user']): string {
+  return user?.emails[0]?.address!
 }
 
-const webhookTypes = ['pending', 'auth', 'capture', 'credit'] as const
-function isWebhookTypeOrGreater(type: BoltTransactionWebhook['type'], input: BoltTransactionWebhook): boolean {
-  const compareIndex = webhookTypes.indexOf(type)
-  const inputIndex = webhookTypes.indexOf(input.type)
-  return inputIndex >= compareIndex
-}
-
-router.post('/webhook', async (req, res) => {
+/*
+ * Handle Bolt transaction webhooks
+ * https://help.bolt.com/developers/webhooks/transaction-webhooks/
+ *
+ * Always return 200 OK. Handle all issues with a dead letter queue or similar.
+ */
+router.post('/webhook', verifySignature, async (req, res) => {
   try {
-
     const input: BoltTransactionWebhook = req.body
-    // TODO: what is input.type vs input.data.status
     if (input.object === 'transaction') {
       const userEmail = getPrimaryEmail(input.data.from_user)
       if (!userEmail) {
-        return res.status(400).json({ error: 'User email is required for transaction' })
+        // There might be an issue with your deserialization if you get here
+        return res.status(200)
       }
+
+      // Bolt uses email as the primary identifier.
+      // It is recommended to ensure you have accounts linked via Bolt SSO
+      // https://help.bolt.com/dashboard/account/merchant-single-sign-on/
       const user = db.getUserByEmail(userEmail)
       if (!user) {
-        return res.status(404).json({ error: 'User not found' })
+        return res.status(200)
       }
 
       if (input.type === 'auth') {
@@ -58,13 +47,14 @@ router.post('/webhook', async (req, res) => {
           console.log(`Adding ${gems} gems for user ${user.username}`)
           db.addGemsToUser(user.id, gems)
         }
+      } else if (input.type === 'failed_payments') {
+        // Handle failed payments if necessary
       }
 
       db.upsertTransaction({
         userId: user.id,
         boltReference: input.data.reference,
-        acknowledged: isWebhookTypeOrGreater('auth', input),
-        status: input.data.status,
+        status: input.type,
         totalAmount: {
           value: input.data.amount.amount,
           currency: input.data.amount.currency
@@ -80,23 +70,6 @@ router.post('/webhook', async (req, res) => {
   } catch (error) {
     console.error('Error handling transaction:', error)
     const response: ApiResponse<null> = { success: false, error: 'Transaction failed' }
-    res.status(500).json(response)
-  }
-})
-
-// we recommend checking against bolt transaction history to ensure integrity
-// good idea to periodically check or trigger in case webhook fails (check your monitors)
-router.post('/restore-purchases', authenticateToken, async (req, res) => {
-  try {
-    // stub
-    const subscriptions = await boltApi.subscriptions.getAllForUser(req.user!.email)
-    const subscriptionOrders = await boltApi.subscriptions.getOrders(subscriptions.map(sub => sub.id))
-
-    const response: ApiResponse<any> = { success: true, data: { subscriptions, subscriptionOrders } }
-    res.json(response)
-  } catch (error) {
-    console.error('Error restoring purchases:', (error as Error).message)
-    const response: ApiResponse<null> = { success: false, error: 'Failed to restore purchases' }
     res.status(500).json(response)
   }
 })

@@ -1,6 +1,6 @@
 import Database from 'better-sqlite3';
 import path from 'path';
-import type { User, UserProfile, Product, TransactionReceipt, Amount } from './types/shared';
+import type { User, UserProfile, Product, Amount } from './types/shared';
 
 export interface DatabaseUser extends User{
   createdAt: string;
@@ -25,9 +25,8 @@ export interface DatabaseTransaction {
   id: number;
   userId: string;
   boltReference: string;
-  status: 'pending' | 'authorized' | 'failed' | 'refunded';
+  status: 'pending' | 'auth' | 'capture' | 'credit' | 'failed_payments';
   totalAmount: Amount;
-  acknowledged: boolean;
   createdAt: string;
   updatedAt: string;
 }
@@ -102,7 +101,6 @@ export class DatabaseService {
         boltReference TEXT UNIQUE NOT NULL,
         status TEXT NOT NULL DEFAULT 'pending',
         totalAmount REAL NOT NULL,
-        acknowledged BOOLEAN NOT NULL DEFAULT 0,
         createdAt TEXT NOT NULL DEFAULT (datetime('now')),
         updatedAt TEXT NOT NULL DEFAULT (datetime('now')),
         FOREIGN KEY (userId) REFERENCES users(id) ON DELETE CASCADE
@@ -252,11 +250,6 @@ export class DatabaseService {
     return stmt.get(sku) as DatabaseProduct | undefined;
   }
 
-  getProductById(id: number): DatabaseProduct | undefined {
-    const stmt = this.db.prepare('SELECT * FROM products WHERE id = ?');
-    return stmt.get(id) as DatabaseProduct | undefined;
-  }
-
   getAllProducts(): DatabaseProduct[] {
     const stmt = this.db.prepare('SELECT * FROM products ORDER BY createdAt DESC');
     return stmt.all() as DatabaseProduct[];
@@ -295,14 +288,13 @@ export class DatabaseService {
       // Update existing transaction
       const stmt = this.db.prepare(`
         UPDATE transactions 
-        SET userId = ?, status = ?, totalAmount = ?, acknowledged = ?, updatedAt = ?
+        SET userId = ?, status = ?, totalAmount = ?, updatedAt = ?
         WHERE boltReference = ?
       `);
       stmt.run(
         transaction.userId,
         transaction.status,
         transaction.totalAmount.value,
-        transaction.acknowledged ? 1 : 0,
         now,
         transaction.boltReference
       );
@@ -310,15 +302,14 @@ export class DatabaseService {
     } else {
       // Create new transaction
       const stmt = this.db.prepare(`
-        INSERT INTO transactions (userId, boltReference, status, totalAmount, acknowledged, createdAt, updatedAt)
-        VALUES (?, ?, ?, ?, ?, ?, ?)
+        INSERT INTO transactions (userId, boltReference, status, totalAmount, createdAt, updatedAt)
+        VALUES (?, ?, ?, ?, ?, ?)
       `);
       const result = stmt.run(
         transaction.userId,
         transaction.boltReference,
         transaction.status,
         transaction.totalAmount.value,
-        transaction.acknowledged ? 1 : 0,
         now,
         now
       );
@@ -335,7 +326,6 @@ export class DatabaseService {
     return {
       ...row,
       totalAmount: { value: row.totalAmount, currency: 'USD' },
-      acknowledged: Boolean(row.acknowledged) // Convert back to boolean
     } as DatabaseTransaction;
   }
 
@@ -348,7 +338,6 @@ export class DatabaseService {
     return {
       ...row,
       totalAmount: { value: row.totalAmount, currency: 'USD' },
-      acknowledged: Boolean(row.acknowledged) // Convert back to boolean
     } as DatabaseTransaction;
   }
 
@@ -362,10 +351,6 @@ export class DatabaseService {
       // Handle Amount object for totalAmount field
       if (field === 'totalAmount' && typeof value === 'object' && value.value !== undefined) {
         return value.value;
-      }
-      // Handle boolean conversion for acknowledged field
-      if (field === 'acknowledged' && typeof value === 'boolean') {
-        return value ? 1 : 0;
       }
       return value;
     });
@@ -398,48 +383,6 @@ export class DatabaseService {
   getTransactionProducts(transactionId: number): TransactionProduct[] {
     const stmt = this.db.prepare('SELECT * FROM transaction_products WHERE transactionId = ?');
     return stmt.all(transactionId) as TransactionProduct[];
-  }
-
-  // Helper method to get full transaction with products
-  getFullTransactionById(id: number): TransactionReceipt | undefined {
-    const transaction = this.getTransactionById(id);
-    if (!transaction) return undefined;
-
-    const transactionProducts = this.getTransactionProducts(id);
-    const products: Product[] = [];
-
-    for (const tp of transactionProducts) {
-      const product = this.getProductById(tp.productId);
-      if (product) {
-        products.push({
-          tier: product.tier,
-          name: product.name,
-          description: product.description,
-          sku: product.sku,
-          image: product.image,
-          price: tp.price, // Use the price at time of purchase
-          category: product.category,
-          gemAmount: product.gemAmount,
-          savings: product.savings,
-          popular: product.popular
-        });
-      }
-    }
-
-    return {
-      id: transaction.id,
-      boltReference: transaction.boltReference,
-      acknowledged: transaction.acknowledged,
-      products
-    };
-  }
-
-  // Helper method to get full transaction by bolt reference
-  getFullTransactionByBoltReference(boltReference: string): TransactionReceipt | undefined {
-    const transaction = this.getTransactionByBoltReference(boltReference);
-    if (!transaction) return undefined;
-
-    return this.getFullTransactionById(transaction.id);
   }
 
   // Utility methods
