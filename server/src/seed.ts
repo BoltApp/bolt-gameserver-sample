@@ -8,7 +8,7 @@ export async function seedDatabase() {
   console.log('Seeding database...');
 
   // Create sample products - matching gem packages from client
-  const products: Product[] = [
+  const products: Omit<Product, 'boltLink'>[] = [
     {
       tier: 'starter',
       name: 'Starter Pack',

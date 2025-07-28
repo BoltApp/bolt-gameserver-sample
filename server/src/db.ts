@@ -15,7 +15,7 @@ export interface DatabaseUserProfile extends Omit<UserProfile, 'username' | 'ema
   updatedAt: string;
 }
 
-export interface DatabaseProduct extends Product {
+export interface DatabaseProduct extends Omit<Product, 'boltLink'> {
   id: number;
   createdAt: string;
   updatedAt: string;

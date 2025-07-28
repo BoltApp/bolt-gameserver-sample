@@ -8,6 +8,5 @@ export interface GemPackageConfigs {
     scale?: number
     offsetY?: number
     offsetX?: number
-    checkoutLink: string
   }
 }
