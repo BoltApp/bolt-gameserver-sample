@@ -1,5 +1,6 @@
 import axios, { type AxiosInstance } from 'axios';
 
+// Find all Bolt API references at https://help.bolt.com/api-bolt
 export class BoltEndpoints {
   private client: AxiosInstance;
 

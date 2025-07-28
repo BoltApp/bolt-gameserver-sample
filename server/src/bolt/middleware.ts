@@ -3,6 +3,7 @@ import type { Request, Response, NextFunction } from "express";
 
 const signingSecret = process.env.BOLT_SIGNING_SECRET;
 
+// All webhooks should verify their signatures using the signing secret
 // https://help.bolt.com/developers/webhooks/hook-verification/
 export function verifySignature(req: Request, res: Response, next: NextFunction) {
   const hmac_header = req.headers['x-bolt-hmac-sha256'];
