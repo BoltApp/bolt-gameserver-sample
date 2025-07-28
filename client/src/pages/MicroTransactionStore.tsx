@@ -27,7 +27,7 @@ export function MicroTransactionStore() {
     });
     setSelectedPackage(pkg.tier);
 
-    const result = await Charge.checkout(pkg.checkoutLink);
+    const result = await Charge.checkout(pkg.boltLink);
 
     if (result.status === "success") {
       console.log(

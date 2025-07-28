@@ -26,5 +26,15 @@ export const env = {
   baseURL,
   apiKey,
   publishableKey,
-  jwtSecret
+  jwtSecret,
+  bolt: {
+    links: {
+      'gems-100': process.env.BOLT_CHECKOUT_STARTER,
+      'gems-500': process.env.BOLT_CHECKOUT_BRONZE,
+      'gems-1400': process.env.BOLT_CHECKOUT_SILVER,
+      'gems-3000': process.env.BOLT_CHECKOUT_GOLD,
+      'gems-7000': process.env.BOLT_CHECKOUT_PLATINUM,
+      'gems-16000': process.env.BOLT_CHECKOUT_DIAMOND,
+    } as Record<string, string>,
+  }
 }
