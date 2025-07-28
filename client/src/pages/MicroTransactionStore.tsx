@@ -1,4 +1,6 @@
 import { useState } from "preact/hooks";
+import { toast } from "react-toastify";
+
 import "./MicroTransactionStore.css";
 import type { GemPackage } from "../types";
 import { MicroTransactionCard } from "../components/MicroTransactionCard";
@@ -33,7 +35,16 @@ export function MicroTransactionStore() {
         pkg.name,
         result.payload.reference
       );
-      validateUser(result.payload.reference);
+      validateUser(result.payload.reference, {
+        onSuccess: (data) => {
+          toast.success(`Successfully purchased ${pkg.gemAmount} gems!`);
+          console.log("User validated:", data);
+        },
+        onError: (error) => {
+          toast.error(`Failed to validate purchase: ${error.message}`);
+          console.error("Validation error:", error);
+        },
+      });
     } else {
       console.log("Purchase cancelled:");
     }
