@@ -34,7 +34,7 @@ router.post('/webhook', verifySignature, async (req, res) => {
         return res.status(200)
       }
 
-      if (input.type === 'auth') {
+      if (input.type === 'auth' || input.type === 'payment') {
         const boltTransaction = await boltApi.transactions.get(input.data.reference)
         const sku = boltTransaction.order.cart.items[0].merchant_variant_id
         const product = await db.getProductBySku(sku)
