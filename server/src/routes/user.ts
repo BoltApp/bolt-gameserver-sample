@@ -22,7 +22,7 @@ router.get('/profile', authenticateToken, (req, res) => {
 })
 
 // FE should poll every second
-// If you support streaming, you should do something else
+// If you support streaming, you should replace this with websockets instead
 router.get('/validate', authenticateToken, (req, res) => {
   const transactionReference = req.query.transaction as string
   console.log('Validating transaction:', transactionReference)
