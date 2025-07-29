@@ -5,11 +5,12 @@ import { MicroTransactionCard } from "../components/MicroTransactionCard";
 import TreasuryRoomBg from "../assets/treasury-room.png";
 
 import { Charge } from "@boltpay/bolt-js";
-import { useGetAllProducts } from "../endpoints";
+import { useGetAllProducts, useValidateUser } from "../endpoints";
 
 export function MicroTransactionStore() {
   const [selectedPackage, setSelectedPackage] = useState<string | null>(null);
   const { data: gemPackages, isLoading } = useGetAllProducts();
+  const { mutate: validateUser } = useValidateUser();
 
   if (isLoading || !gemPackages) {
     return <div>Loading...</div>;
@@ -32,6 +33,7 @@ export function MicroTransactionStore() {
         pkg.name,
         result.payload.reference
       );
+      validateUser(result.payload.reference);
     } else {
       console.log("Purchase cancelled:");
     }

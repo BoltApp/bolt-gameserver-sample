@@ -22,18 +22,17 @@ router.get('/profile', authenticateToken, (req, res) => {
 })
 
 // FE should poll every second
-// TODO: Doc: if you support streaming, you should do something else
+// If you support streaming, you should replace this with websockets instead
 router.get('/validate', authenticateToken, (req, res) => {
   const transactionReference = req.query.transaction as string
   console.log('Validating transaction:', transactionReference)
 
   try {
     const transaction = db.getTransactionByBoltReference(transactionReference)
-    console.log('Transaction found:', transaction)
     if (!transaction) {
       return res.status(404).json({ success: false, error: 'Transaction not found' })
     }
-    if (transaction.status !== 'authorized') {
+    if (transaction.status !== 'auth') {
       return res.status(400).json({ success: false, error: 'Transaction not valid' })
     }
     if (transaction.userId !== req.user!.id) {

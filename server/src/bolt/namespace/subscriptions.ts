@@ -1,6 +1,7 @@
 import { BoltEndpoints } from "../bolt-endpoints";
 import type { Subscription, SubscriptionOrder } from "../types";
 
+// https://help.bolt.com/api-subscriptions/
 export class SubscriptionsAPI {
   private readonly boltApi: BoltEndpoints;
   

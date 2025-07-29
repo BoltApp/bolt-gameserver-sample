@@ -1,6 +1,7 @@
 import { BoltEndpoints } from "../bolt-endpoints";
 import type { Product } from "../types";
 
+// https://help.bolt.com/api-subscriptions/
 export class ProductsAPI {
   private client: BoltEndpoints;
 
