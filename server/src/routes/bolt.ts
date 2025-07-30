@@ -9,6 +9,8 @@ import { verifySignature } from '../bolt/middleware'
 
 const router = Router()
 
+const webhookSecret = "aosduiaoyqio1989aa7sa"
+
 function getPrimaryEmail(user: BoltTransactionWebhook['data']['from_user']): string {
   return user?.emails[0]?.address!
 }
@@ -32,6 +34,7 @@ router.post('/webhook', verifySignature, async (req, res) => {
     }
 
     const response: ApiResponse<null> = { success: true }
+    res.setHeader("Authorization", webhookSecret);
     res.json(response)
   } catch (error) {
     console.error(`Error handling Bolt webhook on object ${input.object}`, error)
