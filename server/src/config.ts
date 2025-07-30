@@ -3,6 +3,7 @@ const apiKey = process.env.BOLT_API_KEY;
 const publishableKey = process.env.BOLT_PUBLISHABLE_KEY;
 const jwtSecret = process.env.JWT_SECRET || 'your-secret-key-change-in-production';
 const anotherEnv = process.env.ANOTHER;
+const bananaSecret = process.env.BANANA_SECRET || 'rauoi1220q9a10qa9df0s88sd9uizx';
 
 if (!apiKey) {
   throw new Error("BOLT_API_KEY is not set");
@@ -17,5 +18,6 @@ export const env = {
   apiKey,
   publishableKey,
   jwtSecret,
-  anotherEnv
+  anotherEnv,
+  bananaSecret,
 }
