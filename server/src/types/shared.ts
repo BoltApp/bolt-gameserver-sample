@@ -30,7 +30,6 @@ export type Product = {
   description: string;
   price: number;
   category: 'gem_package';
-  boltLink: string; // Link to purchase via Bolt
   gemAmount?: number; // Actual gem value
   savings?: string; // Optional savings info
   popular?: boolean; // Optional flag for popular products

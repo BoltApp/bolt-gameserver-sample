@@ -1,7 +1,6 @@
 import { Router } from 'express'
 import { db } from '../db'
 import { Product } from '../types/shared'
-import { env } from '../config'
 
 const router = Router()
 
@@ -9,7 +8,6 @@ router.get('', (_, res) => {
   const products = db.getAllProducts()
     .map<Product>(({updatedAt, createdAt, ...product}) => ({
       ...product,
-      boltLink: env.bolt.links[product.sku] ?? '',
       savings: product.savings ?? undefined,
       popular: Boolean(product.popular),
     }))

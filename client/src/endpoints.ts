@@ -116,3 +116,16 @@ export function useValidateUser() {
     },
   });
 }
+
+export function getCheckoutLink(sku: string): Promise<string> {
+  return authenticatedFetch(`${BACKEND_URL}/api/bolt/products/${sku}/checkout-link`)
+    .then(response => response.json())
+    .then((response: ApiResponse<{ link: string }>) => {
+      console.log('Payment link response:', response);
+      if (response.success && response.data) {
+        return response.data.link;
+      }
+      throw new Error(response.error);
+    });
+}
+

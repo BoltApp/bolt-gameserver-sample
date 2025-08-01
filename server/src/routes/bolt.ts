@@ -1,16 +1,26 @@
 import { Router } from 'express'
 import { boltApi } from '../bolt'
-import type { 
-  ApiResponse 
-} from '../types/shared'
+import type { ApiResponse } from '../types/shared'
 import type { BoltTransactionWebhook } from '../bolt/types/transaction-webhook'
 import { db } from '../db'
 import { verifySignature } from '../bolt/middleware'
+import { env } from '../config'
 
 const router = Router()
 
-function getPrimaryEmail(user: BoltTransactionWebhook['data']['from_user']): string {
-  return user?.emails[0]?.address!
+router.get('/products', async (_, res) => {
+  try {
+    const products = await boltApi.products.getAll()
+    res.json(products)
+  } catch (error) {
+    console.error('Error fetching products:', error)
+    res.status(500).json({ error: 'Failed to fetch products' })
+  }
+})
+
+
+function getPrimaryEmail(user: BoltTransactionWebhook['data']['from_user']): string | undefined {
+  return user?.emails[0]?.address
 }
 
 /*
@@ -80,5 +90,16 @@ async function handleTransaction(input: BoltTransactionWebhook) {
   })
   console.log(`Transaction ${input.data.reference} processed for user ${user.username}. Status: ${input.data.status}`)
 }
+
+router.get('/products/:sku/checkout-link', async (req, res) => {
+  const { sku } = req.params;
+
+  res.json({
+    success: true,
+    data: {
+      link: env.bolt.links[sku],
+    },
+  })
+})
 
 export default router
