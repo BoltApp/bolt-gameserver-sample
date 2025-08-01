@@ -34,7 +34,7 @@ router.post('/webhook', verifySignature, async (req, res) => {
     const response: ApiResponse<null> = { success: true }
     res.json(response)
   } catch (error) {
-    console.error(`Error handling Bolt webhook on object ${input.object}`, error)
+    console.error(`Error handling Bolt webhook on object %o: %s`, input.object, error)
     const response: ApiResponse<null> = { success: false, error: `Webhook failed` }
     res.status(500).json(response)
   }
