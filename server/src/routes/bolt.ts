@@ -1,15 +1,13 @@
 import { Router } from 'express'
 import { boltApi } from '../bolt'
 import { authenticateToken } from '../middleware/auth'
-import type { 
-  ApiResponse 
-} from '../types/shared'
+import type { ApiResponse } from '../types/shared'
 import type { BoltTransactionWebhook } from '../bolt/types/transaction-webhook'
+import type { PaymentLinkRequest } from '../bolt/types'
 import { db } from '../db'
+import { env } from '../config'
 
 const router = Router()
-
-// TODO: implement SSO for account creation `bolt/universal`
 
 router.get('/products', async (_, res) => {
   try {
@@ -84,21 +82,15 @@ router.post('/webhook', async (req, res) => {
   }
 })
 
-// we recommend checking against bolt transaction history to ensure integrity
-// good idea to periodically check or trigger in case webhook fails (check your monitors)
-router.post('/restore-purchases', authenticateToken, async (req, res) => {
-  try {
-    // stub
-    const subscriptions = await boltApi.subscriptions.getAllForUser(req.user!.email)
-    const subscriptionOrders = await boltApi.subscriptions.getOrders(subscriptions.map(sub => sub.id))
+router.get('/products/:sku/checkout-link', async (req, res) => {
+  const { sku } = req.params;
 
-    const response: ApiResponse<any> = { success: true, data: { subscriptions, subscriptionOrders } }
-    res.json(response)
-  } catch (error) {
-    console.error('Error restoring purchases:', (error as Error).message)
-    const response: ApiResponse<null> = { success: false, error: 'Failed to restore purchases' }
-    res.status(500).json(response)
-  }
+  res.json({
+    success: true,
+    data: {
+      link: env.bolt.links[sku],
+    },
+  })
 })
 
 export default router
