@@ -5,7 +5,7 @@ import { MicroTransactionCard } from "../components/MicroTransactionCard";
 import TreasuryRoomBg from "../assets/treasury-room.png";
 
 import { Charge } from "@boltpay/bolt-js";
-import { getCheckoutLink, useGetAllProducts } from "../endpoints";
+import { getPaymentLink, useGetAllProducts } from "../endpoints";
 
 export function MicroTransactionStore() {
   const [selectedPackage, setSelectedPackage] = useState<string | null>(null);
@@ -24,8 +24,8 @@ export function MicroTransactionStore() {
     });
     setSelectedPackage(pkg.tier);
 
-    const checkoutLink = await getCheckoutLink(pkg.sku);
-    const result = await Charge.checkout(checkoutLink);
+    const paymentLink = await getPaymentLink(pkg.sku);
+    const result = await Charge.checkout(paymentLink);
 
     if (result.status === "success") {
       console.log(

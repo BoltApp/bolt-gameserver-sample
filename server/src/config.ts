@@ -2,6 +2,7 @@ const baseURL = process.env.BOLT_BASE_URL;
 const apiKey = process.env.BOLT_API_KEY;
 const publishableKey = process.env.BOLT_PUBLISHABLE_KEY;
 const jwtSecret = process.env.JWT_SECRET || 'your-secret-key-change-in-production';
+const gameId = process.env.BOLT_GAME_ID || 'default-game-id';
 
 if (!apiKey) {
   throw new Error("BOLT_API_KEY is not set");
@@ -17,6 +18,7 @@ export const env = {
   publishableKey,
   jwtSecret,
   bolt: {
+    gameId,
     links: {
       'gems-100': process.env.BOLT_CHECKOUT_STARTER,
       'gems-500': process.env.BOLT_CHECKOUT_BRONZE,
