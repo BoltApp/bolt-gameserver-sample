@@ -8,8 +8,8 @@ import TreasuryRoomBg from "../assets/treasury-room.png";
 
 import { Charge } from "@boltpay/bolt-js";
 import {
-  getCheckoutLink,
   useGetAllProducts,
+  getPaymentLink,
   useValidateUser,
 } from "../endpoints";
 
@@ -31,8 +31,8 @@ export function MicroTransactionStore() {
     });
     setSelectedPackage(pkg.tier);
 
-    const checkoutLink = await getCheckoutLink(pkg.sku);
-    const result = await Charge.checkout(checkoutLink);
+    const paymentLink = await getPaymentLink(pkg.sku);
+    const result = await Charge.checkout(paymentLink);
 
     if (result.status === "success") {
       console.log(

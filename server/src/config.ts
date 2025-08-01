@@ -1,22 +1,23 @@
 import crypto from 'crypto'
 
 const baseURL = process.env.BOLT_BASE_URL;
-const apiKey = process.env.BOLT_API_KEY;
-const publishableKey = process.env.BOLT_PUBLISHABLE_KEY;
-let jwtSecret = process.env.JWT_SECRET;
-
 if (!baseURL) {
   throw new Error("BOLT_BASE_URL is not set")
 }
 
+const apiKey = process.env.BOLT_API_KEY;
 if (!apiKey) {
   throw new Error("BOLT_API_KEY is not set");
 }
 
+const publishableKey = process.env.BOLT_PUBLISHABLE_KEY;
 if (!publishableKey) {
   throw new Error("BOLT_PUBLISHABLE_KEY is not set");
 }
 
+const gameId = process.env.BOLT_GAME_ID || 'default-game-id';
+
+let jwtSecret = process.env.JWT_SECRET;
 if (!jwtSecret) {
   console.warn("JWT_SECRET is not set, generating a temporary secret. Authentications will expire on restart.")
   jwtSecret = crypto.randomBytes(64).toString('hex')
@@ -28,6 +29,7 @@ export const env = {
   publishableKey,
   jwtSecret,
   bolt: {
+    gameId,
     links: {
       'gems-100': process.env.BOLT_CHECKOUT_STARTER,
       'gems-500': process.env.BOLT_CHECKOUT_BRONZE,

@@ -102,4 +102,34 @@ router.get('/products/:sku/checkout-link', async (req, res) => {
   })
 })
 
+router.post('/products/:sku/payment-link', authenticateToken, (req, res) => {
+  const { sku } = req.params;
+
+  const product = db.getProductBySku(sku);
+  if (!product) {
+    return res.status(404).json({ error: 'Product not found' });
+  }
+
+  const paymentLinkRequest: PaymentLinkRequest = {
+    item: {
+      price: Math.floor(product.price * 100),
+      name: product.name,
+      currency: 'USD',
+    },
+    redirect_url: "https://example.com/checkout/success",
+    user_id: req.user!.id,
+    game_id: env.bolt.gameId,
+    metadata: {},
+  };
+
+  boltApi.gaming.createPaymentLink(paymentLinkRequest)
+    .then((response) => {
+      res.json({ success: true, data: response });
+    })
+    .catch((error) => {
+      console.error('Error creating payment link:', error);
+      res.status(500).json({ success: false, error: 'Failed to create payment link' });
+    });
+})
+
 export default router
