@@ -1,5 +1,7 @@
 import { createRootRoute, Outlet } from "@tanstack/react-router";
 
+import { ToastContainer } from "react-toastify";
+
 import { TopNav } from "../components/TopNav";
 import { Footer } from "../components/Footer";
 
@@ -15,6 +17,7 @@ export const rootRoute = createRootRoute({
 
         <Footer />
       </div>
+      <ToastContainer position="top-center" />
       {/* <TanStackRouterDevtools /> */}
     </>
   ),

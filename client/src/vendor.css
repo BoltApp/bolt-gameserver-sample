@@ -1,0 +1,6 @@
+:root {
+  --toastify-color-light: var(--color-card-bg);
+
+  /* Nav bar + 16px spacing */
+  --toastify-toast-offset: calc(88px + 16px);
+}
