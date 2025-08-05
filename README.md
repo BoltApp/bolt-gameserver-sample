@@ -1,54 +1,35 @@
 # Bolt Gameserver Sample
 
-⚠️ **Note:** We will be updating this repo with a fully featured demo in the very near future.
+⚠️ **Note:** We will be updating this repo with a fully featured demo in the very near future. If you would like early access please let our team know.
 
 <img src="https://www.bolt.com/assets/images/components/FooterCallout/callout-rebrand-lightning.svg" alt="Bolt Charge Hero" />
 
+## Description
 Sample backend code snippets to demonstrate how to integrate Bolt's SDK into your game server. 
 
 
-
-**Prerequisites:** Make sure you have fully onboarded onto Bolt Charge by [following this guide.](https://help.bolt.com/products/bolt-charge/charge-setup/) It should take approximately 5 minutes.
-
-**Language Support:** Looking for a different language or a particular server SDK? You can easily clone, copy, or paste URL this lightweight repo into your favorite copilot tool and it should do a good job replicating the interfaces for you. 
-
-If you have questions or need additional support please reach out to us in our [discord server](https://discord.gg/BSUp9qjtnc) and we would be happy to assist!
+## What You Will FInd
+This project showcases an example backend with the following flows implemented
+- **Payment Links:** Creating links that take user to checkout
+- **Validate Order:** Validating a transaction was successful for a specific user
+- **Transaction Webhooks:** Handling webhooks on transaction success as users make purchases in your game
 
 ## API Keys
 
 Bolt uses API keys to authenticate your requests. You can manage your API keys in the Bold Dashboard.
 
-- [Staging Dashboard](https://merchant-staging.bolt.com/)
+- [Sandbox Dashboard](https://merchant-sandbox.bolt.com/)
 - [Production Dashboard](https://merchant.bolt.com/)
 
+## Quick Start
+When you are ready to implement Bolt into your gaming SDK make sure to follow along using the Installation Guide.
 
-## Key Concepts
-Bolt offers an easy to use API to manage your digital products and subscriptions.
+**Installation Guide:** Our quick start guide will walk you through the full gaming setup: https://bolt-gaming-docs.vercel.app/guide/checkout-quickstart.html
 
-- **Products** are what you're selling
+## Onboarding
+**Merchant Dashboard:** Make sure you have fully onboarded onto our Bolt Gaming sandbox. You can [sign up](https://merchant-sandbox.bolt.com/onboarding/get-started/gaming) or [sign in](https://merchant-sandbox.bolt.com/) depending if you have an existing merchant account or not.
 
-- **Plans** are how you're selling it
-- **Subscriptions** are active instances of recurring plans
+## Support
+**Language Support:** Looking for a different language or a particular server SDK? You can easily clone, copy, or paste URL this lightweight repo into your favorite copilot tool and it should do a good job replicating the interfaces for you.
 
-### Products
-Products are the base offerings in your game's monetization system. They represent the actual items or services you're selling, such as:
-- Virtual currency (coins, gems)
-- In-game items (weapons, skins)
-- Game expansions
-- Premium features
-
-### Plans
-Plans define how a product is delivered to the user. They specify:
-- The delivery method (one-time purchase, recurring)
-- The price point
-- Any associated benefits or features
-- Duration (for time-based offerings)
-
-### Subscriptions
-Subscriptions are active instances of recurring plans. They represent:
-- An ongoing relationship between a user and a plan
-- The current status of a user's access to a product
-- Billing cycles and renewal dates
-- Usage tracking and limits
-
-
+**Bolt Support:** If you have questions or need additional support please reach out to us in our [discord server](https://discord.gg/BSUp9qjtnc) and we would be happy to assist!
