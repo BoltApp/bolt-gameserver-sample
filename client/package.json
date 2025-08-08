@@ -10,13 +10,14 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@boltpay/bolt-js": "0.0.9-beta.1",
+    "@boltpay/bolt-js": "0.0.9",
     "@tanstack/query-async-storage-persister": "^5.83.0",
     "@tanstack/react-query": "^5.83.0",
     "@tanstack/react-query-persist-client": "^5.83.0",
     "@tanstack/react-router": "^1.124.0",
     "classnames": "^2.5.1",
-    "preact": "^10.26.9"
+    "preact": "^10.26.9",
+    "react-toastify": "^11.0.5"
   },
   "devDependencies": {
     "@preact/preset-vite": "^2.10.1",

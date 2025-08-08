@@ -1,5 +1,6 @@
 import { QueryClient } from "@tanstack/react-query";
 import "./app.css";
+import "./vendor.css";
 import { homeRoute } from "./routes/home";
 import { rootRoute } from "./routes/root";
 import { microTransactionStoreRoute } from "./routes/store";
