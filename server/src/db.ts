@@ -24,8 +24,8 @@ export interface DatabaseProduct extends Product {
 export interface DatabaseTransaction {
   id: number;
   userId: string;
-  boltReference: string;
-  status: 'pending' | 'auth' | 'capture' | 'credit' | 'failed_payments';
+  boltPaymentLinkId: string;
+  status: 'pending' | 'auth' | 'capture' | 'credit' | 'failed_payments' | 'payment';
   totalAmount: Amount;
   createdAt: string;
   updatedAt: string;
@@ -98,7 +98,7 @@ export class DatabaseService {
       CREATE TABLE IF NOT EXISTS transactions (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         userId TEXT NOT NULL,
-        boltReference TEXT UNIQUE NOT NULL,
+        paymentLinkId TEXT UNIQUE NOT NULL,
         status TEXT NOT NULL DEFAULT 'pending',
         totalAmount REAL NOT NULL,
         createdAt TEXT NOT NULL DEFAULT (datetime('now')),
@@ -126,7 +126,7 @@ export class DatabaseService {
       CREATE INDEX IF NOT EXISTS idx_users_email ON users(email);
       CREATE INDEX IF NOT EXISTS idx_user_profiles_userId ON user_profiles(userId);
       CREATE INDEX IF NOT EXISTS idx_transactions_userId ON transactions(userId);
-      CREATE INDEX IF NOT EXISTS idx_transactions_boltReference ON transactions(boltReference);
+      CREATE INDEX IF NOT EXISTS idx_transactions_paymentLinkId ON transactions(paymentLinkId);
       CREATE INDEX IF NOT EXISTS idx_transaction_products_transactionId ON transaction_products(transactionId);
       CREATE INDEX IF NOT EXISTS idx_transaction_products_productId ON transaction_products(productId);
     `);
@@ -282,32 +282,32 @@ export class DatabaseService {
     const now = new Date().toISOString();
     
     // Check if transaction already exists
-    const existing = this.getTransactionByBoltReference(transaction.boltReference);
-    
+    const existing = this.getTransactionByPaymentLinkId(transaction.boltPaymentLinkId);
+
     if (existing) {
       // Update existing transaction
       const stmt = this.db.prepare(`
         UPDATE transactions 
         SET userId = ?, status = ?, totalAmount = ?, updatedAt = ?
-        WHERE boltReference = ?
+        WHERE paymentLinkId = ?
       `);
       stmt.run(
         transaction.userId,
         transaction.status,
         transaction.totalAmount.value,
         now,
-        transaction.boltReference
+        transaction.boltPaymentLinkId
       );
       return { ...transaction, id: existing.id, createdAt: existing.createdAt, updatedAt: now };
     } else {
       // Create new transaction
       const stmt = this.db.prepare(`
-        INSERT INTO transactions (userId, boltReference, status, totalAmount, createdAt, updatedAt)
+        INSERT INTO transactions (userId, paymentLinkId, status, totalAmount, createdAt, updatedAt)
         VALUES (?, ?, ?, ?, ?, ?)
       `);
       const result = stmt.run(
         transaction.userId,
-        transaction.boltReference,
+        transaction.boltPaymentLinkId,
         transaction.status,
         transaction.totalAmount.value,
         now,
@@ -329,9 +329,9 @@ export class DatabaseService {
     } as DatabaseTransaction;
   }
 
-  getTransactionByBoltReference(boltReference: string): DatabaseTransaction | undefined {
-    const stmt = this.db.prepare('SELECT * FROM transactions WHERE boltReference = ?');
-    const row = stmt.get(boltReference) as any;
+  getTransactionByPaymentLinkId(paymentLinkId: string): DatabaseTransaction | undefined {
+    const stmt = this.db.prepare('SELECT * FROM transactions WHERE paymentLinkId = ?');
+    const row = stmt.get(paymentLinkId) as any;
     if (!row) return undefined;
     
     // Convert the numeric totalAmount back to Amount object
@@ -341,7 +341,7 @@ export class DatabaseService {
     } as DatabaseTransaction;
   }
 
-  updateTransactionByBoltReference(boltReference: string, updates: Partial<Omit<DatabaseTransaction, 'id' | 'boltReference' | 'createdAt' | 'updatedAt'>>): boolean {
+  updateTransactionByPaymentLinkId(paymentLinkId: string, updates: Partial<Omit<DatabaseTransaction, 'id' | 'paymentLinkId' | 'createdAt' | 'updatedAt'>>): boolean {
     const fields = Object.keys(updates);
     if (fields.length === 0) return false;
     
@@ -358,9 +358,9 @@ export class DatabaseService {
     const stmt = this.db.prepare(`
       UPDATE transactions 
       SET ${setClause}, updatedAt = datetime('now')
-      WHERE boltReference = ?
+      WHERE paymentLinkId = ?
     `);
-    const result = stmt.run(...values, boltReference);
+    const result = stmt.run(...values, paymentLinkId);
     return result.changes > 0;
   }
 
