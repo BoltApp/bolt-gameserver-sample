@@ -92,11 +92,11 @@ export function useFakeLogin() {
   });
 }
 
-function validateUser(transactionReference: string): Promise<UserProfile> {
-  if (!transactionReference) {
-    return Promise.reject(new Error('Transaction reference is required'));
+function validateUser(paymentLinkId: string): Promise<UserProfile> {
+  if (!paymentLinkId) {
+    return Promise.reject(new Error('Payment link ID is required'));
   }
-  return authenticatedFetch(`${BACKEND_URL}/api/user/validate?transaction=${transactionReference}`)
+  return authenticatedFetch(`${BACKEND_URL}/api/user/validate?payment_link_id=${paymentLinkId}`)
     .then(response => response.json())
     .then((response: ApiResponse<UserProfile>) => {
       if (response.success && response.data) {
@@ -105,6 +105,7 @@ function validateUser(transactionReference: string): Promise<UserProfile> {
       throw new Error(response.error);
     });
 }
+
 export function useValidateUser() {
   const queryClient = useQueryClient();
   return useMutation({

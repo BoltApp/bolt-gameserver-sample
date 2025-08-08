@@ -5,6 +5,8 @@ import type { BoltTransactionWebhook } from '../bolt/types/transaction-webhook'
 import { db } from '../db'
 import { verifySignature } from '../bolt/middleware'
 import { env } from '../config'
+import { PaymentLinkRequest } from '../bolt/types'
+import { authenticateToken } from '../middleware/auth'
 
 const router = Router()
 
@@ -35,6 +37,7 @@ router.post('/webhook', verifySignature, async (req, res) => {
   try {
     switch (input.object) {
       case 'transaction':
+        console.log(`Received transaction webhook for ${input.type}:`, input)
         await handleTransaction(input)
         break
       default:
@@ -51,22 +54,17 @@ router.post('/webhook', verifySignature, async (req, res) => {
 })
 
 async function handleTransaction(input: BoltTransactionWebhook) {
-  const userEmail = getPrimaryEmail(input.data.from_user)
-  if (!userEmail) {
-    // There might be an issue with your deserialization if you get here
-    return
-  }
+  const paymentLink = input.data.payment_link;
 
-  const user = db.getUserByEmail(userEmail)
+  const user = db.getUserById(paymentLink.user_id)
   if (!user) {
     return
   }
 
   // See events: https://help.bolt.com/developers/webhooks/webhooks/#authorization-events
   if (input.type === 'auth' || input.type === 'payment') {
-    const boltTransaction = await boltApi.transactions.get(input.data.reference)
-    const sku = boltTransaction.order.cart.items[0].merchant_variant_id
-    const product = await db.getProductBySku(sku)
+    const metadata = JSON.parse(paymentLink.metadata || '{}')
+    const product = await db.getProductBySku(metadata.sku)
 
     const gems = product?.gemAmount ?? 0
     if (gems > 0) {
@@ -81,7 +79,7 @@ async function handleTransaction(input: BoltTransactionWebhook) {
 
   db.upsertTransaction({
     userId: user.id,
-    boltReference: input.data.reference,
+    boltPaymentLinkId: input.data.payment_link.id,
     status: input.type,
     totalAmount: {
       value: input.data.amount.amount,
@@ -119,7 +117,9 @@ router.post('/products/:sku/payment-link', authenticateToken, (req, res) => {
     redirect_url: "https://example.com/checkout/success",
     user_id: req.user!.id,
     game_id: env.bolt.gameId,
-    metadata: {},
+    metadata: {
+      sku: product.sku,
+    },
   };
 
   boltApi.gaming.createPaymentLink(paymentLinkRequest)
@@ -127,7 +127,8 @@ router.post('/products/:sku/payment-link', authenticateToken, (req, res) => {
       res.json({ success: true, data: response });
     })
     .catch((error) => {
-      console.error('Error creating payment link:', error);
+      // const {} = error
+      console.error('Error creating payment link:', error.request, error.response);
       res.status(500).json({ success: false, error: 'Failed to create payment link' });
     });
 })
