@@ -6,10 +6,10 @@ import type { GemPackage } from "../types";
 import { MicroTransactionCard } from "../components/MicroTransactionCard";
 import TreasuryRoomBg from "../assets/treasury-room.png";
 
-import { Charge } from "@boltpay/bolt-js";
+import { BoltSDK } from "@boltpay/bolt-js";
 import {
-  useGetAllProducts,
   getPaymentLink,
+  useGetAllProducts,
   useValidateUser,
 } from "../endpoints";
 
@@ -32,15 +32,17 @@ export function MicroTransactionStore() {
     setSelectedPackage(pkg.tier);
 
     const paymentLink = await getPaymentLink(pkg.sku);
-    const result = await Charge.checkout(paymentLink);
+    console.log("Payment link retrieved:", paymentLink);
+    const paymentLinkSession = await BoltSDK.gaming.openCheckout(paymentLink);
 
-    if (result.status === "success") {
-      console.log(
-        "Purchase completed for:",
-        pkg.name,
-        result.payload.reference
-      );
-      validateUser(result.payload.reference, {
+    if (!paymentLinkSession) {
+      console.error("Failed to open payment link session");
+      return;
+    } else if (paymentLinkSession.status === "abandoned") {
+      console.log("Purchase cancelled by user:", pkg.name);
+    } else {
+      console.log("Purchase pending for:", pkg.name);
+      validateUser(paymentLinkSession.paymentLinkId, {
         onSuccess: (data) => {
           toast.success(`Successfully purchased ${pkg.gemAmount} gems!`);
           console.log("User validated:", data);
@@ -50,8 +52,6 @@ export function MicroTransactionStore() {
           console.error("Validation error:", error);
         },
       });
-    } else {
-      console.log("Purchase cancelled:");
     }
     setSelectedPackage(null);
   };

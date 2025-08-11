@@ -161,5 +161,18 @@ export interface BoltTransactionWebhook {
       };
     };
     capture_type: string;
+    payment_link: {
+      id: string;
+      link: string;
+      user_id: string;
+      game_id: string;
+      item: {
+        name: string;
+        price: number;
+        currency: string;
+      };
+      redirect_url: string;
+      metadata: string;
+    };
   };
 }
