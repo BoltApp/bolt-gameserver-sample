@@ -40,3 +40,24 @@ export type ApiResponse<T> = {
   data?: T;
   error?: string;
 }
+
+export interface PaymentLinkPayload {
+  id: string;
+  item: {
+    price: number;
+    name: string;
+    currency: string;
+  };
+  redirect_url: string;
+  user_id: string;
+  game_id: string;
+  metadata: string;
+}
+
+export interface PaymentLinkTransactionResponse {
+  payment_link: PaymentLinkPayload;
+  transaction: {
+    reference: string;
+    status: string;
+  }
+}

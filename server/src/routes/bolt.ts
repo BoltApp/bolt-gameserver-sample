@@ -1,12 +1,13 @@
 import { Router } from 'express'
 import { boltApi } from '../bolt'
-import type { ApiResponse } from '../types/shared'
+import type { ApiResponse, PaymentLinkPayload, PaymentLinkTransactionResponse } from '../types/shared'
 import type { BoltTransactionWebhook } from '../bolt/types/transaction-webhook'
 import { db } from '../db'
 import { verifySignature } from '../bolt/middleware'
 import { env } from '../config'
 import { PaymentLinkRequest } from '../bolt/types'
 import { authenticateToken } from '../middleware/auth'
+import { TransactionService } from '../services/transactions'
 
 const router = Router()
 
@@ -19,11 +20,6 @@ router.get('/products', async (_, res) => {
     res.status(500).json({ error: 'Failed to fetch products' })
   }
 })
-
-
-function getPrimaryEmail(user: BoltTransactionWebhook['data']['from_user']): string | undefined {
-  return user?.emails[0]?.address
-}
 
 /*
  * Handle Bolt transaction webhooks
@@ -38,7 +34,7 @@ router.post('/webhook', verifySignature, async (req, res) => {
     switch (input.object) {
       case 'transaction':
         console.log(`Received transaction webhook for ${input.type}:`, input)
-        await handleTransaction(input)
+        await TransactionService.processWebhook(input)
         break
       default:
         console.warn(`Unhandled Bolt webhook object: ${input.object}`)
@@ -52,42 +48,6 @@ router.post('/webhook', verifySignature, async (req, res) => {
     res.status(500).json(response)
   }
 })
-
-async function handleTransaction(input: BoltTransactionWebhook) {
-  const paymentLink = input.data.payment_link;
-
-  const user = db.getUserById(paymentLink.user_id)
-  if (!user) {
-    return
-  }
-
-  // See events: https://help.bolt.com/developers/webhooks/webhooks/#authorization-events
-  if (input.type === 'auth' || input.type === 'payment') {
-    const metadata = JSON.parse(paymentLink.metadata || '{}')
-    const product = await db.getProductBySku(metadata.sku)
-
-    const gems = product?.gemAmount ?? 0
-    if (gems > 0) {
-      console.log(`Adding ${gems} gems for user ${user.username}`)
-      db.addGemsToUser(user.id, gems)
-    }
-  } else if (input.type === 'failed_payments') {
-    // Handle failed payments
-  } else if (input.type === 'credit') {
-    // Handle refunds
-  }
-
-  db.upsertTransaction({
-    userId: user.id,
-    boltPaymentLinkId: input.data.payment_link.id,
-    status: input.type,
-    totalAmount: {
-      value: input.data.amount.amount,
-      currency: input.data.amount.currency
-    }
-  })
-  console.log(`Transaction ${input.data.reference} processed for user ${user.username}. Status: ${input.data.status}`)
-}
 
 router.get('/products/:sku/checkout-link', async (req, res) => {
   const { sku } = req.params;
@@ -131,6 +91,36 @@ router.post('/products/:sku/payment-link', authenticateToken, (req, res) => {
       console.error('Error creating payment link:', error.request, error.response);
       res.status(500).json({ success: false, error: 'Failed to create payment link' });
     });
+})
+
+router.get('/verify', authenticateToken, async (req, res) => {
+  const paymentLinkId = req.query.payment_link_id as string;
+  console.log('Validating payment link:', paymentLinkId);
+  const transactionResponse = await boltApi.gaming.getPaymentLinkTransaction(paymentLinkId)
+
+    try {
+      const transaction = db.getTransactionByPaymentLinkId(paymentLinkId)
+        ?? await TransactionService.processPaymentLinkRequest(transactionResponse)
+      if (!transaction) {
+        return res.status(404).json({ success: false, error: 'Transaction not found' })
+      }
+      if (transaction.status !== 'authorized') {
+        return res.status(400).json({ success: false, error: 'Payment link not valid' })
+      }
+      if (transaction.userId !== req.user!.id) {
+        return res.status(403).json({ success: false, error: 'Payment link does not belong to user' })
+      }
+      
+      const response: ApiResponse<PaymentLinkTransactionResponse> = {
+        success: true,
+        data: transactionResponse,
+      }
+      res.json(response)
+    } catch (error) {
+      console.error('Error validating transaction:', error)
+      const response: ApiResponse<null> = { success: false, error: 'Transaction validation failed' }
+      res.status(500).json(response)
+    }
 })
 
 export default router
