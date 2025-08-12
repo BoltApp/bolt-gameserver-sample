@@ -1,6 +1,6 @@
 import { BoltTransactionWebhook } from "../bolt/types/transaction-webhook";
 import { DatabaseService, db } from "../db";
-import { PaymentLinkPayload, PaymentLinkTransactionResponse } from "../types/shared";
+import { PaymentLinkPayload, PaymentLinkTransactionResponse, User } from "../types/shared";
 
 export const createTransactionService = (db: DatabaseService) => {
   // Helper function to validate user existence
@@ -13,7 +13,7 @@ export const createTransactionService = (db: DatabaseService) => {
   };
 
   // Helper function to process gems for successful transactions
-  const processGemsForUser = async (user: any, metadata: any) => {
+  const processGemsForUser = async (user: User, metadata: any) => {
     const product = await db.getProductBySku(metadata.sku);
     const gems = product?.gemAmount ?? 0;
     
@@ -26,7 +26,7 @@ export const createTransactionService = (db: DatabaseService) => {
   };
 
   // Helper function to handle successful transaction statuses
-  const handleSuccessfulTransaction = async (user: any, paymentLink: any) => {
+  const handleSuccessfulTransaction = async (user: User, paymentLink: PaymentLinkPayload) => {
     const metadata = typeof paymentLink.metadata === 'string' 
       ? JSON.parse(paymentLink.metadata || '{}')
       : paymentLink.metadata || {};
@@ -35,7 +35,7 @@ export const createTransactionService = (db: DatabaseService) => {
   };
 
   // Helper function to log transaction completion
-  const logTransactionCompletion = (transaction: any, user: any) => {
+  const logTransactionCompletion = (transaction: { reference: string }, user: User) => {
     console.log(`Transaction ${transaction.reference} processed for user ${user.username}. Status: ${transaction.status}`);
   };
 

@@ -96,9 +96,9 @@ router.post('/products/:sku/payment-link', authenticateToken, (req, res) => {
 router.get('/verify', authenticateToken, async (req, res) => {
   const paymentLinkId = req.query.payment_link_id as string;
   console.log('Validating payment link:', paymentLinkId);
-  const transactionResponse = await boltApi.gaming.getPaymentLinkTransaction(paymentLinkId)
-
-    try {
+  
+  try {
+      const transactionResponse = await boltApi.gaming.getPaymentLinkTransaction(paymentLinkId)
       const transaction = db.getTransactionByPaymentLinkId(paymentLinkId)
         ?? await TransactionService.processPaymentLinkRequest(transactionResponse)
       if (!transaction) {
