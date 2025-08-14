@@ -1,4 +1,4 @@
-export interface PaymentLinkRequest {
+export interface CreatePaymentLinkRequest {
   item: {
     price: number;
     name: string;
@@ -10,7 +10,7 @@ export interface PaymentLinkRequest {
   metadata: Record<string, any>;
 }
 
-export interface PaymentLinkResponse {
+export interface CreatePaymentLinkResponse {
   id: string;
   link: string;
 }

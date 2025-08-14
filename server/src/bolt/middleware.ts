@@ -16,7 +16,7 @@ export function verifySignature(req: Request, res: Response, next: NextFunction)
 
   const isValid = hmac_header === computedHmac;
   if (!isValid) {
-    console.log('Invalid signature for Bolt webhook');
+    console.log(`Invalid signature for Bolt webhook. Expected ${computedHmac}, got ${hmac_header}`);
     res.status(403).json({ error: 'Invalid signature' });
     return;
   }

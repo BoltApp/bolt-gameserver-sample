@@ -7,6 +7,8 @@ import { microTransactionStoreRoute } from "./routes/store";
 import { createRouter, RouterProvider } from "@tanstack/react-router";
 import { createAsyncStoragePersister } from "@tanstack/query-async-storage-persister";
 import { PersistQueryClientProvider } from "@tanstack/react-query-persist-client";
+import { useUserProfile } from "./endpoints";
+import { useBoltSessionVerification } from "./hooks/useBoltSessionVerification";
 
 const routeTree = rootRoute.addChildren([
   homeRoute,
@@ -31,12 +33,27 @@ const persister = createAsyncStoragePersister({
   storage: window.localStorage,
 });
 
+type SessionManagementProps = {
+  children: React.ReactNode;
+};
+
+function SessionManagement({ children }: SessionManagementProps) {
+  const { data: userProfile, isLoading, error } = useUserProfile();
+
+  const isLoggedIn = !isLoading && !error && !!userProfile;
+  useBoltSessionVerification(isLoggedIn);
+
+  return <>{children}</>;
+}
+
 export function App() {
   return (
     <PersistQueryClientProvider
       client={queryClient}
       persistOptions={{ persister }}>
-      <RouterProvider router={router} />
+      <SessionManagement>
+        <RouterProvider router={router} />
+      </SessionManagement>
     </PersistQueryClientProvider>
   );
 }

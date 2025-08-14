@@ -1,6 +1,7 @@
 import Database from 'better-sqlite3';
 import path from 'path';
 import type { User, UserProfile, Product, Amount } from './types/shared';
+import { BoltTransactionWebhook } from './bolt/types/transaction-webhook';
 
 export interface DatabaseUser extends User{
   createdAt: string;
@@ -25,10 +26,17 @@ export interface DatabaseTransaction {
   id: number;
   userId: string;
   boltPaymentLinkId: string;
-  status: 'pending' | 'auth' | 'capture' | 'credit' | 'failed_payments' | 'payment';
+  status: BoltTransactionWebhook['data']['status'];
   totalAmount: Amount;
   createdAt: string;
   updatedAt: string;
+}
+
+export interface DatabaseUpsertTransaction {
+  userId: string;
+  boltPaymentLinkId: string;
+  status: BoltTransactionWebhook['data']['status'];
+  totalAmount?: Amount;
 }
 
 export interface TransactionProduct {
@@ -100,7 +108,7 @@ export class DatabaseService {
         userId TEXT NOT NULL,
         paymentLinkId TEXT UNIQUE NOT NULL,
         status TEXT NOT NULL DEFAULT 'pending',
-        totalAmount REAL NOT NULL,
+        totalAmount REAL,
         createdAt TEXT NOT NULL DEFAULT (datetime('now')),
         updatedAt TEXT NOT NULL DEFAULT (datetime('now')),
         FOREIGN KEY (userId) REFERENCES users(id) ON DELETE CASCADE
@@ -278,7 +286,7 @@ export class DatabaseService {
   }
 
   // Transaction operations
-  upsertTransaction(transaction: Omit<DatabaseTransaction, 'id' | 'createdAt' | 'updatedAt'>): DatabaseTransaction {
+  upsertTransaction(transaction: DatabaseUpsertTransaction): DatabaseTransaction {
     const now = new Date().toISOString();
     
     // Check if transaction already exists
@@ -294,11 +302,17 @@ export class DatabaseService {
       stmt.run(
         transaction.userId,
         transaction.status,
-        transaction.totalAmount.value,
+        transaction.totalAmount?.value ?? existing.totalAmount.value,
         now,
         transaction.boltPaymentLinkId
       );
-      return { ...transaction, id: existing.id, createdAt: existing.createdAt, updatedAt: now };
+      return { 
+        ...transaction, 
+        id: existing.id, 
+        createdAt: existing.createdAt, 
+        updatedAt: now,
+        totalAmount: transaction.totalAmount || existing.totalAmount 
+      };
     } else {
       // Create new transaction
       const stmt = this.db.prepare(`
@@ -309,11 +323,17 @@ export class DatabaseService {
         transaction.userId,
         transaction.boltPaymentLinkId,
         transaction.status,
-        transaction.totalAmount.value,
+        transaction.totalAmount?.value ?? null,
         now,
         now
       );
-      return { ...transaction, id: result.lastInsertRowid as number, createdAt: now, updatedAt: now };
+      return {
+        ...transaction,
+        totalAmount: transaction.totalAmount!,
+        id: result.lastInsertRowid as number,
+        createdAt: now,
+        updatedAt: now
+      };
     }
   }
 
@@ -334,10 +354,10 @@ export class DatabaseService {
     const row = stmt.get(paymentLinkId) as any;
     if (!row) return undefined;
     
-    // Convert the numeric totalAmount back to Amount object
+    // Convert the numeric totalAmount back to Amount object if it exists
     return {
       ...row,
-      totalAmount: { value: row.totalAmount, currency: 'USD' },
+      totalAmount: row.totalAmount ? { value: row.totalAmount, currency: 'USD' } : undefined,
     } as DatabaseTransaction;
   }
 

@@ -2,6 +2,8 @@ import { Router } from 'express'
 import type { ApiResponse, UserProfile } from '../types/shared'
 import { db } from '../db'
 import { authenticateToken } from '../middleware/auth'
+import { boltApi } from '../bolt'
+import { TransactionService } from '../services/transactions'
 
 const router = Router()
 
@@ -23,16 +25,20 @@ router.get('/profile', authenticateToken, (req, res) => {
 
 // FE should poll every second
 // If you support streaming, you should replace this with websockets instead
-router.get('/validate', authenticateToken, (req, res) => {
+router.get('/validate', authenticateToken, async (req, res) => {
   const paymentLinkId = req.query.payment_link_id as string
   console.log('Validating payment link:', paymentLinkId)
 
   try {
-    const transaction = db.getTransactionByPaymentLinkId(paymentLinkId)
+    let transaction = db.getTransactionByPaymentLinkId(paymentLinkId)
     if (!transaction) {
-      return res.status(404).json({ success: false, error: 'Transaction not found' })
+      const paymentLink = await boltApi.gaming.getPaymentLinkResponse(paymentLinkId)
+      transaction = await TransactionService.processPaymentLinkRequest(paymentLink)
+      if (!transaction) {
+        return res.status(404).json({ success: false, error: 'Transaction not found' })
+      }
     }
-    if (transaction.status !== 'auth') {
+    if (transaction.status !== 'authorized') {
       return res.status(400).json({ success: false, error: 'Payment link not valid' })
     }
     if (transaction.userId !== req.user!.id) {

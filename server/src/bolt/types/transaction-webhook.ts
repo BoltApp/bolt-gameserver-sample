@@ -1,3 +1,5 @@
+import { GetPaymentLinkRequest } from "../../types/shared";
+
 type Amount = {
   amount: number;
   currency: string;
@@ -85,7 +87,7 @@ export interface BoltTransactionWebhook {
     date: number;
     // refund creates new reference
     reference: string;
-    status: 'pending' | 'authorized' | 'failed';
+    status: 'pending' | 'authorized' | 'failed' | 'completed';
 
     // not present during "credit" (refund)
     from_user?: {
@@ -161,18 +163,6 @@ export interface BoltTransactionWebhook {
       };
     };
     capture_type: string;
-    payment_link: {
-      id: string;
-      link: string;
-      user_id: string;
-      game_id: string;
-      item: {
-        name: string;
-        price: number;
-        currency: string;
-      };
-      redirect_url: string;
-      metadata: string;
-    };
+    payment_link: GetPaymentLinkRequest;
   };
 }
