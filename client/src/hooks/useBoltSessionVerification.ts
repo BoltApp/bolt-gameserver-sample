@@ -40,6 +40,7 @@ export function useBoltSessionVerification(isLoggedIn: boolean) {
 
         if (sessionsResolved > 0) {
           console.log(`Resolved ${sessionsResolved} payment sessions, updating user profile`);
+          // Invalidate user profile cache to refresh data
           await queryClient.invalidateQueries({ queryKey: ['userProfile'] });
         }
       } catch (error) {
