@@ -1,7 +1,8 @@
-import { CreatePaymentLinkRequest } from "../bolt/types";
+import type { GetPaymentLinkRequest, GetPaymentLinkResponse } from '@boltpay/bolt-js'
+
 import { BoltTransactionWebhook } from "../bolt/types/transaction-webhook";
 import { DatabaseService, db } from "../db";
-import { GetPaymentLinkRequest, GetPaymentLinkResponse, User } from "../types/shared";
+import type { User } from "../types/shared";
 
 export const createTransactionService = (db: DatabaseService) => {
   // Helper function to validate user existence
@@ -34,7 +35,7 @@ export const createTransactionService = (db: DatabaseService) => {
     return await processGemsForUser(user, metadata);
   };
 
-  const logTransactionCompletion = (transaction: { reference: string }, user: User) => {
+  const logTransactionCompletion = (transaction: { reference: string; status: string; }, user: User) => {
     console.log(`Transaction ${transaction.reference} processed for user ${user.username}. Status: ${transaction.status}`);
   };
 
@@ -93,9 +94,8 @@ export const createTransactionService = (db: DatabaseService) => {
         await handleSuccessfulTransaction(user, paymentLink);
       } else if (transaction.status === 'failed') {
         // Handle failed payments
-      } else if (transaction.status === 'credit') {
-        // Handle refunds
       }
+      // TODO: transaction missing properties to determine it's a refund
     
       const upsertedTransaction = db.upsertTransaction({
         userId: user.id,

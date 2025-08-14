@@ -1,4 +1,4 @@
-import { GetPaymentLinkRequest } from "../../types/shared";
+import type { GetPaymentLinkRequest } from "@boltpay/bolt-js";
 
 type Amount = {
   amount: number;
