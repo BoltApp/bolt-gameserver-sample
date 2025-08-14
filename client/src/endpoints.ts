@@ -1,5 +1,8 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import type { ApiResponse, LoginResponse, PaymentLinkTransactionResponse, Product, UserProfile } from '@shared-types';
+import type { GetPaymentLinkResponse } from '@boltpay/bolt-js';
+
+import type { ApiResponse, LoginResponse, Product, UserProfile } from '@shared-types';
+
 import type { GemPackage } from './types';
 import { gemConfig } from './configs/products-config';
 import { env } from './configs/env';
@@ -144,10 +147,10 @@ export function getPaymentLink(sku: string): Promise<string> {
     });
 }
 
-export function verifyPendingSession(paymentLinkId: string): Promise<PaymentLinkTransactionResponse> {
+export function verifyPendingSession(paymentLinkId: string): Promise<GetPaymentLinkResponse> {
   return authenticatedFetch(`${BACKEND_URL}/api/bolt/verify?payment_link_id=${paymentLinkId}`)
     .then(response => response.json())
-    .then((response: ApiResponse<PaymentLinkTransactionResponse>) => {
+    .then((response: ApiResponse<GetPaymentLinkResponse>) => {
       if (response.success && response.data) {
         return response.data;
       }

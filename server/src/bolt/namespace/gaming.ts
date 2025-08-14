@@ -1,6 +1,6 @@
-import { GetPaymentLinkResponse } from "../../types/shared";
+import type { CreatePaymentLinkRequest, CreatePaymentLinkResponse, GetPaymentLinkResponse } from "@boltpay/bolt-js";
+
 import { BoltEndpoints } from "../bolt-endpoints";
-import type { CreatePaymentLinkRequest, CreatePaymentLinkResponse } from "../types";
 
 export class GamingAPI {
   private client: BoltEndpoints;
