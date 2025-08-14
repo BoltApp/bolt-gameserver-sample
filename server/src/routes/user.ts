@@ -32,7 +32,7 @@ router.get('/validate', authenticateToken, async (req, res) => {
   try {
     let transaction = db.getTransactionByPaymentLinkId(paymentLinkId)
     if (!transaction) {
-      const paymentLink = await boltApi.gaming.getPaymentLinkTransaction(paymentLinkId)
+      const paymentLink = await boltApi.gaming.getPaymentLinkResponse(paymentLinkId)
       transaction = await TransactionService.processPaymentLinkRequest(paymentLink)
       if (!transaction) {
         return res.status(404).json({ success: false, error: 'Transaction not found' })

@@ -1,6 +1,7 @@
 import Database from 'better-sqlite3';
 import path from 'path';
 import type { User, UserProfile, Product, Amount } from './types/shared';
+import { BoltTransactionWebhook } from './bolt/types/transaction-webhook';
 
 export interface DatabaseUser extends User{
   createdAt: string;
@@ -25,7 +26,7 @@ export interface DatabaseTransaction {
   id: number;
   userId: string;
   boltPaymentLinkId: string;
-  status: 'pending' | 'authorized' | 'completed';
+  status: BoltTransactionWebhook['data']['status'];
   totalAmount: Amount;
   createdAt: string;
   updatedAt: string;
@@ -34,7 +35,7 @@ export interface DatabaseTransaction {
 export interface DatabaseUpsertTransaction {
   userId: string;
   boltPaymentLinkId: string;
-  status: 'pending' | 'authorized' | 'completed';
+  status: BoltTransactionWebhook['data']['status'];
   totalAmount?: Amount;
 }
 

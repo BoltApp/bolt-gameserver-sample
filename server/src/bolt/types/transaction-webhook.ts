@@ -1,4 +1,4 @@
-import { PaymentLinkPayload } from "../../types/shared";
+import { GetPaymentLinkRequest } from "../../types/shared";
 
 type Amount = {
   amount: number;
@@ -163,6 +163,6 @@ export interface BoltTransactionWebhook {
       };
     };
     capture_type: string;
-    payment_link: PaymentLinkPayload;
+    payment_link: GetPaymentLinkRequest;
   };
 }

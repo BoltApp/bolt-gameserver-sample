@@ -41,7 +41,7 @@ export type ApiResponse<T> = {
   error?: string;
 }
 
-export interface PaymentLinkPayload {
+export interface GetPaymentLinkRequest {
   id: string;
   item: {
     price: number;
@@ -54,9 +54,9 @@ export interface PaymentLinkPayload {
   metadata: string;
 }
 
-export interface PaymentLinkTransactionResponse {
-  payment_link: PaymentLinkPayload;
-  transaction: {
+export interface GetPaymentLinkResponse {
+  payment_link: GetPaymentLinkRequest;
+  transaction?: {
     reference: string;
     status: string;
   }

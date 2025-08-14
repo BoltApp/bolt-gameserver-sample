@@ -1,6 +1,7 @@
+import { CreatePaymentLinkRequest } from "../bolt/types";
 import { BoltTransactionWebhook } from "../bolt/types/transaction-webhook";
 import { DatabaseService, db } from "../db";
-import { PaymentLinkPayload, PaymentLinkTransactionResponse, User } from "../types/shared";
+import { GetPaymentLinkRequest, GetPaymentLinkResponse, User } from "../types/shared";
 
 export const createTransactionService = (db: DatabaseService) => {
   // Helper function to validate user existence
@@ -25,8 +26,7 @@ export const createTransactionService = (db: DatabaseService) => {
     return gems;
   };
 
-  // Helper function to handle successful transaction statuses
-  const handleSuccessfulTransaction = async (user: User, paymentLink: PaymentLinkPayload) => {
+  const handleSuccessfulTransaction = async (user: User, paymentLink: GetPaymentLinkRequest) => {
     const metadata = typeof paymentLink.metadata === 'string' 
       ? JSON.parse(paymentLink.metadata || '{}')
       : paymentLink.metadata || {};
@@ -34,12 +34,10 @@ export const createTransactionService = (db: DatabaseService) => {
     return await processGemsForUser(user, metadata);
   };
 
-  // Helper function to log transaction completion
   const logTransactionCompletion = (transaction: { reference: string }, user: User) => {
     console.log(`Transaction ${transaction.reference} processed for user ${user.username}. Status: ${transaction.status}`);
   };
 
-  // Helper function to determine if status should trigger gem processing
   const shouldProcessGems = (status: string, isWebhook: boolean) => {
     if (isWebhook) {
       return status === 'completed' || status === 'authorized';
@@ -50,7 +48,7 @@ export const createTransactionService = (db: DatabaseService) => {
   return {
     async processWebhook(payload: BoltTransactionWebhook) {
       const transaction = payload.data;
-      const paymentLink = payload.data.payment_link as PaymentLinkPayload;
+      const paymentLink = payload.data.payment_link as GetPaymentLinkRequest;
       const user = validateUser(paymentLink.user_id);
       
       if (!user) {
@@ -80,10 +78,13 @@ export const createTransactionService = (db: DatabaseService) => {
       return upsertedTransaction;
     },
 
-    async processPaymentLinkRequest({ payment_link: paymentLink, transaction }: PaymentLinkTransactionResponse) {
+    async processPaymentLinkRequest({ payment_link: paymentLink, transaction }: GetPaymentLinkResponse) {
       const user = validateUser(paymentLink.user_id);
       
       if (!user) {
+        return;
+      }
+      if (!transaction) {
         return;
       }
     
