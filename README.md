@@ -8,7 +8,7 @@
 Sample backend code snippets to demonstrate how to integrate Bolt's SDK into your game server. 
 
 
-## What You Will FInd
+## What You Will Find
 This project showcases an example backend with the following flows implemented
 - **Payment Links:** Creating links that take user to checkout
 - **Validate Order:** Validating a transaction was successful for a specific user
@@ -24,7 +24,7 @@ Bolt uses API keys to authenticate your requests. You can manage your API keys i
 ## Quick Start
 When you are ready to implement Bolt into your gaming SDK make sure to follow along using the Installation Guide.
 
-**Installation Guide:** Our quick start guide will walk you through the full gaming setup: https://bolt-gaming-docs.vercel.app/guide/checkout-quickstart.html
+**Installation Guide:** Our [Quickstart](https://gaming-help.bolt.com/guide/quickstart.html) guide will walk you through the full gaming setup.
 
 ## Onboarding
 **Merchant Dashboard:** Make sure you have fully onboarded onto our Bolt Gaming sandbox. You can [sign up](https://merchant-sandbox.bolt.com/onboarding/get-started/gaming) or [sign in](https://merchant-sandbox.bolt.com/) depending if you have an existing merchant account or not.
