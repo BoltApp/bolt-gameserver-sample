@@ -2,7 +2,7 @@
 
 ⚠️ **Note:** We will be updating this repo with a fully featured demo in the very near future. If you would like early access please let our team know.
 
-<img src="https://www.bolt.com/assets/images/components/FooterCallout/callout-rebrand-lightning.svg" alt="Bolt Charge Hero" />
+<img src="https://github.com/BoltApp/bolt-gameserver-sample/blob/main/public/banner-gameserver.svg?raw=true" alt="Bolt Charge Hero" />
 
 ## Description
 Sample backend code snippets to demonstrate how to integrate Bolt's SDK into your game server. 
