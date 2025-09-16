@@ -1,0 +1,31 @@
+{
+  "name": "gaming",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "start:staging": "NODE_ENV=staging vite --mode staging",
+    "dev": "vite",
+    "build:staging": "tsc -b && NODE_ENV=staging vite build --mode staging",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@boltpay/bolt-js": "0.0.10-beta.2",
+    "@tanstack/query-async-storage-persister": "^5.83.0",
+    "@tanstack/react-query": "^5.83.0",
+    "@tanstack/react-query-persist-client": "^5.83.0",
+    "@tanstack/react-router": "^1.124.0",
+    "classnames": "^2.5.1",
+    "preact": "^10.26.9",
+    "react-toastify": "^11.0.5"
+  },
+  "devDependencies": {
+    "@preact/preset-vite": "^2.10.1",
+    "@tanstack/router-devtools": "^1.124.0",
+    "typescript": "~5.8.3",
+    "vite": "^7.0.0"
+  },
+  "volta": {
+    "node": "22.17.0"
+  }
+}
