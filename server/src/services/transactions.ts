@@ -1,6 +1,5 @@
-import type { GetPaymentLinkRequest, GetPaymentLinkResponse } from '@boltpay/bolt-js'
+import type { GetPaymentLinkRequest, GetPaymentLinkResponse, BoltTransactionWebhook } from '@boltpay/bolt-js'
 
-import { BoltTransactionWebhook } from "../bolt/types/transaction-webhook";
 import { DatabaseService, db } from "../db";
 import type { User } from "../types/shared";
 

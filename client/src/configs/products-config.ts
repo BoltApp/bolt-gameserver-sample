@@ -1,5 +1,4 @@
 import type { GemPackageConfigs } from '../types'
-import { env} from './env'
 
 import GameGems1 from '../assets/IconGroup_ShopIcon_Gems_s_0.png'
 import GameGems2 from '../assets/IconGroup_ShopIcon_Gems_s_1.png'

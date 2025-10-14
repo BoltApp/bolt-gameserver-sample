@@ -1,8 +1,7 @@
 import { Router } from 'express'
-import type { CreatePaymentLinkRequest, GetPaymentLinkResponse } from '@boltpay/bolt-js'
+import type { CreatePaymentLinkRequest, GetPaymentLinkResponse, BoltTransactionWebhook } from '@boltpay/bolt-js'
 
 import type { ApiResponse } from '../types/shared'
-import type { BoltTransactionWebhook } from '../bolt/types/transaction-webhook'
 
 import { boltApi } from '../bolt'
 import { env } from '../config'

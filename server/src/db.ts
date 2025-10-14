@@ -1,7 +1,7 @@
 import Database from 'better-sqlite3';
 import path from 'path';
+import type { BoltTransactionWebhook } from '@boltpay/bolt-js';
 import type { User, UserProfile, Product, Amount } from './types/shared';
-import { BoltTransactionWebhook } from './bolt/types/transaction-webhook';
 
 export interface DatabaseUser extends User{
   createdAt: string;
