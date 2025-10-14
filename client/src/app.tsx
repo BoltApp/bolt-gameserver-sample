@@ -1,18 +1,23 @@
 import { QueryClient } from "@tanstack/react-query";
-import "./app.css";
-import "./vendor.css";
-import { homeRoute } from "./routes/home";
-import { rootRoute } from "./routes/root";
-import { microTransactionStoreRoute } from "./routes/store";
 import { createRouter, RouterProvider } from "@tanstack/react-router";
 import { createAsyncStoragePersister } from "@tanstack/query-async-storage-persister";
 import { PersistQueryClientProvider } from "@tanstack/react-query-persist-client";
+
+import "./app.css";
+import "./vendor.css";
+
+import { homeRoute } from "./routes/home";
+import { rootRoute } from "./routes/root";
+import { microTransactionStoreRoute } from "./routes/store";
+import { gameRoute } from "./routes/game";
+
 import { useUserProfile } from "./endpoints";
 import { useBoltSessionVerification } from "./hooks/useBoltSessionVerification";
 
 const routeTree = rootRoute.addChildren([
   homeRoute,
   microTransactionStoreRoute,
+  gameRoute,
 ]);
 
 const router = createRouter({
