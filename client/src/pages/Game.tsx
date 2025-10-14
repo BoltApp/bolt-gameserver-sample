@@ -1,5 +1,7 @@
 import { useEffect, useRef, useState } from "preact/hooks";
 import CharacterImage from "../assets/Character_l_Sample01.png";
+import GameOverOverlay from "../components/GameOverOverlay";
+import "./Game.css";
 
 interface GameState {
   score: number;
@@ -28,9 +30,9 @@ export default function Game() {
 
     // Set canvas size
     canvas.width = 800;
-    canvas.height = 200;
+    canvas.height = 300;
 
-    initGame(canvas, ctx);
+    return initGame(canvas, ctx);
   }, []);
 
   const initGame = (
@@ -40,7 +42,7 @@ export default function Game() {
     // Game constants
     const GRAVITY = 0.5;
     const JUMP_FORCE = -12;
-    const GROUND_Y = 150;
+    const GROUND_Y = 250;
     const DINO_X = 80;
     const GAME_SPEED = 4;
 
@@ -102,15 +104,6 @@ export default function Game() {
       ctx.font = "20px Arial";
       ctx.textAlign = "center";
       ctx.fillText("Click to start", canvas.width / 2, 100);
-      ctx.textAlign = "left";
-    }
-
-    function drawGameOverText() {
-      ctx.fillStyle = "#525252";
-      ctx.font = "24px Arial";
-      ctx.textAlign = "center";
-      ctx.fillText("GAME OVER", canvas.width / 2, 80);
-      ctx.fillText("Click to restart", canvas.width / 2, 110);
       ctx.textAlign = "left";
     }
 
@@ -178,16 +171,14 @@ export default function Game() {
       if (!gameStateRef.current.isPlaying && !gameStateRef.current.isGameOver) {
         startGame();
         gameLoop();
-      } else if (gameStateRef.current.isGameOver) {
-        startGame();
-        gameLoop();
-      } else {
+      } else if (!gameStateRef.current.isGameOver) {
         jump();
       }
+      // Remove the game over restart logic since we handle it with the overlay button
     };
 
     // Add click listener
-    canvas.addEventListener("click", handleClick);
+    canvas.addEventListener("mousedown", handleClick);
 
     // Game loop
     function gameLoop() {
@@ -198,9 +189,7 @@ export default function Game() {
       drawGround();
 
       if (!gameStateRef.current.isPlaying) {
-        if (gameStateRef.current.isGameOver) {
-          drawGameOverText();
-        } else {
+        if (!gameStateRef.current.isGameOver) {
           drawStartText();
         }
         drawDino(DINO_X, GROUND_Y);
@@ -273,63 +262,55 @@ export default function Game() {
 
     // Cleanup function
     return () => {
-      canvas.removeEventListener("click", handleClick);
+      canvas.removeEventListener("mousedown", handleClick);
       if (animationId) {
         cancelAnimationFrame(animationId);
       }
     };
   };
 
-  return (
-    <div
-      className="game-container"
-      style={{
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        padding: "20px",
-        minHeight: "100vh",
-        backgroundColor: "#f0f0f0",
-      }}>
-      <h1
-        style={{
-          marginBottom: "20px",
-          color: "#333",
-          fontFamily: "Arial, sans-serif",
-        }}>
-        Chrome Dino Game
-      </h1>
+  const handleRestartClick = () => {
+    if (gameStateRef.current.isGameOver) {
+      const canvas = gameCanvasRef.current;
+      if (canvas) {
+        const ctx = canvas.getContext("2d")!;
 
-      <div
-        style={{
-          border: "2px solid #ccc",
-          borderRadius: "8px",
-          overflow: "hidden",
-          backgroundColor: "#f7f7f7",
-        }}>
-        <canvas
-          ref={gameCanvasRef}
-          style={{
-            display: "block",
-            cursor: "pointer",
-          }}
-        />
+        // Reset game state
+        gameStateRef.current = {
+          score: 0,
+          isGameOver: false,
+          isPlaying: false,
+        };
+        setGameState({ ...gameStateRef.current });
+
+        // Reinitialize the game
+        initGame(canvas, ctx);
+      }
+    }
+  };
+
+  return (
+    <div className="game-container">
+      <h1 className="game-title">Jump Game</h1>
+
+      <div className="game-canvas-container">
+        <canvas ref={gameCanvasRef} className="game-canvas" />
+
+        {gameState.isGameOver && (
+          <GameOverOverlay
+            score={gameState.score}
+            onRestart={handleRestartClick}
+          />
+        )}
       </div>
 
-      <div
-        style={{
-          marginTop: "20px",
-          textAlign: "center",
-          color: "#666",
-          fontFamily: "Arial, sans-serif",
-        }}>
+      <div className="game-controls-info">
         <p>
           <strong>Controls:</strong> Click to jump/start
         </p>
         <p>
           <strong>Score:</strong> {gameState.score}
         </p>
-        {gameState.isGameOver && <p style={{ color: "#d9534f" }}>Game Over!</p>}
       </div>
     </div>
   );
