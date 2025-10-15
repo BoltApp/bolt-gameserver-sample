@@ -1,11 +1,12 @@
 import { Router } from 'express'
+import type { CreatePaymentLinkRequest, GetPaymentLinkResponse, BoltTransactionWebhook } from '@boltpay/bolt-js'
+
+import type { ApiResponse } from '../types/shared'
+
 import { boltApi } from '../bolt'
-import type { ApiResponse, GetPaymentLinkResponse } from '../types/shared'
-import type { BoltTransactionWebhook } from '../bolt/types/transaction-webhook'
+import { env } from '../config'
 import { db } from '../db'
 import { verifySignature } from '../bolt/middleware'
-import { env } from '../config'
-import { CreatePaymentLinkRequest } from '../bolt/types'
 import { authenticateToken } from '../middleware/auth'
 import { TransactionService } from '../services/transactions'
 

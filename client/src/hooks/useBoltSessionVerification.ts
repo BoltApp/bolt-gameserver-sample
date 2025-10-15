@@ -28,10 +28,7 @@ export function useBoltSessionVerification(isLoggedIn: boolean) {
         for (const session of pendingSessions) {
           try {
             const transactionResponse = await verifyPendingSession(session.paymentLinkId);
-            BoltSDK.gaming.resolveSession(
-              transactionResponse.payment_link.id,
-              transactionResponse.transaction.status as any,
-            );
+            BoltSDK.gaming.resolveSession(transactionResponse);
             sessionsResolved++;
           } catch (error) {
             console.log('Error verifying session:', session.paymentLinkId, error);

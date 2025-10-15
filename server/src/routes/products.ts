@@ -1,6 +1,6 @@
 import { Router } from 'express'
 import { db } from '../db'
-import { Product } from '../types/shared'
+import type { Product } from '../types/shared'
 
 const router = Router()
 
