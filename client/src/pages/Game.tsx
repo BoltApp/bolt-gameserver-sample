@@ -2,6 +2,8 @@ import { useEffect, useRef, useState } from "preact/hooks";
 import CharacterImage from "../assets/Character_l_Sample01.png";
 import GameOverOverlay from "../components/GameOverOverlay";
 import "./Game.css";
+import { BoltSDK, type PreloadedAd } from "@boltpay/bolt-js";
+import { env } from "../configs/env";
 
 interface GameState {
   score: number;
@@ -21,6 +23,7 @@ export default function Game() {
     isGameOver: false,
     isPlaying: false,
   });
+  const [preloadedAd, setPreloadedAd] = useState<PreloadedAd | null>(null);
 
   useEffect(() => {
     if (!gameCanvasRef.current) return;
@@ -35,10 +38,22 @@ export default function Game() {
     return initGame(canvas, ctx);
   }, []);
 
+  const preloadAd = () => {
+    const ad = BoltSDK.gaming.preloadAd(env.AD_LINK, {
+      type: "untimed",
+      onClaim: () => {
+        handleRestartClick();
+      },
+    });
+    setPreloadedAd(ad ?? null);
+  };
+
   const initGame = (
     canvas: HTMLCanvasElement,
     ctx: CanvasRenderingContext2D
   ) => {
+    preloadAd();
+
     // Game constants
     const GRAVITY = 0.5;
     const JUMP_FORCE = -12;
@@ -289,6 +304,12 @@ export default function Game() {
     }
   };
 
+  const handleShowAdBeforeRestart = () => {
+    if (preloadedAd) {
+      preloadedAd.show();
+    }
+  };
+
   return (
     <div className="game-container">
       <h1 className="game-title">Jump Game</h1>
@@ -299,7 +320,7 @@ export default function Game() {
         {gameState.isGameOver && (
           <GameOverOverlay
             score={gameState.score}
-            onRestart={handleRestartClick}
+            onPlayAgain={handleShowAdBeforeRestart}
           />
         )}
       </div>
