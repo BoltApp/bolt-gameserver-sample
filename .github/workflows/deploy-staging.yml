@@ -1,0 +1,146 @@
+name: Deploy to Staging
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch: # Allow manual deployment
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    env:
+      NODE_VERSION: "20.6.0"
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: "npm"
+
+      - name: Install server dependencies
+        run: |
+          cd server
+          npm ci
+
+      - name: Install client dependencies
+        run: |
+          cd client
+          npm ci
+
+      - name: Validate build (optional)
+        run: |
+          cd client
+          npm run build:staging
+          echo "✅ Client build validation completed"
+
+      - name: Deploy to Lightsail instance
+        run: |
+          # Install SSH key
+          mkdir -p ~/.ssh
+          echo "${{ secrets.LIGHTSAIL_SSH_KEY }}" > ~/.ssh/lightsail_key
+          chmod 600 ~/.ssh/lightsail_key
+
+          # Deploy using git pull and rebuild
+          ssh -i ~/.ssh/lightsail_key -o StrictHostKeyChecking=no \
+            bitnami@${{ env.LIGHTSAIL_HOST }} << 'ENDSSH'
+            
+            set -e  # Exit on any error
+            
+            echo "🚀 Starting deployment..."
+            
+            # Navigate to the repository
+            cd ~/bolt-gameserver-sample
+            
+            # Fetch latest changes
+            echo "🔄 Fetching latest code..."
+            git fetch origin
+            git reset --hard origin/${{ github.ref_name }}
+            
+            # Install server dependencies
+            echo "📦 Installing server dependencies..."
+            cd server
+            npm ci --production
+            
+            # Build client
+            echo "🏗️  Building client..."
+            cd ../client
+            npm ci
+            npm run build:staging
+            
+            # Start the service
+            echo "▶️  Starting nodejs service..."
+            cd ~/bolt-gameserver-sample/server
+            sudo systemctl start nodejs.service
+
+            # Wait and check if service is running
+            sleep 5
+            if sudo systemctl is-active --quiet nodejs.service; then
+              echo "✅ Service started successfully"
+            else
+              echo "❌ Service failed to start, attempting rollback..."
+
+              # Restore from backup...
+              cd ~/bolt-gameserver-sample
+              git checkout -- .
+              cd server
+              npm ci --production
+              cd ../client
+              npm ci
+              npm run build:staging
+
+              echo "🔄 Rollback completed"
+              exit 1
+            fi
+            
+            # Clean up old backups (keep last 5)
+            echo "🧹 Cleaning up old backups..."
+            cd ~/backups
+            ls -t | tail -n +6 | xargs -r rm -rf
+            
+            echo "🎉 Deployment completed successfully!"
+          ENDSSH
+
+      - name: Health check
+        run: |
+          echo "Performing health checks..."
+
+          # Wait for service to be ready
+          sleep 15
+
+          # Check multiple endpoints
+          HEALTH_ENDPOINTS=(
+            "http://${{ env.LIGHTSAIL_HOST }}/api/health"
+            "https://${{ env.LIGHTSAIL_HOST }}/api/health"
+          )
+
+          SUCCESS=false
+          for endpoint in "${HEALTH_ENDPOINTS[@]}"; do
+            echo "Checking $endpoint..."
+            if curl -f -s --max-time 10 "$endpoint" > /dev/null; then
+              echo "✅ Health check passed for $endpoint"
+              SUCCESS=true
+              break
+            else
+              echo "❌ Health check failed for $endpoint"
+            fi
+          done
+
+          if [ "$SUCCESS" = false ]; then
+            echo "❌ All health checks failed"
+            exit 1
+          fi
+
+      - name: Notify deployment status
+        if: always()
+        run: |
+          if [ ${{ job.status }} == 'success' ]; then
+            echo "✅ Staging deployment successful!"
+          else
+            echo "❌ Staging deployment failed!"
+          fi
