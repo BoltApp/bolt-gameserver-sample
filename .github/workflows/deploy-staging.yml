@@ -23,6 +23,9 @@ jobs:
         with:
           node-version: ${{ env.NODE_VERSION }}
           cache: "npm"
+          cache-dependency-path: |
+            server/package-lock.json
+            client/package-lock.json
 
       - name: Install server dependencies
         run: |
@@ -49,7 +52,7 @@ jobs:
 
           # Deploy using git pull and rebuild
           ssh -i ~/.ssh/lightsail_key -o StrictHostKeyChecking=no \
-            bitnami@${{ env.LIGHTSAIL_HOST }} << 'ENDSSH'
+            bitnami@${{ vars.LIGHTSAIL_HOST }} << 'ENDSSH'
             
             set -e  # Exit on any error
             
@@ -66,7 +69,7 @@ jobs:
             # Install server dependencies
             echo "📦 Installing server dependencies..."
             cd server
-            npm ci --production
+            npm ci
             
             # Build client
             echo "🏗️  Building client..."
@@ -76,34 +79,12 @@ jobs:
             
             # Start the service
             echo "▶️  Starting nodejs service..."
-            cd ~/bolt-gameserver-sample/server
             sudo systemctl start nodejs.service
-
-            # Wait and check if service is running
-            sleep 5
-            if sudo systemctl is-active --quiet nodejs.service; then
-              echo "✅ Service started successfully"
-            else
-              echo "❌ Service failed to start, attempting rollback..."
-
-              # Restore from backup...
-              cd ~/bolt-gameserver-sample
-              git checkout -- .
-              cd server
-              npm ci --production
-              cd ../client
-              npm ci
-              npm run build:staging
-
-              echo "🔄 Rollback completed"
-              exit 1
-            fi
+            
+            echo "✅ Service start command executed"
             
             # Clean up old backups (keep last 5)
-            echo "🧹 Cleaning up old backups..."
-            cd ~/backups
-            ls -t | tail -n +6 | xargs -r rm -rf
-            
+
             echo "🎉 Deployment completed successfully!"
           ENDSSH
 
@@ -116,8 +97,8 @@ jobs:
 
           # Check multiple endpoints
           HEALTH_ENDPOINTS=(
-            "http://${{ env.LIGHTSAIL_HOST }}/api/health"
-            "https://${{ env.LIGHTSAIL_HOST }}/api/health"
+            "http://${{ vars.LIGHTSAIL_HOST }}/api/health"
+            "https://${{ vars.LIGHTSAIL_HOST }}/api/health"
           )
 
           SUCCESS=false
