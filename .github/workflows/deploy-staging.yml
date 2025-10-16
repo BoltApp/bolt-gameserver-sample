@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+      - athai/github-deploy
   workflow_dispatch: # Allow manual deployment
 
 jobs:
