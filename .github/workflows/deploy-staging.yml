@@ -95,26 +95,20 @@ jobs:
           # Wait for service to be ready
           sleep 15
 
-          # Check multiple endpoints
-          HEALTH_ENDPOINTS=(
-            "http://${{ vars.LIGHTSAIL_HOST }}/api/health"
-            "https://${{ vars.LIGHTSAIL_HOST }}/api/health"
-          )
+          # Check health endpoint
+          ENDPOINT="${{ vars.HOST_STAGING }}/api/health"
 
-          SUCCESS=false
-          for endpoint in "${HEALTH_ENDPOINTS[@]}"; do
-            echo "Checking $endpoint..."
-            if curl -f -s --max-time 10 "$endpoint" > /dev/null; then
-              echo "✅ Health check passed for $endpoint"
-              SUCCESS=true
-              break
-            else
-              echo "❌ Health check failed for $endpoint"
-            fi
-          done
+          echo "Checking $ENDPOINT..."
+          if curl -f -s --max-time 10 "$ENDPOINT" > /dev/null; then
+            echo "✅ Health check passed for $ENDPOINT"
+            SUCCESS=true
+          else
+            echo "❌ Health check failed for $ENDPOINT"
+            SUCCESS=false
+          fi
 
           if [ "$SUCCESS" = false ]; then
-            echo "❌ All health checks failed"
+            echo "❌ Health check failed"
             exit 1
           fi
 
