@@ -1,0 +1,119 @@
+name: Deploy to Staging
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch: # Allow manual deployment
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    env:
+      NODE_VERSION: "20.6.0"
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: "npm"
+          cache-dependency-path: |
+            server/package-lock.json
+            client/package-lock.json
+
+      - name: Install server dependencies
+        run: |
+          cd server
+          npm ci
+
+      - name: Install client dependencies
+        run: |
+          cd client
+          npm ci
+
+      - name: Validate build (optional)
+        run: |
+          cd client
+          npm run build:staging
+          echo "✅ Client build validation completed"
+
+      - name: Deploy to Lightsail instance
+        run: |
+          # Install SSH key
+          mkdir -p ~/.ssh
+          echo "${{ secrets.LIGHTSAIL_SSH_KEY }}" > ~/.ssh/lightsail_key
+          chmod 600 ~/.ssh/lightsail_key
+
+          # Deploy using git pull and rebuild
+          ssh -i ~/.ssh/lightsail_key -o StrictHostKeyChecking=no \
+            bitnami@${{ vars.LIGHTSAIL_HOST }} << 'ENDSSH'
+            
+            set -e  # Exit on any error
+            
+            echo "🚀 Starting deployment..."
+            
+            cd ~/bolt-gameserver-sample
+            
+            echo "🔄 Fetching latest code..."
+            git fetch origin
+            git reset --hard origin/${{ github.ref_name }}
+            
+            # Install server dependencies
+            echo "📦 Installing server dependencies..."
+            cd server
+            npm ci
+            
+            # Build client
+            echo "🏗️  Building client..."
+            cd ../client
+            npm ci
+            npm run build:staging
+
+            echo "▶️  Starting client..."
+            sudo /opt/bitnami/ctlscript.sh restart nginx
+
+            echo "▶️  Starting nodejs service..."
+            sudo systemctl restart nodejs.service
+            
+            echo "✅ Service start command executed"
+            
+            echo "🎉 Deployment completed successfully!"
+          ENDSSH
+
+      - name: Health check
+        run: |
+          echo "Performing health checks..."
+
+          # Wait for service to be ready
+          sleep 15
+
+          # Check health endpoint
+          ENDPOINT="${{ vars.HOST_STAGING }}/api/health"
+
+          echo "Checking $ENDPOINT..."
+          if curl -f -s --max-time 10 "$ENDPOINT" > /dev/null; then
+            echo "✅ Health check passed for $ENDPOINT"
+            SUCCESS=true
+          else
+            echo "❌ Health check failed for $ENDPOINT"
+            SUCCESS=false
+          fi
+
+          if [ "$SUCCESS" = false ]; then
+            echo "❌ Health check failed"
+            exit 1
+          fi
+
+      - name: Notify deployment status
+        if: always()
+        run: |
+          if [ ${{ job.status }} == 'success' ]; then
+            echo "✅ Staging deployment successful!"
+          else
+            echo "❌ Staging deployment failed!"
+          fi
