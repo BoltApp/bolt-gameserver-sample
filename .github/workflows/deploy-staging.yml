@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - main
-      - athai/github-deploy
   workflow_dispatch: # Allow manual deployment
 
 jobs:
@@ -58,10 +57,8 @@ jobs:
             
             echo "🚀 Starting deployment..."
             
-            # Navigate to the repository
             cd ~/bolt-gameserver-sample
             
-            # Fetch latest changes
             echo "🔄 Fetching latest code..."
             git fetch origin
             git reset --hard origin/${{ github.ref_name }}
@@ -76,15 +73,15 @@ jobs:
             cd ../client
             npm ci
             npm run build:staging
-            
-            # Start the service
+
+            echo "▶️  Starting client..."
+            sudo /opt/bitnami/ctlscript.sh restart nginx
+
             echo "▶️  Starting nodejs service..."
-            sudo systemctl start nodejs.service
+            sudo systemctl restart nodejs.service
             
             echo "✅ Service start command executed"
             
-            # Clean up old backups (keep last 5)
-
             echo "🎉 Deployment completed successfully!"
           ENDSSH
 
