@@ -2,7 +2,6 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 20px;
   background-color: #f0f0f0;
   position: relative;
 }
@@ -14,11 +13,11 @@
 }
 
 .game-canvas-container {
-  border: 2px solid #ccc;
+  border-block: 2px solid #ccc;
   overflow: hidden;
   background-color: #f7f7f7;
   position: relative;
-  width: 800px;
+  width: min(800px, 100vw);
   height: 300px;
 }
 

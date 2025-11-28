@@ -19,10 +19,10 @@ export function TopNav() {
           <div className="nav-brand">
             <Link to="/" className="nav-brand-link">
               <img src={GameLogo} alt="Game Logo" className="nav-logo" />
-              Knights of Valor
+              <span className="mobile-hidden">Knights of Valor</span>
             </Link>
           </div>
-          <div className="nav-links">
+          <div className="nav-links mobile-hidden">
             <Link
               to="/store"
               className="nav-link"

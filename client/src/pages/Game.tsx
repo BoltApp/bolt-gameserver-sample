@@ -32,8 +32,9 @@ export default function Game() {
     const ctx = canvas.getContext("2d")!;
 
     // Set canvas size
-    canvas.width = 800;
+    canvas.width = gameCanvasRef.current.parentElement?.clientWidth || 800;
     canvas.height = 300;
+    console.log("Setting canvas size", canvas.width, canvas.height);
 
     return initGame(canvas, ctx);
   }, []);
