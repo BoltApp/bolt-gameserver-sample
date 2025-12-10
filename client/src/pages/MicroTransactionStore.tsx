@@ -15,6 +15,7 @@ import {
 
 export function MicroTransactionStore() {
   const [selectedPackage, setSelectedPackage] = useState<string | null>(null);
+  const [isProcessing, setIsProcessing] = useState<boolean>(false);
   const { data: gemPackages, isLoading } = useGetAllProducts();
   const { mutate: validateUser } = useValidateUser();
 
@@ -35,19 +36,25 @@ export function MicroTransactionStore() {
     console.log("Payment link retrieved:", paymentLink);
     const paymentLinkSession = await BoltSDK.gaming.openCheckout(paymentLink);
 
+    setIsProcessing(true);
+
     if (!paymentLinkSession) {
       console.error("Failed to open payment link session");
+      setIsProcessing(false);
       return;
     } else if (paymentLinkSession.status === "abandoned") {
       console.log("Purchase cancelled by user:", pkg.name);
+      setIsProcessing(false);
     } else {
       console.log("Purchase pending for:", pkg.name);
       validateUser(paymentLinkSession.paymentLinkId, {
         onSuccess: (data) => {
+          setIsProcessing(false);
           toast.success(`Successfully purchased ${pkg.gemAmount} gems!`);
           console.log("User validated:", data);
         },
         onError: (error) => {
+          setIsProcessing(false);
           toast.error(`Failed to validate purchase: ${error.message}`);
           console.error("Validation error:", error);
         },
@@ -73,6 +80,13 @@ export function MicroTransactionStore() {
             />
           ))}
         </div>
+
+        {isProcessing && (
+          <div className="processing-spinner">
+            <div className="spinner"></div>
+            <p>Processing your purchase...</p>
+          </div>
+        )}
       </div>
       <div className="coin-store-footer">
         <p>
