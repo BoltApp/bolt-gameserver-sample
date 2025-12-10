@@ -78,7 +78,7 @@ export const createTransactionService = (db: DatabaseService) => {
       return upsertedTransaction;
     },
 
-    async processPaymentLinkRequest({ payment_link: paymentLink, transaction }: GetPaymentLinkResponse) {
+    async processPaymentLinkRequest({ payment_link_properties: paymentLink, transaction }: GetPaymentLinkResponse) {
       const user = validateUser(paymentLink.user_id);
       
       if (!user) {
@@ -100,6 +100,10 @@ export const createTransactionService = (db: DatabaseService) => {
         userId: user.id,
         boltPaymentLinkId: transaction.reference, // Using transaction reference as fallback
         status: transaction.status as any, // Type assertion for demo
+        totalAmount: {
+          value: paymentLink.item.price,
+          currency: paymentLink.item.currency
+        }
       });
       
       logTransactionCompletion(transaction, user);

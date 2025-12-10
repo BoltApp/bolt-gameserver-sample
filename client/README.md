@@ -32,6 +32,10 @@ A medieval-themed game store demo built with Preact, TypeScript, and Vite, showc
 
 4. **Open your browser** and navigate to `http://localhost:5173`
 
+### Deployment
+
+Deploys are done automatically. If you need to change an environment variable, SSH into the server. Steps [found here](https://boltpay.atlassian.net/wiki/spaces/EN/pages/3779395587/Demo+bolt-gameserver-sample)
+
 ## 📦 Tech Stack
 
 ### Core Technologies

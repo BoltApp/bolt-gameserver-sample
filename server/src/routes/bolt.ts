@@ -9,6 +9,7 @@ import { db } from '../db'
 import { verifySignature } from '../bolt/middleware'
 import { authenticateToken } from '../middleware/auth'
 import { TransactionService } from '../services/transactions'
+import { getAssetUrlForSku } from '../utils/assets'
 
 const router = Router()
 
@@ -74,6 +75,7 @@ router.post('/products/:sku/payment-link', authenticateToken, (req, res) => {
       price: Math.floor(product.price * 100),
       name: product.name,
       currency: 'USD',
+      image_url: getAssetUrlForSku(sku),
     },
     redirect_url: "https://example.com/checkout/success",
     user_id: req.user!.id,
@@ -85,11 +87,14 @@ router.post('/products/:sku/payment-link', authenticateToken, (req, res) => {
 
   boltApi.gaming.createPaymentLink(paymentLinkRequest)
     .then((response) => {
+      console.log('Created payment link:', response);
       res.json({ success: true, data: response });
     })
     .catch((error) => {
-      // const {} = error
-      console.error('Error creating payment link:', error.request, error.response);
+      const {} = error
+      console.error('Error creating payment link');
+      console.error('Response headers:', error?.response?.headers);
+      console.error('Response body:', error?.response?.data);
       res.status(500).json({ success: false, error: 'Failed to create payment link' });
     });
 })
