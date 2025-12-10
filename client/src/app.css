@@ -34,7 +34,7 @@
 .app-content {
   display: grid;
   gap: 2rem;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  grid-template-columns: 1fr 1fr;
   margin-bottom: 3rem;
 }
 
@@ -55,6 +55,7 @@
   margin-top: 0;
   color: var(--color-tan-light);
   font-family: "Cinzel", serif;
+  font-size: clamp(1.5rem, 3vw, 2.2rem);
 }
 
 .demo-card p {
@@ -177,7 +178,12 @@
   }
 
   .app-header h1 {
-    font-size: 2rem;
+    font-size: clamp(1.8rem, 5vw, 2.5rem);
+  }
+
+  .index-page .app-header {
+    padding: 3rem 1.5rem;
+    margin: 1rem 0 2rem 0;
   }
 
   .footer-content {
@@ -380,16 +386,20 @@
   border: 1px solid rgba(139, 115, 85, 0.3);
 }
 
-/* Home page specific styling for bright landscape background */
+/* Home page hero section styling */
 .index-page .app-header {
-  background: rgba(245, 235, 220, 0.85);
-  border-radius: 24px;
-  padding: 2rem;
-  margin: 2rem 0;
-  backdrop-filter: blur(8px);
-  border: 3px solid rgba(218, 204, 182, 0.5);
-  box-shadow: 0 8px 0 rgba(139, 128, 110, 0.2),
-    0 12px 20px rgba(139, 128, 110, 0.3);
+  background: linear-gradient(
+    135deg,
+    rgba(245, 235, 220, 0.95) 0%,
+    rgba(218, 204, 182, 0.9) 100%
+  );
+  padding: 4rem 2rem;
+  margin: 2rem 0 3rem 0;
+  backdrop-filter: blur(12px);
+  border-bottom: 4px solid rgba(218, 204, 182, 0.7);
+  box-shadow: 0 4px 20px rgba(139, 128, 110, 0.3);
+  width: 100%;
+  max-width: none;
 }
 
 .index-page .app-header h1 {
@@ -399,11 +409,15 @@
   -webkit-text-fill-color: transparent;
   text-shadow: 0 2px 0 rgba(139, 128, 110, 0.4),
     0 4px 8px rgba(139, 128, 110, 0.3);
+  font-size: clamp(2.5rem, 6vw, 4.5rem);
+  margin-bottom: 1rem;
 }
 
 .index-page .app-header p {
   color: var(--color-text);
   text-shadow: 0 1px 2px rgba(245, 235, 220, 0.8);
+  font-size: clamp(1.1rem, 2.5vw, 1.6rem);
+  margin: 0;
 }
 
 .index-page .demo-card {
@@ -436,6 +450,47 @@
 
 .index-page .demo-card li::before {
   filter: drop-shadow(0 1px 2px rgba(139, 128, 110, 0.4));
+}
+
+/* Specific styling for game and treasury cards */
+.index-page .game-card {
+  background: linear-gradient(
+    135deg,
+    rgba(230, 190, 138, 0.9) 0%,
+    rgba(218, 165, 32, 0.85) 100%
+  );
+  border: 3px solid rgba(184, 134, 11, 0.8);
+}
+
+.index-page .game-card:hover {
+  background: linear-gradient(
+    135deg,
+    rgba(230, 190, 138, 0.95) 0%,
+    rgba(218, 165, 32, 0.9) 100%
+  );
+  border-color: rgba(184, 134, 11, 1);
+  box-shadow: 0 6px 0 rgba(139, 128, 110, 0.25),
+    0 10px 16px rgba(139, 128, 110, 0.35), 0 0 30px rgba(218, 165, 32, 0.6);
+}
+
+.index-page .treasury-card {
+  background: linear-gradient(
+    135deg,
+    rgba(144, 238, 144, 0.9) 0%,
+    rgba(34, 139, 34, 0.85) 100%
+  );
+  border: 3px solid rgba(0, 100, 0, 0.8);
+}
+
+.index-page .treasury-card:hover {
+  background: linear-gradient(
+    135deg,
+    rgba(144, 238, 144, 0.95) 0%,
+    rgba(34, 139, 34, 0.9) 100%
+  );
+  border-color: rgba(0, 100, 0, 1);
+  box-shadow: 0 6px 0 rgba(139, 128, 110, 0.25),
+    0 10px 16px rgba(139, 128, 110, 0.35), 0 0 30px rgba(34, 139, 34, 0.6);
 }
 
 /* Keep navigation and footer darker for contrast */
