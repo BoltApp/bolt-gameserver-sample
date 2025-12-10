@@ -186,7 +186,7 @@ export default function Game() {
       event.preventDefault();
       if (!gameStateRef.current.isPlaying && !gameStateRef.current.isGameOver) {
         startGame();
-        gameLoop();
+        // Game loop is already running, no need to call it again
       } else if (!gameStateRef.current.isGameOver) {
         jump();
       }
@@ -209,6 +209,9 @@ export default function Game() {
           drawStartText();
         }
         drawDino(DINO_X, GROUND_Y);
+
+        // Continue the animation loop even when not playing to update the character image
+        animationId = requestAnimationFrame(gameLoop);
         return;
       }
 
@@ -270,11 +273,14 @@ export default function Game() {
       }
     }
 
-    // Initial draw
+    // Initial draw and start animation loop
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     drawGround();
     drawDino(DINO_X, GROUND_Y);
     drawStartText();
+
+    // Start the animation loop immediately
+    gameLoop();
 
     // Cleanup function
     return () => {
