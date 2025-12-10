@@ -9,6 +9,7 @@ import { db } from '../db'
 import { verifySignature } from '../bolt/middleware'
 import { authenticateToken } from '../middleware/auth'
 import { TransactionService } from '../services/transactions'
+import { getAssetUrlForSku } from '../utils/assets'
 
 const router = Router()
 
@@ -74,7 +75,7 @@ router.post('/products/:sku/payment-link', authenticateToken, (req, res) => {
       price: Math.floor(product.price * 100),
       name: product.name,
       currency: 'USD',
-      image_url: 'https://gaming.staging-bolt.com/assets/Character_l_Sample01-DW3jnJ4o.png',
+      image_url: getAssetUrlForSku(sku),
     },
     redirect_url: "https://example.com/checkout/success",
     user_id: req.user!.id,

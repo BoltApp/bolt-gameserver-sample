@@ -23,11 +23,14 @@ if (!jwtSecret) {
   jwtSecret = crypto.randomBytes(64).toString('hex')
 }
 
+const frontendUrl = process.env.FRONTEND_URL || 'https://gaming.staging-bolt.com';
+
 export const env = {
   baseURL,
   apiKey,
   publishableKey,
   jwtSecret,
+  frontendUrl,
   bolt: {
     gameId,
     links: {

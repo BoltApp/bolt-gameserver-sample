@@ -13,6 +13,13 @@ export default defineConfig(({ mode }) => {
         '@shared-types': '../src/server/types/shared'
       }
     },
+    build: {
+      rollupOptions: {
+        output: {
+          assetFileNames: '[name].[ext]'
+        }
+      }
+    },
     server: {
       port,
       allowedHosts: [
