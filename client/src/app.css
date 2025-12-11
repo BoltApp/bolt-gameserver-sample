@@ -45,8 +45,6 @@
   padding: 2rem;
   text-align: left;
   transition: all 0.3s ease;
-  box-shadow: 0 8px 0 var(--color-stone-dark),
-    0 12px 20px var(--color-shadow-medium);
   position: relative;
 }
 
@@ -108,6 +106,7 @@
     0 8px 12px var(--color-shadow-medium);
   position: relative;
   text-decoration: none;
+  box-shadow: none;
 }
 
 .demo-button:hover {
@@ -202,21 +201,59 @@
 .app-nav {
   align-items: center;
   background: var(--gradient-nav);
-  border-bottom: 3px solid var(--color-nav-secondary);
   display: flex;
-  padding: 1rem;
+  padding-inline: 1rem;
   box-shadow: 0 8px 0 var(--color-nav-bg),
     0 12px 20px var(--color-shadow-medium);
 }
 
 .nav-links {
   display: flex;
-  gap: 1.5rem;
+  gap: 1rem;
+}
+
+/* Demo top bar styles */
+.demo-top-bar {
+  background: #fefef9ab;
+  border-bottom: 2px solid #e9ecef;
+  padding-inline: 1rem;
+}
+
+.demo-tabs-container {
+  display: flex;
+  gap: 0;
+  max-width: 1200px;
+  margin: 0 auto;
+  align-items: center;
+}
+
+.demo-tab {
+  background: none;
+  border: none;
+  color: #495057;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-weight: 500;
+  font-size: 0.9rem;
+  padding: 0.6rem 1.2rem;
+  border-radius: 0;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  letter-spacing: 0;
+  box-shadow: none;
+}
+
+.demo-tab:hover:not(:disabled) {
+  box-shadow: none;
+}
+
+.demo-tab-active {
+  background-color: var(--color-nav-accent);
+  font-weight: 600;
 }
 
 .nav-brand-link {
   color: var(--color-nav-text);
-  font-size: 1.8rem;
+  font-size: clamp(1.2rem, 4vw, 1.8rem);
   font-weight: bold;
   font-family: "Cinzel", serif;
   text-decoration: none;
@@ -231,7 +268,7 @@
     0 0 15px rgba(212, 165, 116, 0.6);
 }
 
-@media (max-width: 600px) {
+@media (max-width: 768px) {
   .mobile-hidden {
     border: 0;
     clip: rect(0 0 0 0);
@@ -241,6 +278,33 @@
     padding: 0;
     position: absolute;
     width: 1px;
+  }
+
+  .demo-top-bar {
+    padding: 0.5rem 1rem;
+  }
+
+  .demo-tab {
+    padding: 0.5rem 0.9rem;
+    font-size: 0.8rem;
+  }
+
+  .app-nav {
+    padding-inline: 0.5rem;
+  }
+
+  .nav-link {
+    padding: 0.8rem 1rem;
+    min-height: 2.5rem;
+    font-size: 0.9rem;
+  }
+
+  .nav-container {
+    gap: 0.5rem;
+  }
+
+  .nav-left {
+    gap: 0.5rem;
   }
 }
 
@@ -301,17 +365,19 @@
   text-decoration: none;
   font-family: "Cinzel", serif;
   font-weight: 600;
-  padding: 0.8rem 1.5rem;
-  border-radius: 16px;
-  border: 2px solid transparent;
+  padding: 1.2rem 1.5rem;
+  border-radius: 0;
   transition: all 0.3s ease;
   text-shadow: 0 1px 2px rgba(139, 115, 85, 0.8);
   letter-spacing: 0.5px;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  min-height: 3rem;
 }
 
 .nav-link:hover {
   color: var(--color-nav-accent);
-  border-color: var(--color-nav-accent);
   background: rgba(212, 165, 116, 0.15);
   text-shadow: 0 1px 2px rgba(139, 115, 85, 0.8),
     0 0 10px rgba(212, 165, 116, 0.6);
@@ -319,6 +385,9 @@
 
 .nav-link.active {
   color: var(--color-nav-accent);
+  background: rgba(212, 165, 116, 0.25);
+  text-shadow: 0 1px 2px rgba(139, 115, 85, 0.8),
+    0 0 10px rgba(212, 165, 116, 0.6);
 }
 
 .nav-left {
