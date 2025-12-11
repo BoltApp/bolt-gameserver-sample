@@ -27,7 +27,13 @@ export function TopNav() {
               to="/store"
               className="nav-link"
               activeProps={{ className: "active" }}>
-              Royal Treasury
+              Shop
+            </Link>
+            <Link
+              to="/game"
+              className="nav-link"
+              activeProps={{ className: "active" }}>
+              Game
             </Link>
           </div>
         </div>
