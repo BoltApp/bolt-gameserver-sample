@@ -63,14 +63,22 @@ router.post("/webhook", verifySignature, async (req, res) => {
 });
 
 router.get("/products/:sku/checkout-link", async (req, res) => {
-  const { sku } = req.params;
+  try {
+    const { sku } = req.params;
 
-  res.json({
-    success: true,
-    data: {
-      link: env.bolt.links[sku],
-    },
-  });
+    res.json({
+      success: true,
+      data: {
+        link: env.bolt.links[sku],
+      },
+    });
+  } catch (error) {
+    console.error("Error getting checkout link:", error);
+    res.status(500).json({
+      success: false,
+      error: "Internal server error. " + (error as Error).message,
+    });
+  }
 });
 
 router.post("/products/:sku/payment-link", authenticateToken, (req, res) => {
