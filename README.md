@@ -33,6 +33,15 @@ When you are ready to implement Bolt into your gaming SDK make sure to follow al
 
 This project includes a Tilt configuration for easy local development. You have two options to start the development environment:
 
+**Setup:**
+```
+cp client/.env.local.sample client/.env.local
+cp client/.env.staging.sample client/.env.staging
+
+cp server/.env.local.sample server/.env.local
+cp server/.env.staging.sample server/.env.staging
+```
+
 **Using script (uses Tilt):**
 
 ```bash

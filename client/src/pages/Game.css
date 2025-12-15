@@ -31,7 +31,8 @@
 
 .game-controls-info {
   margin-top: 20px;
-  text-align: center;
+  font-size: 1.2rem;
+  text-align: left;
   color: #666;
   font-family: Arial, sans-serif;
 }

@@ -100,8 +100,12 @@ export default function Game() {
       // Main cactus body
       ctx.fillRect(obstacle.x, obstacle.y, obstacle.width, obstacle.height);
       // Spikes
-      ctx.fillRect(obstacle.x - 3, obstacle.y + 10, 6, 3);
-      ctx.fillRect(obstacle.x + 12, obstacle.y + 15, 6, 3);
+      ctx.fillRect(obstacle.x - 6, obstacle.y + 10, 6, 3);
+      ctx.fillRect(obstacle.x + 12, obstacle.y + 15, 9, 3);
+      // circular top of cactus
+      ctx.beginPath();
+      ctx.arc(obstacle.x + 7.5, obstacle.y, 7.5, 0, 2 * Math.PI);
+      ctx.fill();
     }
 
     function drawGround() {
@@ -126,7 +130,7 @@ export default function Game() {
     function createObstacle(x: number) {
       return {
         x: x,
-        y: GROUND_Y - 40,
+        y: GROUND_Y - 20,
         width: 15,
         height: 40,
       };
@@ -228,7 +232,7 @@ export default function Game() {
       }
 
       // Spawn obstacles
-      if (obstacles.length === 0 || Math.random() < 0.003) {
+      if (obstacles.length === 0 || Math.random() < 0.1) {
         if (
           obstacles.length === 0 ||
           canvas.width - obstacles[obstacles.length - 1].x >
