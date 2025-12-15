@@ -1,0 +1,24 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+echo "🔍 Validating staging build before push..."
+
+cd client
+
+# Check if node_modules exists, if not install dependencies
+if [ ! -d "node_modules" ]; then
+  echo "📦 Installing client dependencies..."
+  npm ci
+fi
+
+# Run staging build validation
+echo "🏗️  Building client for staging..."
+npm run build:staging
+
+if [ $? -eq 0 ]; then
+  echo "✅ Staging build validation passed!"
+else
+  echo "❌ Staging build validation failed! Push aborted."
+  exit 1
+fi
+
