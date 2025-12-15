@@ -87,7 +87,7 @@ router.post("/products/:sku/payment-link", authenticateToken, (req, res) => {
       name: product.name,
       currency: "USD",
       image_url: getAssetUrlForSku(sku),
-    },
+    } as CreatePaymentLinkRequest["item"],
     redirect_url: "https://example.com/checkout/success",
     user_id: req.user!.id,
     game_id: env.bolt.gameId,
