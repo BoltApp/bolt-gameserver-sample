@@ -19,20 +19,22 @@ export function TopNav() {
           <div className="nav-brand">
             <Link to="/" className="nav-brand-link">
               <img src={GameLogo} alt="Game Logo" className="nav-logo" />
-              <span className="mobile-hidden">Knights of Valor</span>
+              Knights of Valor
             </Link>
           </div>
           <div className="nav-links mobile-hidden">
             <Link
               to="/store"
               className="nav-link"
-              activeProps={{ className: "active" }}>
+              activeProps={{ className: "active" }}
+            >
               Shop
             </Link>
             <Link
               to="/game"
               className="nav-link"
-              activeProps={{ className: "active" }}>
+              activeProps={{ className: "active" }}
+            >
               Game
             </Link>
           </div>

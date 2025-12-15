@@ -11,9 +11,8 @@ function Home() {
   const [isChestOpen, setChestOpen] = useState(false);
   return (
     <div className="index-page" style={{ "--home-bg": `url(${CastleScene})` }}>
-      <div className="app-header">
+      <div className="app-header mobile-hidden">
         <h1>⚔️ Bolt Demo Store ⚔️</h1>
-        <p>Store to showcase Bolt Charge SDK</p>
       </div>
 
       <div className="app-content">
@@ -24,21 +23,22 @@ function Home() {
               alt="Chest Icon"
               className="icon"
             />
-            Royal Treasury
+            <u>Shop:</u> Royal Treasury
           </h2>
           <p>Acquire precious gems to enhance thy power and prestige</p>
           <Link
             to="/store"
             className="demo-button"
             onMouseDown={() => setChestOpen(true)}
-            onDragEnter={() => setChestOpen(false)}>
+            onDragEnter={() => setChestOpen(false)}
+          >
             Enter Treasury
           </Link>
         </div>
         <div className="demo-card game-card">
           <h2>
             <img src={Character} alt="Character Icon" className="icon" />
-            Epic Adventure
+            <u>Ads:</u> Epic Adventure
           </h2>
           <p>Embark on a thrilling quest and test thy skills in battle</p>
           <Link to="/game" className="demo-button">
