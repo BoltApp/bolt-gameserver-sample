@@ -92,7 +92,7 @@ export const createTransactionService = (db: DatabaseService) => {
     },
 
     async processPaymentLinkRequest({
-      payment_link: paymentLink,
+      payment_link_properties: paymentLink,
       transaction,
     }: GetPaymentLinkResponse) {
       const user = validateUser(paymentLink.user_id);
