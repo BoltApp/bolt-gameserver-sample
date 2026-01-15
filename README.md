@@ -6,15 +6,16 @@
 
 ## Description
 
-Sample backend code snippets to demonstrate how to integrate Bolt's SDK into your game server.
+Demo projects and sample code snippets to demonstrate how to integrate Bolt's SDK into your game server.
 
 ## What You Will Find
 
-This project showcases an example backend with the following flows implemented
-
-- **Payment Links:** Creating links that take user to checkout
-- **Validate Order:** Validating a transaction was successful for a specific user
-- **Transaction Webhooks:** Handling webhooks on transaction success as users make purchases in your game
+- **Zappy Bird JS** - Example SDK integration in JS for ads
+- **client** - Example typescript web game with complete SDK integration for payment links and ads
+- **server** - Example typescript backend server with the following flows implemented:
+  - **Payment Links:** Creating links that take user to checkout
+  - **Validate Order:** Validating a transaction was successful for a specific user
+  - **Transaction Webhooks:** Handling webhooks on transaction success as users make purchases in your game
 
 ## API Keys
 
@@ -31,10 +32,20 @@ When you are ready to implement Bolt into your gaming SDK make sure to follow al
 
 ### Development Environment
 
-This project includes a Tilt configuration for easy local development. You have two options to start the development environment:
+This project includes a Tilt configuration for easy local development. 
 
-**Setup:**
+**Prerequisites:**
+
+To let tilt handle node versions, ensure volta is installed on your system:
+
+```bash
+curl https://get.volta.sh | bash
 ```
+
+
+**Client and Server Setup:**
+
+```bash
 cp client/.env.local.sample client/.env.local
 cp client/.env.staging.sample client/.env.staging
 
@@ -55,6 +66,17 @@ The `start-dev.sh` script provides additional features:
 - Proper environment variable setup for the Tilt environment
 
 Both options will start the backend server, frontend client, and ngrok tunnel for external access.
+
+
+
+**Zappy Bird JS Setup:**
+
+```bash
+./zappy_bird_js/start-dev.sh
+```
+
+The game will be available at `http://localhost:8000`.
+
 
 ## Onboarding
 

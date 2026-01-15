@@ -1,0 +1,16 @@
+# -*- mode: Python -*-
+
+# Install dependencies and run zappy_bird_js frontend
+# Use Volta to ensure correct Node version from package.json
+local_resource(
+    "zappy_bird_js",
+    serve_cmd="""
+        export VOLTA_HOME="$HOME/.volta" && 
+        export PATH="$VOLTA_HOME/bin:$PATH"
+        npm install && 
+        npm run dev
+    """,
+    deps=["./index.html", "./package.json", "./js/"],
+    ignore=["./node_modules/", "./dist/"],
+    links=["http://localhost:8000"]
+)
