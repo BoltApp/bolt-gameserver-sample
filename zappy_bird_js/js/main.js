@@ -1,3 +1,27 @@
+// Bolt SDK initialization (following client pattern from main.tsx)
+import { BoltSDK } from '@boltpay/bolt-js';
+
+// Initialize Bolt SDK using Vite env variables (like client does)
+// Note: client uses VITE_GAME_ID, not VITE_BOLT_GAME_ID
+BoltSDK.initialize({
+  publishableKey: import.meta.env.VITE_BOLT_PUBLISHABLE_KEY,
+  gameId: import.meta.env.VITE_GAME_ID || import.meta.env.VITE_BOLT_GAME_ID,
+  environment: 'Development',
+});
+
+// Make BoltSDK available globally
+window.BoltSDK = BoltSDK;
+
+// Set backend URL from env (fallback to default)
+window.BOLT_BACKEND_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3111';
+
+// Dispatch event to signal SDK is ready
+window.dispatchEvent(new CustomEvent('boltSDKReady'));
+
+console.log('Bolt SDK initialized successfully');
+console.log('Using gameId:', import.meta.env.VITE_GAME_ID || import.meta.env.VITE_BOLT_GAME_ID);
+
+
 (function() {
     window.GAME_CONFIG = {
         spaceshipEnabled: false,
@@ -37,11 +61,22 @@
         });
     };
     
-    if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', function() {
+    function initGame() {
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', function() {
+                loadScripts(scripts, 0);
+            });
+        } else {
             loadScripts(scripts, 0);
-        });
+        }
+    }
+    
+    if (window.BoltSDK) {
+        initGame();
     } else {
-        loadScripts(scripts, 0);
+        window.addEventListener('boltSDKReady', function() {
+            console.log('BoltSDK ready, initializing game');
+            initGame();
+        }, { once: true });
     }
 })();

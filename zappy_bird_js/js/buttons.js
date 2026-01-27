@@ -17,13 +17,35 @@ FB.Buttons = {
     },
     
     isPointInButton: function(x, y, config) {
-        if (!config || !config.image.complete) {
+        if (!config) {
             return false;
         }
+        // If image isn't loaded yet, use fallback dimensions based on scale
+        var buttonWidth, buttonHeight;
+        if (config.image && config.image.complete && config.image.width && config.image.height) {
+            buttonWidth = config.image.width * config.scale;
+            buttonHeight = config.image.height * config.scale;
+        } else if (config.image && (config.image.width || config.image.height)) {
+            // Image is loading but has dimensions
+            buttonWidth = (config.image.width || 100) * config.scale;
+            buttonHeight = (config.image.height || 50) * config.scale;
+        } else {
+            // Fallback: use estimated dimensions based on typical button sizes
+            // supportMode and voltageBoost are typically ~100x50 at scale 0.35 = ~35x17.5
+            // bonusLife is typically smaller
+            if (config.scale === 0.35) {
+                buttonWidth = 100 * config.scale; // ~35
+                buttonHeight = 50 * config.scale; // ~17.5
+            } else if (config.scale === 0.2) {
+                buttonWidth = 80 * config.scale; // ~16
+                buttonHeight = 80 * config.scale; // ~16
+            } else {
+                return false; // Unknown button type, can't detect click
+            }
+        }
+        
         var buttonX = this.getButtonX(config);
         var buttonY = this.getButtonY(config);
-        var buttonWidth = this.getButtonWidth(config);
-        var buttonHeight = this.getButtonHeight(config);
         
         return x >= buttonX && x <= buttonX + buttonWidth && 
                y >= buttonY && y <= buttonY + buttonHeight;
@@ -67,6 +89,11 @@ FB.Buttons = {
         var buttonY = this.getButtonY(config);
         var buttonWidth = this.getButtonWidth(config);
         var buttonHeight = this.getButtonHeight(config);
+        
+        // Debug log for bonusLife button position
+        if (config === FB.Buttons.configs.bonusLife) {
+            console.log('bonusLife button rendering at:', buttonX, buttonY, 'config x/y:', config.x, config.y);
+        }
         
         var elapsedTime = (Date.now() - startTime) / 1000;
         var breath = (Math.sin(elapsedTime * speed) + 1) / 2;
@@ -120,9 +147,11 @@ FB.Buttons.configs = {
     bonusLife: {
         image: null, 
         scale: 0.2,
-        x: 10,
-        y: 10,
-        onClick: function() { FB.lives += 1; }
+        x: 0,
+        y: 0,
+        onClick: function() { 
+            handleButtonAd('bonusLife');
+        }
     },
     supportMode: {
         image: null,
@@ -140,10 +169,9 @@ FB.Buttons.configs = {
             }
             return FB.WIDTH / 2 - 80;
         },
-        y: 280,
+        y: 290,
         onClick: function() { 
-            window.GAME_CONFIG.spaceshipEnabled = true;
-            FB.GameUtils.showNotification("Support Systems Engaged");
+            handleButtonAd('supportMode');
         }
     },
     voltageBoost: {
@@ -162,10 +190,9 @@ FB.Buttons.configs = {
             }
             return FB.WIDTH / 2 + 20;
         },
-        y: 280,
+        y: 290,
         onClick: function() { 
-            window.GAME_CONFIG.voltageBoost = true;
-            FB.GameUtils.showNotification("boosters charged");
+            handleButtonAd('voltageBoost');
         }
     }
 };

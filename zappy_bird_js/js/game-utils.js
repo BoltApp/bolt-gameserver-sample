@@ -105,6 +105,7 @@ FB.GameUtils = {
         setTimeout(function() {
             FB.Sound.play(FB.Sound.die);
             var bannerName = (FB.lives > 0) ? "scoreboard_continue" : "scoreboard_game_over";
+            console.log('initScoreboard: FB.lives =', FB.lives, 'selecting banner:', bannerName);
             var banner = that.createImage("assets/images/" + bannerName + ".png");
             var boltType = that.getBoltType(FB.score.bolts);
             var bolt = that.createImage('assets/images/bolt_' + boltType + '.png');
@@ -125,15 +126,45 @@ FB.GameUtils = {
     renderScoreboard: function(scoreboard) {
         if (!scoreboard || !scoreboard.banner) return;
         
-        FB.Draw.Image(scoreboard.banner, 42, 70);
-        FB.Draw.Image(scoreboard.bolt, 55, 165);
-        if (FB.lives > 0) {
-            FB.Draw.Image(scoreboard.replay, 102.5, 260);
-        } else {
-            FB.Draw.text("Click anywhere to restart", 30, 280, 12, 'black');
+        // Only render if banner image is loaded
+        if (!scoreboard.banner.complete || scoreboard.banner.naturalWidth === 0) {
+            return;
         }
-        FB.Draw.text(FB.score.bolts, 225, 174, 15, 'black');
-        FB.Draw.text(scoreboard.highscore, 225, 214, 15, 'black');
+        
+        // Scale both banners to 0.8 their current size
+        var scale = 0.8;
+        var bannerWidth = scoreboard.banner.naturalWidth * scale;
+        var bannerHeight = scoreboard.banner.naturalHeight * scale;
+        var bannerX = 42 + (scoreboard.banner.naturalWidth - bannerWidth) / 2;
+        var bannerY = 30 + (scoreboard.banner.naturalHeight - bannerHeight) / 2;
+        
+        // Move scoreboard elements up to make room for support_mode and voltage_boost buttons
+        FB.ctx.drawImage(scoreboard.banner, bannerX, bannerY, bannerWidth, bannerHeight);
+        if (scoreboard.bolt && scoreboard.bolt.complete) {
+            FB.Draw.Image(scoreboard.bolt, 70, 133);
+        }
+        if (FB.lives > 0) {
+            if (scoreboard.replay && scoreboard.replay.complete) {
+                FB.Draw.Image(scoreboard.replay, 102.5, 220);
+            }
+        } else {
+            // Center the text and make it neon green with black outline
+            var text = "Click anywhere to restart";
+            FB.ctx.font = 'bold 12px Monospace';
+            var textWidth = FB.ctx.measureText(text).width;
+            var textX = (FB.WIDTH - textWidth) / 2;
+            
+            // Draw black outline
+            FB.ctx.strokeStyle = '#000000';
+            FB.ctx.lineWidth = 3;
+            FB.ctx.strokeText(text, textX, 240);
+            
+            // Draw neon green fill
+            FB.ctx.fillStyle = '#39ff14';
+            FB.ctx.fillText(text, textX, 240);
+        }
+        FB.Draw.text(FB.score.bolts, 216, 140, 15, 'black');
+        FB.Draw.text(scoreboard.highscore, 216, 176, 15, 'black');
     },
     
     shootLaser: function() {
@@ -191,4 +222,12 @@ FB.GameUtils = {
         
         FB.Draw.text(text, x, config.y, config.fontSize, config.color);
     }
+};
+
+// Stub for handleButtonAd - will be overridden in states.js
+// This ensures the function exists when buttons.js loads
+window.handleButtonAd = function(buttonType) {
+    // This will be replaced by the real implementation in states.js
+    // If this is called, it means states.js hasn't loaded yet, which shouldn't happen
+    console.warn('handleButtonAd stub called - states.js should have overridden this:', buttonType);
 };

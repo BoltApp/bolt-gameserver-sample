@@ -7,6 +7,9 @@
     "dev": "vite",
     "preview": "vite preview"
   },
+  "dependencies": {
+    "@boltpay/bolt-js": "^0.2.5"
+  },
   "devDependencies": {
     "@types/node": "^22.0.0",
     "imagemin": "^9.0.1",

@@ -59,6 +59,80 @@
             font-size: 20px;
             text-align: center;
         }
+        /* Ensure Bolt SDK modals/iframes can display on top */
+        #bolt-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 10000;
+            pointer-events: none;
+        }
+        #bolt-container > * {
+            pointer-events: auto;
+        }
+        /* Ad overlay wrapper - sits above iframe with visible backdrop */
+        #ad-overlay-wrapper {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1000000;
+            background: rgba(0, 0, 0, 0.3);  /* Semi-transparent backdrop */
+            pointer-events: none;
+        }
+        
+        /* Close button inside overlay wrapper - bright and obvious */
+        #ad-close-button {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            width: 60px;
+            height: 60px;
+            background: #ff0000;
+            color: white;
+            border: 4px solid white;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 36px;
+            font-weight: bold;
+            line-height: 52px;
+            text-align: center;
+            box-shadow: 0 0 20px rgba(255, 0, 0, 0.8), 0 4px 12px rgba(0, 0, 0, 0.8);
+            pointer-events: auto;
+            transition: all 0.2s;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+        
+        #ad-close-button:hover {
+            background: rgba(255, 0, 0, 1);
+            transform: scale(1.1);
+        }
+        
+        /* Style Bolt SDK iframe */
+        /* Commented out widescreen styling - let it render with default styling
+        iframe#bolt-iframe-modal,
+        iframe[src*="bolt"],
+        iframe[src*="toffee"] {
+            z-index: 999999 !important;
+            position: fixed !important;
+            top: 50% !important;
+            left: 50% !important;
+            transform: translate(-50%, -50%) !important;
+            max-width: 90vw !important;
+            max-height: 90vh !important;
+            border-radius: 12px !important;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5) !important;
+        }
+        */
     </style>
 
 </head>
@@ -73,7 +147,7 @@
         <div id="click-to-begin-text">Click to Begin</div>
     </div>
     <canvas></canvas>
-    <script src="js/main.js"></script>
+    <script type="module" src="js/main.js"></script>
 
 </body>
 
