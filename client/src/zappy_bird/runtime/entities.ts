@@ -1,3 +1,10 @@
+// @ts-nocheck
+const FB = (window as any).FB;
+
+function canDraw(img) {
+    return !!img && img.complete === true && (img.naturalWidth || img.width) > 0;
+}
+
 FB.Cloud = function (x, y) {
 
     this.x = x;
@@ -32,7 +39,7 @@ FB.Cloud = function (x, y) {
 
 FB.Spaceship = function () {
     this.type = 'spaceship';
-    this.img = FB.GameUtils.createImage('assets/images/spaceship.png');
+    this.img = FB.GameUtils.createImage('/zappy_bird/assets/images/spaceship.png');
     this.x = 10;
     this.y = 70;
     this.speed = 2;
@@ -172,7 +179,7 @@ FB.City = function (x, y) {
     this.scale = 0.7;
     
     var cityNumber = Math.floor(Math.random() * 5) + 1;
-    this.img = FB.GameUtils.createImage('assets/images/cityskape/city' + cityNumber + '.png');
+    this.img = FB.GameUtils.createImage('/zappy_bird/assets/images/cityskape/city' + cityNumber + '.png');
     var that = this;
     this.img.onload = function() {
         that.originalW = that.img.width;
@@ -193,7 +200,7 @@ FB.City = function (x, y) {
     };
 
     this.render = function () {
-        if (this.img.complete) {
+        if (canDraw(this.img)) {
             if (!this.originalW || this.originalW !== this.img.width) {
                 this.originalW = this.img.width;
                 this.originalH = this.img.height;
@@ -214,7 +221,7 @@ FB.City = function (x, y) {
         }
         this.x = Math.max(FB.WIDTH, rightmostX + 10);
         var cityNumber = Math.floor(Math.random() * 5) + 1;
-        this.img = FB.GameUtils.createImage('assets/images/cityskape/city' + cityNumber + '.png');
+        this.img = FB.GameUtils.createImage('/zappy_bird/assets/images/cityskape/city' + cityNumber + '.png');
         var that = this;
         this.img.onload = function() {
             that.originalW = that.img.width;
@@ -236,8 +243,8 @@ FB.Pipe = function (x, w) {
     this.vx = -1;
     this.type = 'pipe';
     this.topDestroyed = false;
-    this.boltImg = FB.GameUtils.createImage('assets/images/bolt_pink.png');
-    this.pipeImg = FB.GameUtils.createImage('assets/images/pipe1.png');
+    this.boltImg = FB.GameUtils.createImage('/zappy_bird/assets/images/bolt_pink.png');
+    this.pipeImg = FB.GameUtils.createImage('/zappy_bird/assets/images/pipe1.png');
 
     this.update = function () {
         this.centerX += this.vx;
@@ -250,6 +257,7 @@ FB.Pipe = function (x, w) {
 
         if (this.bolt) {
             var img = this.boltImg;
+            if (!canDraw(img)) return;
             var scale = 0.4;
             var imgWidth = img.width || img.naturalWidth || 20;
             var imgHeight = img.height || img.naturalHeight || 20;
@@ -258,7 +266,7 @@ FB.Pipe = function (x, w) {
             FB.ctx.drawImage(img, x, y, imgWidth * scale, imgHeight * scale);
         }
         
-        if (this.pipeImg.complete && this.pipeImg.naturalWidth > 0) {
+        if (canDraw(this.pipeImg)) {
             var imgWidth = this.pipeImg.naturalWidth;
             var imgHeight = this.pipeImg.naturalHeight;
             
@@ -312,7 +320,7 @@ FB.Pipe = function (x, w) {
 
 FB.Bird = function () {
 
-    this.img = FB.GameUtils.createImage('assets/images/bird.png');
+    this.img = FB.GameUtils.createImage('/zappy_bird/assets/images/bird.png');
     this.gravity = 0.25;
     this.width = 34;
     this.height = 24;
@@ -397,3 +405,5 @@ FB.Particle = function (x, y, r, col, type) {
     };
 
 };
+
+export {};

@@ -1,3 +1,6 @@
+// @ts-nocheck
+const FB = (window as any).FB;
+
 FB.Buttons = {
     
     getButtonX: function(config) {
@@ -198,7 +201,9 @@ FB.Buttons.configs = {
 };
 
 FB.Buttons.init = function() {
-    FB.Buttons.configs.bonusLife.image = FB.GameUtils.createImage('assets/images/buttons/bonus_life.png');
-    FB.Buttons.configs.supportMode.image = FB.GameUtils.createImage('assets/images/buttons/support_mode.png');
-    FB.Buttons.configs.voltageBoost.image = FB.GameUtils.createImage('assets/images/buttons/voltage_boost.png');
+    FB.Buttons.configs.bonusLife.image = FB.GameUtils.createImage('/zappy_bird/assets/images/buttons/bonus_life.png');
+    FB.Buttons.configs.supportMode.image = FB.GameUtils.createImage('/zappy_bird/assets/images/buttons/support_mode.png');
+    FB.Buttons.configs.voltageBoost.image = FB.GameUtils.createImage('/zappy_bird/assets/images/buttons/voltage_boost.png');
 };
+
+export {};

@@ -10,7 +10,7 @@ import { homeRoute } from "./routes/home";
 import { rootRoute } from "./routes/root";
 import { microTransactionStoreRoute } from "./routes/store";
 import { gameRoute } from "./routes/game";
-
+import { zappyBirdRoute } from "./routes/zappy-bird";
 import { useUserProfile } from "./endpoints";
 import { useBoltSessionVerification } from "./hooks/useBoltSessionVerification";
 
@@ -18,6 +18,7 @@ const routeTree = rootRoute.addChildren([
   homeRoute,
   microTransactionStoreRoute,
   gameRoute,
+  zappyBirdRoute,
 ]);
 
 const router = createRouter({

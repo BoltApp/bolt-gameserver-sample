@@ -1,3 +1,8 @@
+// @ts-nocheck
+import { zappyAssetUrl } from '../asset';
+
+const FB = (window as any).FB;
+
 FB.GameUtils = {
     
     resetGameConfig: function() {
@@ -20,7 +25,13 @@ FB.GameUtils = {
     
     createImage: function(src) {
         var img = new Image();
-        img.src = src + '?v=' + Date.now();
+        // Rewrite static code to Vite URLs for bundled assets.
+        var prefix = '/zappy_bird/assets/';
+        if (typeof src === 'string' && src.indexOf(prefix) === 0) {
+            img.src = zappyAssetUrl(src.substring(prefix.length));
+        } else {
+            img.src = src;
+        }
         return img;
     },
     
@@ -87,7 +98,7 @@ FB.GameUtils = {
     
     initFonts: function() {
         for (var n = 0; n < 10; n++) {
-            var img = this.createImage("assets/images/numbers/font_small_" + n + '.png');
+            var img = this.createImage("/zappy_bird/assets/images/numbers/font_small_" + n + '.png');
             FB.fonts.push(img);
         }
         FB.digits = ["0"];
@@ -106,10 +117,10 @@ FB.GameUtils = {
             FB.Sound.play(FB.Sound.die);
             var bannerName = (FB.lives > 0) ? "scoreboard_continue" : "scoreboard_game_over";
             console.log('initScoreboard: FB.lives =', FB.lives, 'selecting banner:', bannerName);
-            var banner = that.createImage("assets/images/" + bannerName + ".png");
+            var banner = that.createImage("/zappy_bird/assets/images/" + bannerName + ".png");
             var boltType = that.getBoltType(FB.score.bolts);
-            var bolt = that.createImage('assets/images/bolt_' + boltType + '.png');
-            var replay = that.createImage("assets/images/buttons/replay.png");
+            var bolt = that.createImage('/zappy_bird/assets/images/bolt_' + boltType + '.png');
+            var replay = that.createImage("/zappy_bird/assets/images/buttons/replay.png");
             var highscore = FB.Storage.getHighScore();
             
             if (callback) {
@@ -231,3 +242,5 @@ window.handleButtonAd = function(buttonType) {
     // If this is called, it means states.js hasn't loaded yet, which shouldn't happen
     console.warn('handleButtonAd stub called - states.js should have overridden this:', buttonType);
 };
+
+export {};

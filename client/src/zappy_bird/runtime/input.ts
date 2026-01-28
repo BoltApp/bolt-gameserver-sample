@@ -1,3 +1,6 @@
+// @ts-nocheck
+const FB = (window as any).FB;
+
 FB.Input = {
 
     x: 0,
@@ -17,3 +20,5 @@ FB.Input = {
     }
 
 };
+
+export {};

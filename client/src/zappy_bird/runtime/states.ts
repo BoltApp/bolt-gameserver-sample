@@ -1,6 +1,9 @@
+// @ts-nocheck
+const FB = (window as any).FB;
+
 window.Splash = function(){
 	
-	this.banner = FB.GameUtils.createImage("assets/images/splash.png");
+	this.banner = FB.GameUtils.createImage("/zappy_bird/assets/images/splash.png");
 	this.buttonConfigs = FB.Buttons.configs;
 	
 	this.init = function(){
@@ -373,3 +376,5 @@ function resumeAllAudio() {
 		});
 	}
 }
+
+export {};

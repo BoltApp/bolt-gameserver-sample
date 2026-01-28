@@ -1,3 +1,6 @@
+// @ts-nocheck
+const FB = (window as any).FB;
+
 FB.Collides = function (bird, pipe) {
 	
 	if(bird.vy >=370){				  
@@ -40,3 +43,5 @@ FB.Collides = function (bird, pipe) {
     return (c1 || c2)
 
 };
+
+export {};
