@@ -37,6 +37,13 @@ export function TopNav() {
             >
               Game
             </Link>
+            <Link
+              to="/zappy-bird"
+              className="nav-link"
+              activeProps={{ className: "active "}}
+            >
+              Zappy Bird
+            </Link>
           </div>
         </div>
         <div className="nav-user-info">
