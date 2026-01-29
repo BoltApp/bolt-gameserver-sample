@@ -1,17 +1,20 @@
-// @ts-nocheck
-
 import { zappyAssetUrl } from '../asset';
 
-export function installSound() {
-  const FB = (window as any).FB;
+export function installSound(): void {
+  const FB = window.FB!;
 
   FB.Sound = {
     channels: [],
     channelMax: 10,
+    jump: new Audio(),
+    score: new Audio(),
+    hit: new Audio(),
+    die: new Audio(),
+    swoosh: new Audio(),
 
-    init: function () {
+    init: function (): void {
       this.channels = [];
-      for (var a = 0; a < this.channelMax; a++) {
+      for (let a = 0; a < this.channelMax; a++) {
         this.channels[a] = {
           channel: new Audio(),
           finished: -1,
@@ -19,11 +22,11 @@ export function installSound() {
       }
     },
 
-    play: function (sound) {
+    play: function (sound: HTMLAudioElement): void {
       if (!sound) return;
 
-      var thistime = new Date().getTime();
-      for (var a = 0; a < this.channels.length; a++) {
+      const thistime = new Date().getTime();
+      for (let a = 0; a < this.channels.length; a++) {
         if (this.channels[a].finished < thistime) {
           this.channels[a].finished = thistime + sound.duration * 1000;
           this.channels[a].channel.src = sound.src;

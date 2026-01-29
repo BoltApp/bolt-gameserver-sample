@@ -1,47 +1,40 @@
-// @ts-nocheck
-const FB = (window as any).FB;
+import type { Bird, Pipe } from '../types';
 
-FB.Collides = function (bird, pipe) {
-	
-	if(bird.vy >=370){				  
-	 return true;
-	}
-    if (pipe.bolt && bird.vx > pipe.centerX + pipe.w / 2 - 5) {
-        pipe.bolt = false;
-        var points = window.GAME_CONFIG.voltageBoost ? 2 : 1;
-        FB.score.bolts += points;
-		FB.digits = FB.score.bolts.toString().split('');
-        FB.Sound.play(FB.Sound.score);
-    }
+const FB = window.FB!;
 
-    var bx1 = bird.vx - bird.width / 2;
-    var by1 = bird.vy - bird.height / 2;
-    var bx2 = bird.vx + bird.width / 2;
-    var by2 = bird.vy + bird.height / 2;
+FB.Collides = function (bird: Bird, pipe: Pipe): boolean {
+  if (bird.vy >= 370) {
+    return true;
+  }
+  if (pipe.bolt && bird.vx > pipe.centerX + pipe.w / 2 - 5) {
+    pipe.bolt = false;
+    const points = window.GAME_CONFIG?.voltageBoost ? 2 : 1;
+    FB.score.bolts += points;
+    FB.digits = FB.score.bolts.toString().split('');
+    FB.Sound.play(FB.Sound.score);
+  }
 
-    var c1 = false;
-    if (!pipe.topDestroyed) {
-        var upx1 = pipe.centerX;
-        var upy1 = 0;
-        var upx2 = pipe.centerX + pipe.w;
-        var upy2 = pipe.centerY - 50;
-        c1 = !(bx1 > upx2 ||
-            bx2 < upx1 ||
-            by1 > upy2 ||
-            by2 < upy1);
-    }
+  const bx1 = bird.vx - bird.width / 2;
+  const by1 = bird.vy - bird.height / 2;
+  const bx2 = bird.vx + bird.width / 2;
+  const by2 = bird.vy + bird.height / 2;
 
-    var lpx1 = pipe.centerX;
-    var lpy1 = pipe.centerY + 50;
-    var lpx2 = pipe.centerX + pipe.w;
-    var lpy2 = pipe.h;
-    var c2 = !(bx1 > lpx2 ||
-        bx2 < lpx1 ||
-        by1 > lpy2 ||
-        by2 < lpy1)
+  let c1 = false;
+  if (!pipe.topDestroyed) {
+    const upx1 = pipe.centerX;
+    const upy1 = 0;
+    const upx2 = pipe.centerX + pipe.w;
+    const upy2 = pipe.centerY - 50;
+    c1 = !(bx1 > upx2 || bx2 < upx1 || by1 > upy2 || by2 < upy1);
+  }
 
-    return (c1 || c2)
+  const lpx1 = pipe.centerX;
+  const lpy1 = pipe.centerY + 50;
+  const lpx2 = pipe.centerX + pipe.w;
+  const lpy2 = pipe.h;
+  const c2 = !(bx1 > lpx2 || bx2 < lpx1 || by1 > lpy2 || by2 < lpy1);
 
+  return c1 || c2;
 };
 
 export {};

@@ -1,14 +1,12 @@
-// @ts-nocheck
-
-export function installStorage() {
-  const FB = (window as any).FB;
+export function installStorage(): void {
+  const FB = window.FB!;
 
   FB.Storage = {
-    getCookie: function (cname) {
-      var name = cname + '=';
-      var ca = document.cookie.split(';');
-      for (var i = 0; i < ca.length; i++) {
-        var c = ca[i].trim();
+    getCookie: function (cname: string): string {
+      const name = cname + '=';
+      const ca = document.cookie.split(';');
+      for (let i = 0; i < ca.length; i++) {
+        const c = ca[i].trim();
         if (c.indexOf(name) === 0) {
           return c.substring(name.length, c.length);
         }
@@ -16,24 +14,24 @@ export function installStorage() {
       return '';
     },
 
-    setCookie: function (cname, cvalue, exdays) {
-      var d = new Date();
+    setCookie: function (cname: string, cvalue: string, exdays: number): void {
+      const d = new Date();
       d.setTime(d.getTime() + exdays * 24 * 60 * 60 * 1000);
-      var expires = 'expires=' + d.toGMTString();
+      const expires = 'expires=' + d.toUTCString();
       document.cookie = cname + '=' + cvalue + '; ' + expires;
     },
 
-    getHighScore: function () {
-      var savedscore = this.getCookie('highscore');
+    getHighScore: function (): number {
+      const savedscore = this.getCookie('highscore');
       if (savedscore !== '') {
-        var hs = parseInt(savedscore) || 0;
+        let hs = parseInt(savedscore) || 0;
         if (hs < FB.score.bolts) {
           hs = FB.score.bolts;
-          this.setCookie('highscore', hs, 999);
+          this.setCookie('highscore', hs.toString(), 999);
         }
         return hs;
       } else {
-        this.setCookie('highscore', FB.score.bolts, 999);
+        this.setCookie('highscore', FB.score.bolts.toString(), 999);
         return FB.score.bolts;
       }
     },

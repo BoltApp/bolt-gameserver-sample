@@ -1,24 +1,20 @@
-// @ts-nocheck
-const FB = (window as any).FB;
+const FB = window.FB!;
 
 FB.Input = {
+  x: 0,
+  y: 0,
+  tapped: false,
+  keys: {} as Record<string, boolean>,
 
-    x: 0,
-    y: 0,
-    tapped: false,
-    keys: {},
+  set: function (data: { pageX: number; pageY: number }): void {
+    this.x = (data.pageX - FB.offset.left) / FB.scale;
+    this.y = (data.pageY - FB.offset.top) / FB.scale;
+    this.tapped = true;
+  },
 
-    set: function (data) {
-        this.x = (data.pageX - FB.offset.left) / FB.scale;
-        this.y = (data.pageY - FB.offset.top) / FB.scale;
-        this.tapped = true;
-
-    },
-
-    isKeyDown: function(key) {
-        return this.keys[key] === true;
-    }
-
+  isKeyDown: function (key: string): boolean {
+    return this.keys[key] === true;
+  },
 };
 
 export {};
