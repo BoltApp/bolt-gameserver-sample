@@ -1,20 +1,46 @@
-const FB = window.FB!;
+export interface Offset {
+  top: number;
+  left: number;
+}
 
-FB.Input = {
-  x: 0,
-  y: 0,
-  tapped: false,
-  keys: {} as Record<string, boolean>,
+export class Input {
+  private _x = 0;
+  private _y = 0;
+  private _tapped = false;
+  keys: Record<string, boolean> = {};
+  private getOffset: () => Offset;
+  private getScale: () => number;
 
-  set: function (data: { pageX: number; pageY: number }): void {
-    this.x = (data.pageX - FB.offset.left) / FB.scale;
-    this.y = (data.pageY - FB.offset.top) / FB.scale;
-    this.tapped = true;
-  },
+  constructor(getOffset: () => Offset, getScale: () => number) {
+    this.getOffset = getOffset;
+    this.getScale = getScale;
+  }
 
-  isKeyDown: function (key: string): boolean {
+  get x(): number {
+    return this._x;
+  }
+
+  get y(): number {
+    return this._y;
+  }
+
+  get tapped(): boolean {
+    return this._tapped;
+  }
+
+  set tapped(v: boolean) {
+    this._tapped = v;
+  }
+
+  set(data: { pageX: number; pageY: number }): void {
+    const offset = this.getOffset();
+    const scale = this.getScale();
+    this._x = (data.pageX - offset.left) / scale;
+    this._y = (data.pageY - offset.top) / scale;
+    this._tapped = true;
+  }
+
+  isKeyDown(key: string): boolean {
     return this.keys[key] === true;
-  },
-};
-
-export {};
+  }
+}

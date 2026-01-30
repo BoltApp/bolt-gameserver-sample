@@ -1,17 +1,28 @@
 import type { Bird, Pipe } from '../types';
+import type { GameConfig } from './context';
+import type { Score } from '../types';
 
-const FB = window.FB!;
+export interface CollisionState {
+  score: Score;
+  digits: string[];
+  Sound: { play(sound: HTMLAudioElement): void; score: HTMLAudioElement };
+}
 
-FB.Collides = function (bird: Bird, pipe: Pipe): boolean {
+export function collides(
+  bird: Bird,
+  pipe: Pipe,
+  state: CollisionState,
+  config: GameConfig
+): boolean {
   if (bird.vy >= 370) {
     return true;
   }
   if (pipe.bolt && bird.vx > pipe.centerX + pipe.w / 2 - 5) {
     pipe.bolt = false;
-    const points = window.GAME_CONFIG?.voltageBoost ? 2 : 1;
-    FB.score.bolts += points;
-    FB.digits = FB.score.bolts.toString().split('');
-    FB.Sound.play(FB.Sound.score);
+    const points = config.voltageBoost ? 2 : 1;
+    state.score.bolts += points;
+    state.digits = state.score.bolts.toString().split('');
+    state.Sound.play(state.Sound.score);
   }
 
   const bx1 = bird.vx - bird.width / 2;
@@ -35,6 +46,4 @@ FB.Collides = function (bird: Bird, pipe: Pipe): boolean {
   const c2 = !(bx1 > lpx2 || bx2 < lpx1 || by1 > lpy2 || by2 < lpy1);
 
   return c1 || c2;
-};
-
-export {};
+}
