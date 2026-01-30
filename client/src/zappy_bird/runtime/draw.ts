@@ -1,17 +1,22 @@
 export class Draw {
   private ctx: CanvasRenderingContext2D | null;
-  private WIDTH: number;
-  private HEIGHT: number;
+  private viewWidth: number;
+  private viewHeight: number;
 
-  constructor(ctx: CanvasRenderingContext2D | null, WIDTH: number, HEIGHT: number) {
+  constructor(ctx: CanvasRenderingContext2D | null, viewWidth: number, viewHeight: number) {
     this.ctx = ctx;
-    this.WIDTH = WIDTH;
-    this.HEIGHT = HEIGHT;
+    this.viewWidth = viewWidth;
+    this.viewHeight = viewHeight;
+  }
+
+  setViewSize(viewWidth: number, viewHeight: number): void {
+    this.viewWidth = viewWidth;
+    this.viewHeight = viewHeight;
   }
 
   clear(): void {
     if (!this.ctx) return;
-    this.ctx.clearRect(0, 0, this.WIDTH, this.HEIGHT);
+    this.ctx.clearRect(0, 0, this.viewWidth, this.viewHeight);
   }
 
   rect(x: number, y: number, w: number, h: number, col: string | CanvasGradient): void {

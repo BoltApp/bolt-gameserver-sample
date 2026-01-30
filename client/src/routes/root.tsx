@@ -1,4 +1,4 @@
-import { createRootRoute, Outlet } from "@tanstack/react-router";
+import { createRootRoute, Outlet, useRouterState } from "@tanstack/react-router";
 
 import { ToastContainer } from "react-toastify";
 
@@ -6,21 +6,31 @@ import { TopNav } from "../components/TopNav";
 import { DemoTabs } from "../components/DemoTabs";
 import { Footer } from "../components/Footer";
 
-export const rootRoute = createRootRoute({
-  component: () => (
-    <>
-      <div className="app-container">
-        <DemoTabs />
-        <TopNav />
+function RootLayout() {
+  const pathname = useRouterState({ select: (s) => s.location.pathname });
+  const isZappyBird = pathname === "/zappy-bird";
 
-        <main className="app-main">
+  return (
+    <>
+      <div className={`app-container${isZappyBird ? " app-container--full-viewport" : ""}`}>
+        {!isZappyBird && (
+          <>
+            <DemoTabs />
+            <TopNav />
+          </>
+        )}
+
+        <main className={`app-main${isZappyBird ? " app-main--full-viewport" : ""}`}>
           <Outlet />
         </main>
 
-        <Footer />
+        {!isZappyBird && <Footer />}
       </div>
       <ToastContainer position="top-center" />
-      {/* <TanStackRouterDevtools /> */}
     </>
-  ),
+  );
+}
+
+export const rootRoute = createRootRoute({
+  component: RootLayout,
 });

@@ -5,6 +5,19 @@
   justify-content: space-between;
 }
 
+.app-container--full-viewport {
+  min-height: 100vh;
+  height: 100vh;
+  justify-content: stretch;
+}
+
+.app-main--full-viewport {
+  flex: 1;
+  min-height: 0;
+  height: 100%;
+  display: block;
+}
+
 /* Medieval Gaming Store Styles */
 .app-header {
   text-align: center;

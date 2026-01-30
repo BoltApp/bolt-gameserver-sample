@@ -1,11 +1,6 @@
 import { zappyAssetUrl } from '../asset';
 
-export interface SoundChannel {
-  channel: HTMLAudioElement;
-  finished: number;
-}
-
-const channels: SoundChannel[] = [];
+const channels: { channel: HTMLAudioElement; finished: number }[] = [];
 const CHANNEL_MAX = 10;
 
 function init(): void {

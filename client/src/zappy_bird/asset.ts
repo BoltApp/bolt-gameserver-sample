@@ -13,3 +13,11 @@ export function zappyAssetUrl(relativePathFromAssets: string): string {
   }
   return url;
 }
+
+const ASSET_PREFIX = '/zappy_bird/assets/';
+
+export function createImage(src: string): HTMLImageElement {
+  const img = new Image();
+  img.src = src.startsWith(ASSET_PREFIX) ? zappyAssetUrl(src.slice(ASSET_PREFIX.length)) : src;
+  return img;
+}
