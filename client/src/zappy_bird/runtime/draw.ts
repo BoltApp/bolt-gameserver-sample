@@ -1,32 +1,40 @@
-const FB = window.FB!;
+export class Draw {
+  private ctx: CanvasRenderingContext2D | null;
+  private WIDTH: number;
+  private HEIGHT: number;
 
-FB.Draw = {
-  clear: function (): void {
-    if (!FB.ctx) return;
-    FB.ctx.clearRect(0, 0, FB.WIDTH, FB.HEIGHT);
-  },
+  constructor(ctx: CanvasRenderingContext2D | null, WIDTH: number, HEIGHT: number) {
+    this.ctx = ctx;
+    this.WIDTH = WIDTH;
+    this.HEIGHT = HEIGHT;
+  }
 
-  rect: function (x: number, y: number, w: number, h: number, col: string | CanvasGradient): void {
-    if (!FB.ctx) return;
-    FB.ctx.fillStyle = col;
-    FB.ctx.fillRect(x, y, w, h);
-  },
+  clear(): void {
+    if (!this.ctx) return;
+    this.ctx.clearRect(0, 0, this.WIDTH, this.HEIGHT);
+  }
 
-  circle: function (x: number, y: number, r: number, col: string): void {
-    if (!FB.ctx) return;
-    FB.ctx.fillStyle = col;
-    FB.ctx.beginPath();
-    FB.ctx.arc(x + 5, y + 5, r, 0, Math.PI * 2, true);
-    FB.ctx.closePath();
-    FB.ctx.fill();
-  },
+  rect(x: number, y: number, w: number, h: number, col: string | CanvasGradient): void {
+    if (!this.ctx) return;
+    this.ctx.fillStyle = col;
+    this.ctx.fillRect(x, y, w, h);
+  }
 
-  Image: function (img: HTMLImageElement, x: number, y: number): void {
-    if (!FB.ctx || !img || img.complete !== true || (img.naturalWidth || img.width) <= 0) return;
-    FB.ctx.drawImage(img, x, y);
-  },
+  circle(x: number, y: number, r: number, col: string): void {
+    if (!this.ctx) return;
+    this.ctx.fillStyle = col;
+    this.ctx.beginPath();
+    this.ctx.arc(x + 5, y + 5, r, 0, Math.PI * 2, true);
+    this.ctx.closePath();
+    this.ctx.fill();
+  }
 
-  Sprite: function (
+  Image(img: HTMLImageElement, x: number, y: number): void {
+    if (!this.ctx || !img?.complete || (img.naturalWidth || img.width) <= 0) return;
+    this.ctx.drawImage(img, x, y);
+  }
+
+  Sprite(
     img: HTMLImageElement,
     srcX: number,
     srcY: number,
@@ -38,30 +46,28 @@ FB.Draw = {
     destH: number,
     r: number
   ): void {
-    if (!FB.ctx || !img || img.complete !== true || (img.naturalWidth || img.width) <= 0) return;
-    FB.ctx.save();
-    FB.ctx.translate(destX, destY);
-    FB.ctx.rotate(r * (Math.PI / 180));
-    FB.ctx.translate(-(destX + destW / 2), -(destY + destH / 2));
-    FB.ctx.drawImage(img, srcX, srcY, srcW, srcH, destX, destY, destW, destH);
-    FB.ctx.restore();
-  },
+    if (!this.ctx || !img?.complete || (img.naturalWidth || img.width) <= 0) return;
+    this.ctx.save();
+    this.ctx.translate(destX, destY);
+    this.ctx.rotate(r * (Math.PI / 180));
+    this.ctx.translate(-(destX + destW / 2), -(destY + destH / 2));
+    this.ctx.drawImage(img, srcX, srcY, srcW, srcH, destX, destY, destW, destH);
+    this.ctx.restore();
+  }
 
-  semiCircle: function (x: number, y: number, r: number, col: string): void {
-    if (!FB.ctx) return;
-    FB.ctx.fillStyle = col;
-    FB.ctx.beginPath();
-    FB.ctx.arc(x, y, r, 0, Math.PI, false);
-    FB.ctx.closePath();
-    FB.ctx.fill();
-  },
+  semiCircle(x: number, y: number, r: number, col: string): void {
+    if (!this.ctx) return;
+    this.ctx.fillStyle = col;
+    this.ctx.beginPath();
+    this.ctx.arc(x, y, r, 0, Math.PI, false);
+    this.ctx.closePath();
+    this.ctx.fill();
+  }
 
-  text: function (string: string, x: number, y: number, size: number, col: string): void {
-    if (!FB.ctx) return;
-    FB.ctx.font = 'bold ' + size + 'px Monospace';
-    FB.ctx.fillStyle = col;
-    FB.ctx.fillText(string, x, y);
-  },
-};
-
-export {};
+  text(string: string, x: number, y: number, size: number, col: string): void {
+    if (!this.ctx) return;
+    this.ctx.font = `bold ${size}px Monospace`;
+    this.ctx.fillStyle = col;
+    this.ctx.fillText(string, x, y);
+  }
+}
