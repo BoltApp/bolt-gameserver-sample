@@ -1,33 +1,37 @@
-import { getRuntime, getGameConfig } from './context';
+import type { ZappyBirdRuntime } from './runtime';
+import { initScoreboard, showNotification } from './utils';
 
+let runtimeRef: ZappyBirdRuntime | null = null;
 let preloadedAd: unknown = null;
 let currentButtonAdType: string | null = null;
 let adCallback: ((buttonType: string) => void) | null = null;
 let preloadStarted = false;
 
 function pauseAllAudio(): void {
-  const runtime = getRuntime();
-  if (runtime.backgroundMusic && !runtime.backgroundMusic.paused) {
-    runtime.backgroundMusic.pause();
-    runtime.backgroundMusicWasPlaying = true;
+  const r = runtimeRef;
+  if (!r) return;
+  if (r.backgroundMusic && !r.backgroundMusic.paused) {
+    r.backgroundMusic.pause();
+    r.backgroundMusicWasPlaying = true;
   } else {
-    runtime.backgroundMusicWasPlaying = false;
+    r.backgroundMusicWasPlaying = false;
   }
-  if (runtime.backgroundMusicNext && !runtime.backgroundMusicNext.paused) {
-    runtime.backgroundMusicNext.pause();
+  if (r.backgroundMusicNext && !r.backgroundMusicNext.paused) {
+    r.backgroundMusicNext.pause();
   }
-  if (runtime.Sound?.channels) {
-    for (let i = 0; i < runtime.Sound.channels.length; i++) {
-      const ch = runtime.Sound.channels[i].channel;
+  if (r.Sound?.channels) {
+    for (let i = 0; i < r.Sound.channels.length; i++) {
+      const ch = r.Sound.channels[i].channel;
       if (ch && !ch.paused) ch.pause();
     }
   }
 }
 
 function resumeAllAudio(): void {
-  const runtime = getRuntime();
-  if (runtime.backgroundMusic && runtime.backgroundMusicWasPlaying) {
-    runtime.backgroundMusic.play().catch((err: unknown) => {
+  const r = runtimeRef;
+  if (!r) return;
+  if (r.backgroundMusic && r.backgroundMusicWasPlaying) {
+    r.backgroundMusic.play().catch((err: unknown) => {
       console.log('Background music resume failed:', err);
     });
   }
@@ -45,17 +49,18 @@ function handleAdCompletion(): void {
   setTimeout(() => {
     const rewardType = currentButtonAdType;
     currentButtonAdType = null;
-    const runtime = getRuntime();
+    const r = runtimeRef;
     cleanupAdElements();
     resumeAllAudio();
+    if (!r) return;
 
     if (rewardType === 'bonusLife') {
-      runtime.lives += 1;
-      const gameOverState = runtime.game as { scoreboard?: unknown } | null;
+      r.lives += 1;
+      const gameOverState = r.game as { scoreboard?: unknown } | null;
       if (gameOverState && 'scoreboard' in gameOverState) {
         gameOverState.scoreboard = null;
         setTimeout(() => {
-          runtime.GameUtils.initScoreboard((scoreboard) => {
+          initScoreboard(r, (scoreboard) => {
             (gameOverState as { scoreboard: unknown }).scoreboard = scoreboard;
             const banner = scoreboard.banner;
             if (banner && !banner.complete) {
@@ -65,11 +70,11 @@ function handleAdCompletion(): void {
         }, 100);
       }
     } else if (rewardType === 'supportMode') {
-      getGameConfig().spaceshipEnabled = true;
-      runtime.GameUtils.showNotification('Support Systems Engaged');
+      r.spaceshipEnabled = true;
+      showNotification(r, 'Support Systems Engaged');
     } else if (rewardType === 'voltageBoost') {
-      getGameConfig().voltageBoost = true;
-      runtime.GameUtils.showNotification('boosters charged');
+      r.voltageBoost = true;
+      showNotification(r, 'boosters charged');
     }
   }, 100);
 }
@@ -135,7 +140,8 @@ export function getAdCallback(): ((buttonType: string) => void) | null {
   return adCallback;
 }
 
-export function initAdCallback(): void {
+export function registerAdCallback(runtime: ZappyBirdRuntime): void {
+  runtimeRef = runtime;
   adCallback = handleButtonAdImpl;
   if (typeof window !== 'undefined') {
     const w = window as unknown as { handleButtonAd?: (buttonType: string) => void; handleButtonAdImpl?: (buttonType: string) => void };

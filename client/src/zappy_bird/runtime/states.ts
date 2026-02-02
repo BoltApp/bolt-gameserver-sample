@@ -1,34 +1,65 @@
-import type { GameState, Scoreboard, ButtonConfig, Pipe, ZappyBirdRuntime } from '../types';
-import type { GameConfig } from './context';
+import { createImage } from '../asset';
+import type { ZappyBirdRuntime } from './runtime';
+import type { Scoreboard, ButtonConfig } from './shared-types';
+import type { PipeEntity } from '../entities';
 import { preloadAd } from './ads';
+import {
+  initGameState,
+  initBackgroundEntities,
+  initSpaceship,
+  initPipes,
+  initFonts,
+  updateEntities,
+  checkLevelUp,
+  renderLives,
+  renderNotification,
+  resetGameConfig,
+  initScoreboard,
+  renderScoreboard,
+} from './utils';
+import { collides } from './collision';
+import {
+  handleClick as handleButtonClick,
+  renderButtons,
+  setupImageSmoothing,
+  enableImageSmoothing,
+  renderWithBreathing,
+  restoreImageSmoothing,
+} from './buttons';
+
+export interface GameState {
+  init(): void;
+  update(): void;
+  render(): void;
+}
 
 export class Splash implements GameState {
   banner: HTMLImageElement;
   buttonConfigs: Record<string, ButtonConfig>;
   private runtime: ZappyBirdRuntime;
 
-  constructor(runtime: ZappyBirdRuntime, _config: GameConfig) {
+  constructor(runtime: ZappyBirdRuntime) {
     this.runtime = runtime;
-    this.banner = runtime.GameUtils.createImage('/zappy_bird/assets/images/splash.png');
-    this.buttonConfigs = runtime.Buttons.configs;
+    this.banner = createImage('/zappy_bird/assets/images/splash.png');
+    this.buttonConfigs = runtime.buttonConfigs;
   }
 
   init(): void {
     this.runtime.Sound.play(this.runtime.Sound.swoosh);
-    this.runtime.GameUtils.initGameState();
-    this.runtime.GameUtils.initBackgroundEntities();
-    this.runtime.GameUtils.initSpaceship();
+    initGameState(this.runtime);
+    initBackgroundEntities(this.runtime);
+    initSpaceship(this.runtime);
 
     setTimeout(() => preloadAd(), 100);
   }
 
   update(): void {
-    this.runtime.GameUtils.updateEntities();
+    updateEntities(this.runtime);
     if (this.runtime.Input.tapped && this.runtime.ctx) {
       const x = this.runtime.Input.x;
       const y = this.runtime.Input.y;
 
-      if (this.runtime.Buttons.handleClick(x, y, this.buttonConfigs, ['bonusLife'])) {
+      if (handleButtonClick(x, y, this.buttonConfigs, ['bonusLife'])) {
         this.runtime.Input.tapped = false;
         return;
       }
@@ -42,9 +73,9 @@ export class Splash implements GameState {
 
   render(): void {
     if (!this.runtime.ctx) return;
-    this.runtime.GameUtils.renderLives();
-    this.runtime.Buttons.renderButtons(this.buttonConfigs, this.runtime.ctx, ['bonusLife']);
-    this.runtime.GameUtils.renderNotification();
+    renderLives(this.runtime);
+    renderButtons(this.buttonConfigs, this.runtime.ctx, ['bonusLife']);
+    renderNotification(this.runtime);
 
     if (this.runtime.lives > 0) {
       this.runtime.Draw.Image(this.banner, 66, 90);
@@ -57,40 +88,41 @@ export class Splash implements GameState {
 
 export class Play implements GameState {
   private runtime: ZappyBirdRuntime;
-  private config: GameConfig;
 
-  constructor(runtime: ZappyBirdRuntime, config: GameConfig) {
+  constructor(runtime: ZappyBirdRuntime) {
     this.runtime = runtime;
-    this.config = config;
   }
 
   init(): void {
-    this.runtime.GameUtils.initSpaceship();
-    this.runtime.GameUtils.initPipes();
+    initSpaceship(this.runtime);
+    initPipes(this.runtime);
 
-    this.runtime.bird = this.runtime.Bird();
-    this.runtime.entities.push(this.runtime.bird);
-    this.runtime.GameUtils.initFonts();
+    this.runtime.bird = this.runtime.createBird();
+    initFonts(this.runtime);
 
     setTimeout(() => preloadAd(), 100);
   }
 
   update(): void {
     this.runtime.distance += 1;
-    this.runtime.GameUtils.checkLevelUp();
+    checkLevelUp(this.runtime);
 
     if (this.runtime.Input.tapped) {
       this.runtime.score.taps += 1;
     }
 
-    this.runtime.GameUtils.updateEntities();
+    updateEntities(this.runtime);
 
     if (!this.runtime.bird) return;
     for (const entity of this.runtime.entities) {
-      if (entity.type === 'pipe' && this.runtime.collides(this.runtime.bird, entity as Pipe)) {
-        this.runtime.Sound.play(this.runtime.Sound.hit);
-        this.runtime.changeState('GameOver');
-        break;
+      if (entity.type === 'pipe') {
+        const pipe = entity as PipeEntity;
+        if (pipe.remove) continue;
+        if (collides(this.runtime.bird!, pipe, this.runtime, this.runtime)) {
+          this.runtime.Sound.play(this.runtime.Sound.hit);
+          this.runtime.changeState('GameOver');
+          break;
+        }
       }
     }
   }
@@ -102,9 +134,9 @@ export class Play implements GameState {
       this.runtime.Draw.Image(this.runtime.fonts[Number(d)], X + i * 14, 10);
     }
 
-    this.runtime.GameUtils.renderLives();
+    renderLives(this.runtime);
 
-    if (this.config.voltageBoost) {
+    if (this.runtime.voltageBoost) {
       this.runtime.Draw.text('2x', this.runtime.WIDTH - 30, 30, 12, 'black');
     }
   }
@@ -115,7 +147,7 @@ export class GameOver implements GameState {
   scoreboard: Scoreboard | null = null;
   private runtime: ZappyBirdRuntime;
 
-  constructor(runtime: ZappyBirdRuntime, _config: GameConfig) {
+  constructor(runtime: ZappyBirdRuntime) {
     this.runtime = runtime;
   }
 
@@ -124,9 +156,9 @@ export class GameOver implements GameState {
       this.runtime.lives -= 1;
     }
 
-    this.runtime.GameUtils.resetGameConfig();
+    resetGameConfig(this.runtime);
 
-    this.runtime.GameUtils.initScoreboard((scoreboard) => {
+    initScoreboard(this.runtime, (scoreboard) => {
       this.scoreboard = scoreboard;
     });
   }
@@ -154,7 +186,7 @@ export class GameOver implements GameState {
         }
       }
 
-      if (this.runtime.Buttons.handleClick(x, y, this.runtime.Buttons.configs, [])) {
+      if (handleButtonClick(x, y, this.runtime.buttonConfigs, [])) {
         this.runtime.Input.tapped = false;
         return;
       }
@@ -171,20 +203,20 @@ export class GameOver implements GameState {
 
   render(): void {
     if (!this.runtime.ctx) return;
-    this.runtime.GameUtils.renderLives();
+    renderLives(this.runtime);
 
-    this.runtime.GameUtils.renderScoreboard(this.scoreboard);
+    renderScoreboard(this.runtime, this.scoreboard);
 
     if (this.runtime.lives === 0) {
-      const config = this.runtime.Buttons.configs.bonusLife;
-      const smoothingSettings = this.runtime.Buttons.setupImageSmoothing(this.runtime.ctx);
-      this.runtime.Buttons.enableImageSmoothing(this.runtime.ctx);
-      this.runtime.Buttons.renderWithBreathing(config, this.runtime.ctx, this.startTime);
-      this.runtime.Buttons.restoreImageSmoothing(this.runtime.ctx, smoothingSettings);
+      const config = this.runtime.buttonConfigs.bonusLife;
+      const smoothingSettings = setupImageSmoothing(this.runtime.ctx);
+      enableImageSmoothing(this.runtime.ctx);
+      renderWithBreathing(config, this.runtime.ctx, this.startTime);
+      restoreImageSmoothing(this.runtime.ctx, smoothingSettings);
     }
 
     if (this.runtime.lives > 0) {
-      this.runtime.Buttons.renderButtons(this.runtime.Buttons.configs, this.runtime.ctx, ['bonusLife']);
+      renderButtons(this.runtime.buttonConfigs, this.runtime.ctx, ['bonusLife']);
     }
   }
 }

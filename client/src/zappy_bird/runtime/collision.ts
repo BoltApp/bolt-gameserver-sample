@@ -1,25 +1,24 @@
-import type { Bird, Pipe } from '../types';
-import type { GameConfig } from './context';
-import type { Score } from '../types';
+import type { BirdEntity, PipeEntity } from '../entities';
+import type { ZappyBirdRuntime } from './runtime';
 
 export interface CollisionState {
-  score: Score;
+  score: { taps: number; bolts: number };
   digits: string[];
   Sound: { play(sound: HTMLAudioElement): void; score: HTMLAudioElement };
 }
 
 export function collides(
-  bird: Bird,
-  pipe: Pipe,
+  bird: BirdEntity,
+  pipe: PipeEntity,
   state: CollisionState,
-  config: GameConfig
+  runtime: ZappyBirdRuntime
 ): boolean {
   if (bird.vy >= 370) {
     return true;
   }
   if (pipe.bolt && bird.vx > pipe.centerX + pipe.w / 2 - 5) {
     pipe.bolt = false;
-    const points = config.voltageBoost ? 2 : 1;
+    const points = runtime.voltageBoost ? 2 : 1;
     state.score.bolts += points;
     state.digits = state.score.bolts.toString().split('');
     state.Sound.play(state.Sound.score);
