@@ -45,7 +45,7 @@ export interface GameEntity {
   }
   
   export interface City extends GameEntity {
-    type: 'City';
+    type: 'city';
     vx: number;
     groundLine: number;
     scale: number;
@@ -155,7 +155,7 @@ export interface GameEntity {
     resize: () => void;
   }
   
-  export interface ZappyBirdFB {
+  export interface ZappyBirdRuntime {
     WIDTH: number;
     HEIGHT: number;
     scale: number;
@@ -179,7 +179,7 @@ export interface GameEntity {
     clickToBeginStartTime: number | null;
     notification: Notification;
     RATIO: number | null;
-    bg_grad: 'day' | 'dusk' | 'night' | 'dawn';
+    bgGrad: 'day' | 'dusk' | 'night' | 'dawn';
     game: GameState | null;
     ua: string | null;
     android: boolean | null;
@@ -239,9 +239,9 @@ export interface GameEntity {
     };
   
     Storage: {
-      getCookie(cname: string): string;
-      setCookie(cname: string, cvalue: string, exdays: number): void;
-      getHighScore(): number;
+      getItem(key: string): string;
+      setItem(key: string, value: string): void;
+      getHighScore(currentScore: number): number;
     };
   
     Sound: {
@@ -303,37 +303,23 @@ export interface GameEntity {
       init(): void;
     };
   
-    Collides(bird: Bird, pipe: Pipe): boolean;
+    collides(bird: Bird, pipe: Pipe): boolean;
   
-    // Entity constructors
-    Cloud: new (x: number, y: number) => Cloud;
-    Spaceship: new () => Spaceship;
-    Laser: new (x: number, y: number) => Laser;
-    BottomBar: new (x: number, y: number, w: number) => BottomBar;
-    City: new (x: number, y: number) => City;
-    Pipe: new (x: number, w: number) => Pipe;
-    Bird: new () => Bird;
-    Particle: new (x: number, y: number, r: number, col: string) => Particle;
+    // Entity factories (call to create instance, not constructors)
+    Cloud: (x: number, y: number) => Cloud;
+    Spaceship: () => Spaceship;
+    Laser: (x: number, y: number) => Laser;
+    BottomBar: (x: number, y: number, w: number) => BottomBar;
+    City: (x: number, y: number) => City;
+    Pipe: (x: number, w: number) => Pipe;
+    Bird: () => Bird;
+    Particle: (x: number, y: number, r: number, col: string) => Particle;
   }
   
   export interface ButtonConfig {
-    image: HTMLImageElement;
+    image: HTMLImageElement | null;
     scale: number;
     x: number | (() => number);
     y: number | (() => number);
     onClick(): void;
-  }
-  
-  declare global {
-    interface Window {
-      FB?: ZappyBirdFB;
-      GAME_CONFIG?: {
-        spaceshipEnabled: boolean;
-        voltageBoost: boolean;
-      };
-      Splash: new () => GameState;
-      Play: new () => GameState;
-      GameOver: new () => GameState;
-      handleButtonAd?: (buttonType: string) => void;
-    }
   }

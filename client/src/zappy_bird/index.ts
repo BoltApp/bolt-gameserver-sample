@@ -1,23 +1,12 @@
-import { ensureZappyGlobals } from './runtime/bootstrap';
-import { installStorage } from './runtime/storage';
-import { installSound } from './runtime/sound';
+import type { GameConfig } from './runtime/context';
 
 export type ZappyBirdCleanup = () => void;
 
 export async function startZappyBird(canvas: HTMLCanvasElement): Promise<ZappyBirdCleanup> {
-  ensureZappyGlobals();
-  installStorage();
-  installSound();
+  const config: GameConfig = { spaceshipEnabled: false, voltageBoost: false };
 
-  // Load the engine pieces in-order (they attach onto `window.FB` / `window.*`).
-  await import('./runtime/draw');
-  await import('./runtime/input');
-  await import('./runtime/entities');
-  await import('./runtime/collision');
-  await import('./runtime/game-utils');
-  await import('./runtime/buttons');
   await import('./runtime/states');
 
-  const core = await import('./runtime/core.ts');
-  return core.startCore(canvas);
+  const game = await import('./runtime/game');
+  return game.startGame(canvas, config);
 }
