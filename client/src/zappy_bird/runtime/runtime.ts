@@ -235,9 +235,6 @@ export class ZappyBirdRuntime {
     this.scale = scale;
     this.gradients = this.createGradients(viewHeight);
     this.Draw.setViewSize(viewWidth, viewHeight);
-    if (this.android || this.ios) {
-      document.body.style.height = `${window.innerHeight + 50}px`;
-    }
     this.canvas.style.width = `${this.currentWidth}px`;
     this.canvas.style.height = `${this.currentHeight}px`;
     this.offset.top = this.canvas.offsetTop;
@@ -340,6 +337,8 @@ export class ZappyBirdRuntime {
       this.backgroundMusicNext = new Audio(musicSrc);
       this.backgroundMusic.preload = 'auto';
       this.backgroundMusicNext!.preload = 'auto';
+      Sound.registerElement(this.backgroundMusic);
+      Sound.registerElement(this.backgroundMusicNext!);
       const switchToNext = (): void => {
         const temp = this.backgroundMusic;
         this.backgroundMusic = this.backgroundMusicNext;
@@ -472,9 +471,16 @@ export function startGame(canvas: HTMLCanvasElement, options?: { spaceshipEnable
     window.removeEventListener('keydown', runtime._handlers.keydown, false);
     window.removeEventListener('keyup', runtime._handlers.keyup, false);
     window.removeEventListener('resize', runtime._handlers.resize, false);
+    document.body.style.height = '';
     try {
-      if (runtime.backgroundMusic) runtime.backgroundMusic.pause();
-      if (runtime.backgroundMusicNext) runtime.backgroundMusicNext.pause();
+      if (runtime.backgroundMusic) {
+        runtime.backgroundMusic.pause();
+        Sound.unregisterElement(runtime.backgroundMusic);
+      }
+      if (runtime.backgroundMusicNext) {
+        runtime.backgroundMusicNext.pause();
+        Sound.unregisterElement(runtime.backgroundMusicNext);
+      }
     } catch {}
   };
 }

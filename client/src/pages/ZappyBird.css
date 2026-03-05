@@ -50,3 +50,56 @@
     font-size: 20px;
     text-align: center;
   }
+
+.zappy-volume {
+  position: fixed;
+  top: 12px;
+  right: 16px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  z-index: 1001;
+  opacity: 0.35;
+  transition: opacity 0.2s ease;
+}
+
+.zappy-volume:hover {
+  opacity: 0.85;
+}
+
+.zappy-volume-icon {
+  width: 18px;
+  height: 18px;
+  color: #fff;
+  flex-shrink: 0;
+}
+
+.zappy-volume-slider {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 75px;
+  height: 3px;
+  border-radius: 2px;
+  background: rgba(255, 255, 255, 0.35);
+  outline: none;
+  cursor: pointer;
+}
+
+.zappy-volume-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: #fff;
+  cursor: pointer;
+}
+
+.zappy-volume-slider::-moz-range-thumb {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: #fff;
+  cursor: pointer;
+  border: none;
+}
