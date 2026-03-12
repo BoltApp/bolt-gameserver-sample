@@ -1,6 +1,6 @@
 import { createRoute } from '@tanstack/react-router'
 import { MicroTransactionStore } from '../pages/MicroTransactionStore'
-import { rootRoute } from './root'
+import { standardLayoutRoute } from './root'
 
 function Store() {
   return <MicroTransactionStore />
@@ -9,5 +9,5 @@ function Store() {
 export const microTransactionStoreRoute = createRoute({
   component: Store,
   path: '/store',
-  getParentRoute: () => rootRoute,
+  getParentRoute: () => standardLayoutRoute,
 })

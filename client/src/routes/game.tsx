@@ -1,6 +1,6 @@
 import { createRoute } from "@tanstack/react-router";
 import Game from "../pages/Game";
-import { rootRoute } from "./root";
+import { standardLayoutRoute } from "./root";
 
 export function GamePage() {
   return <Game />;
@@ -9,5 +9,5 @@ export function GamePage() {
 export const gameRoute = createRoute({
   path: "/game",
   component: GamePage,
-  getParentRoute: () => rootRoute,
+  getParentRoute: () => standardLayoutRoute,
 });
