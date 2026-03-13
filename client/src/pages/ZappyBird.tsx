@@ -45,9 +45,15 @@ export default function ZappyBird() {
 
   useEffect(() => {
     if (!canvasRef.current) return;
+    
+    // Initialize the Bolt SDK with the correct parameters for the Zappy Bird game.
+    BoltSDK.initialize({
+      publishableKey: import.meta.env.VITE_BOLT_PUBLISHABLE_KEY,
+      gameId: import.meta.env.VITE_GAME_ID,
+      environment: 'sandbox',
+    });
 
     window.BOLT_BACKEND_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3111';
-    window.GAME_CONFIG ??= { spaceshipEnabled: false, voltageBoost: false };
     // The bundled game still expects these globals for optional ad flows.
     window.BoltSDK ??= BoltSDK;
     window.dispatchEvent(new CustomEvent('boltSDKReady'));

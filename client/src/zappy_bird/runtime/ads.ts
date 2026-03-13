@@ -1,5 +1,7 @@
 import type { ZappyBirdRuntime } from './runtime';
 import { initScoreboard, showNotification } from './utils';
+import { BoltSDK } from '@boltpay/bolt-js';
+
 
 let runtimeRef: ZappyBirdRuntime | null = null;
 let preloadedAd: unknown = null;
@@ -47,11 +49,14 @@ function cleanupAdElements(): void {
 
 function handleAdCompletion(): void {
   setTimeout(() => {
+    cleanupAdElements();
+    resumeAllAudio();
+    preloadedAd = null;
+    preloadStarted = false;
+    preloadAd();
     const rewardType = currentButtonAdType;
     currentButtonAdType = null;
     const r = runtimeRef;
-    cleanupAdElements();
-    resumeAllAudio();
     if (!r) return;
 
     if (rewardType === 'bonusLife') {
@@ -81,7 +86,7 @@ function handleAdCompletion(): void {
 
 export function preloadAd(): void {
   if (preloadedAd || preloadStarted) return;
-  if (!window.BoltSDK) {
+  if (!BoltSDK) {
     window.addEventListener(
       'boltSDKReady',
       () => preloadAd(),
@@ -91,18 +96,13 @@ export function preloadAd(): void {
   }
 
   preloadStarted = true;
-  const adLink = 'https://play.staging-bolt.com/';
+ 
   try {
-    const ad = (window.BoltSDK as { gaming: { preloadAd: (url: string, opts: unknown) => unknown } }).gaming.preloadAd(adLink, {
-      type: 'untimed',
+    const ad = (BoltSDK.gaming.preloadAd({
       onClaim: () => {
         handleAdCompletion();
       },
-      onError: () => {
-        currentButtonAdType = null;
-        resumeAllAudio();
-      },
-    });
+    }));
     preloadedAd = ad ?? null;
   } catch (error) {
     console.error('Error preloading ad:', error);
