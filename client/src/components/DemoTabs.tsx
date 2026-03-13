@@ -5,7 +5,9 @@ export function DemoTabs() {
         <a className="demo-tab" href="http://demo.staging-bolt.com/">
           Standard Demo
         </a>
-        <a className="demo-tab demo-tab-active">Gaming Demo</a>
+        <a className="demo-tab demo-tab-active" href="#">
+          Gaming Demo
+        </a>
       </div>
     </div>
   );
