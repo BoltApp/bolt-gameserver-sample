@@ -3,7 +3,6 @@ import CharacterImage from "../assets/Character_l_Sample01.png";
 import GameOverOverlay from "../components/GameOverOverlay";
 import "./Game.css";
 import { BoltSDK, type PreloadedAd } from "@boltpay/bolt-js";
-import { env } from "../configs/env";
 
 interface GameState {
   score: number;
@@ -40,8 +39,7 @@ export default function Game() {
   }, []);
 
   const preloadAd = () => {
-    const ad = BoltSDK.gaming.preloadAd(env.AD_LINK, {
-      type: "untimed",
+    const ad = BoltSDK.gaming.preloadAd({
       onClaim: () => {
         handleRestartClick();
       },
@@ -51,7 +49,7 @@ export default function Game() {
 
   const initGame = (
     canvas: HTMLCanvasElement,
-    ctx: CanvasRenderingContext2D
+    ctx: CanvasRenderingContext2D,
   ) => {
     preloadAd();
 
@@ -167,7 +165,7 @@ export default function Game() {
     function checkCollision(
       dinoX: number,
       dinoY: number,
-      obstacle: { x: number; y: number; width: number; height: number }
+      obstacle: { x: number; y: number; width: number; height: number },
     ): boolean {
       // Character image bounds (adjusted for the new character image)
       const dinoBox = {

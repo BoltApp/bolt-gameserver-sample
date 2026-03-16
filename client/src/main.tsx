@@ -6,7 +6,7 @@ import { BoltSDK } from "@boltpay/bolt-js";
 BoltSDK.initialize({
   publishableKey: import.meta.env.VITE_BOLT_PUBLISHABLE_KEY,
   gameId: import.meta.env.VITE_GAME_ID,
-  environment: "Development",
+  environment: "development",
 });
 
 render(<App />, document.getElementById("app")!);
