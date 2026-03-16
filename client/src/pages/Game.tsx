@@ -3,7 +3,6 @@ import CharacterImage from "../assets/Character_l_Sample01.png";
 import GameOverOverlay from "../components/GameOverOverlay";
 import "./Game.css";
 import { BoltSDK, type PreloadedAd } from "@boltpay/bolt-js";
-import { env } from "../configs/env";
 
 interface GameState {
   score: number;
