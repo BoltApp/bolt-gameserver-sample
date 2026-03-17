@@ -332,7 +332,7 @@ export class ZappyBirdRuntime {
 
   startBackgroundMusic(): void {
     if (!this.backgroundMusic) {
-      const musicSrc = zappyAssetUrl('sounds/Static Demo Master 1 [Original Soundtrack by Sanyi].mp3');
+      const musicSrc = zappyAssetUrl('sounds/Static [Original Soundtrack by Sanyi].mp3');
       this.backgroundMusic = new Audio(musicSrc);
       this.backgroundMusicNext = new Audio(musicSrc);
       this.backgroundMusic.preload = 'auto';
