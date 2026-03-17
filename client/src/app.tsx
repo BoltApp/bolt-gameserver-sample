@@ -7,17 +7,16 @@ import "./app.css";
 import "./vendor.css";
 
 import { homeRoute } from "./routes/home";
-import { rootRoute } from "./routes/root";
+import { rootRoute, standardLayoutRoute } from "./routes/root";
 import { microTransactionStoreRoute } from "./routes/store";
 import { gameRoute } from "./routes/game";
-
+import { zappyBirdRoute, zappyLayoutRoute } from "./routes/zappy-bird";
 import { useUserProfile } from "./endpoints";
 import { useBoltSessionVerification } from "./hooks/useBoltSessionVerification";
 
 const routeTree = rootRoute.addChildren([
-  homeRoute,
-  microTransactionStoreRoute,
-  gameRoute,
+  standardLayoutRoute.addChildren([homeRoute, microTransactionStoreRoute, gameRoute]),
+  zappyLayoutRoute.addChildren([zappyBirdRoute])
 ]);
 
 const router = createRouter({

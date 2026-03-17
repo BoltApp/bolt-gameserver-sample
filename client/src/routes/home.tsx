@@ -1,5 +1,5 @@
 import { createRoute, Link } from "@tanstack/react-router";
-import { rootRoute } from "./root";
+import { standardLayoutRoute } from "./root";
 
 import Chest from "../assets/chest.png";
 import ChestOpen from "../assets/chest-open.png";
@@ -55,5 +55,5 @@ function Home() {
 export const homeRoute = createRoute({
   path: "/",
   component: Home,
-  getParentRoute: () => rootRoute,
+  getParentRoute: () => standardLayoutRoute,
 });
