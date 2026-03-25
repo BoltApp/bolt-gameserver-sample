@@ -1,0 +1,24 @@
+.xlarge {
+  font-size: var(--bolt-font-body-xlarge-size);
+  line-height: var(--bolt-font-body-xlarge-line-height);
+}
+
+.large {
+  font-size: var(--bolt-font-body-large-size);
+  line-height: var(--bolt-font-body-large-line-height);
+}
+
+.medium {
+  font-size: var(--bolt-font-body-medium-size);
+  line-height: var(--bolt-font-body-medium-line-height);
+}
+
+.small {
+  font-size: var(--bolt-font-body-small-size);
+  line-height: var(--bolt-font-body-small-line-height);
+}
+
+.xsmall {
+  font-size: var(--bolt-font-body-xsmall-size);
+  line-height: var(--bolt-font-body-xsmall-line-height);
+}

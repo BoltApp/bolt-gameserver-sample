@@ -1,0 +1,378 @@
+/**
+ * Do not edit directly, this file was auto-generated.
+ */
+
+:root {
+  --bolt-brand-gray-25: #fbfaf9;
+  --bolt-brand-gray-50: #f9f8f6;
+  --bolt-brand-gray-100: #f3f1ee;
+  --bolt-brand-gray-200: #e0dbd2;
+  --bolt-brand-gray-300: #cfc9bc;
+  --bolt-brand-gray-400: #a6a491;
+  --bolt-brand-gray-500: #7c7a6a;
+  --bolt-brand-gray-600: #535146;
+  --bolt-brand-gray-700: #3c392f;
+  --bolt-brand-gray-800: #27291e;
+  --bolt-brand-gray-900: #1b1d11;
+  --bolt-brand-gray-950: #11190c;
+  --bolt-brand-lightning: #e1ff00;
+  --bolt-brand-red: #ff4f50;
+  --bolt-brand-red-light: #ff7d7d;
+  --bolt-brand-pink: #ff76f2;
+  --bolt-brand-pink-light: #ff9af1;
+  --bolt-brand-purple: #9a4eff;
+  --bolt-brand-purple-light: #b688ff;
+  --bolt-brand-blue: #006dff;
+  --bolt-brand-blue-light: #71b5ff;
+  --bolt-brand-green: #00c42e;
+  --bolt-brand-green-light: #7ddb8b;
+  --bolt-primitives-gray-25: #fafafa;
+  --bolt-primitives-gray-50: #f6f5f4;
+  --bolt-primitives-gray-100: #eeedeb;
+  --bolt-primitives-gray-200: #dad9d7;
+  --bolt-primitives-gray-300: #c4c3c0;
+  --bolt-primitives-gray-400: #9e9e99;
+  --bolt-primitives-gray-500: #6f6f67;
+  --bolt-primitives-gray-600: #454644;
+  --bolt-primitives-gray-700: #333432;
+  --bolt-primitives-gray-800: #242621;
+  --bolt-primitives-gray-900: #1f211c;
+  --bolt-primitives-gray-950: #171b14;
+  --bolt-primitives-gray-white: #ffffff;
+  --bolt-primitives-gray-black: #000000;
+  --bolt-primitives-blue-25: #edf5ff;
+  --bolt-primitives-blue-50: #e5f0ff;
+  --bolt-primitives-blue-100: #cce2ff;
+  --bolt-primitives-blue-200: #b2d3ff;
+  --bolt-primitives-blue-300: #80b6ff;
+  --bolt-primitives-blue-400: #4091ff;
+  --bolt-primitives-blue-500: #006dff;
+  --bolt-primitives-blue-600: #0051bf;
+  --bolt-primitives-blue-700: #0f4085;
+  --bolt-primitives-blue-800: #163460;
+  --bolt-primitives-blue-900: #0a2143;
+  --bolt-primitives-blue-950: #001633;
+  --bolt-primitives-green-25: #edf9ed;
+  --bolt-primitives-green-50: #e0f6e2;
+  --bolt-primitives-green-100: #ccefd2;
+  --bolt-primitives-green-200: #b2e7bd;
+  --bolt-primitives-green-300: #80d796;
+  --bolt-primitives-green-400: #4cc875;
+  --bolt-primitives-green-500: #00ae49;
+  --bolt-primitives-green-600: #00793c;
+  --bolt-primitives-green-700: #00582c;
+  --bolt-primitives-green-800: #153726;
+  --bolt-primitives-green-900: #00231a;
+  --bolt-primitives-green-950: #001913;
+  --bolt-primitives-yellow-25: #fefaef;
+  --bolt-primitives-yellow-50: #fdf6e3;
+  --bolt-primitives-yellow-100: #fcf0d0;
+  --bolt-primitives-yellow-200: #fbe9b9;
+  --bolt-primitives-yellow-300: #f8da8a;
+  --bolt-primitives-yellow-400: #fcca4a;
+  --bolt-primitives-yellow-500: #e8ab0d;
+  --bolt-primitives-yellow-600: #9a6f00;
+  --bolt-primitives-yellow-700: #745300;
+  --bolt-primitives-yellow-800: #422f00;
+  --bolt-primitives-yellow-900: #342600;
+  --bolt-primitives-yellow-950: #1f1700;
+  --bolt-primitives-red-25: #fcf1f2;
+  --bolt-primitives-red-50: #fbeaec;
+  --bolt-primitives-red-100: #f8d6d9;
+  --bolt-primitives-red-200: #fcc2c2;
+  --bolt-primitives-red-300: #fba3a4;
+  --bolt-primitives-red-400: #fd4e4e;
+  --bolt-primitives-red-500: #e62728;
+  --bolt-primitives-red-600: #a81421;
+  --bolt-primitives-red-700: #6b0811;
+  --bolt-primitives-red-800: #471f22;
+  --bolt-primitives-red-900: #360c10;
+  --bolt-primitives-red-950: #25080b;
+  --bolt-primitives-violet-25: #f5f4ff;
+  --bolt-primitives-violet-50: #f2eafd;
+  --bolt-primitives-violet-100: #e8d8fc;
+  --bolt-primitives-violet-200: #d5b9fa;
+  --bolt-primitives-violet-300: #bd92f6;
+  --bolt-primitives-violet-400: #a25cff;
+  --bolt-primitives-violet-500: #8c40f2;
+  --bolt-primitives-violet-600: #752fd0;
+  --bolt-primitives-violet-700: #572a92;
+  --bolt-primitives-violet-800: #33265f;
+  --bolt-primitives-violet-900: #271b50;
+  --bolt-primitives-violet-950: #15093e;
+  --bolt-font-family-text:
+    Inter, -apple-system, BlinkMacSystemFont, system-ui, "Segoe UI", Roboto,
+    Helvetica, Arial, sans-serif;
+  --bolt-font-family-monospace:
+    ui-monospace, Menlo, Monaco, "Cascadia Mono", "Segoe UI Mono",
+    "Roboto Mono", "Courier New", monospace;
+  --bolt-font-family-x-large-heading:
+    "Agrandir Variable", -apple-system, BlinkMacSystemFont, system-ui,
+    "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --bolt-font-body-xlarge-font-family:
+    Inter, -apple-system, BlinkMacSystemFont, system-ui, "Segoe UI", Roboto,
+    Helvetica, Arial, sans-serif;
+  --bolt-font-body-xlarge-size: 24px;
+  --bolt-font-body-xlarge-line-height: 32px;
+  --bolt-font-body-large-font-family:
+    Inter, -apple-system, BlinkMacSystemFont, system-ui, "Segoe UI", Roboto,
+    Helvetica, Arial, sans-serif;
+  --bolt-font-body-large-size: 20px;
+  --bolt-font-body-large-line-height: 28px;
+  --bolt-font-body-medium-font-family:
+    Inter, -apple-system, BlinkMacSystemFont, system-ui, "Segoe UI", Roboto,
+    Helvetica, Arial, sans-serif;
+  --bolt-font-body-medium-size: 16px;
+  --bolt-font-body-medium-line-height: 24px;
+  --bolt-font-body-small-font-family:
+    Inter, -apple-system, BlinkMacSystemFont, system-ui, "Segoe UI", Roboto,
+    Helvetica, Arial, sans-serif;
+  --bolt-font-body-small-size: 14px;
+  --bolt-font-body-small-line-height: 20px;
+  --bolt-font-body-xsmall-font-family:
+    Inter, -apple-system, BlinkMacSystemFont, system-ui, "Segoe UI", Roboto,
+    Helvetica, Arial, sans-serif;
+  --bolt-font-body-xsmall-size: 11px;
+  --bolt-font-body-xsmall-line-height: 16px;
+  --bolt-font-heading-1-font-family:
+    Inter, -apple-system, BlinkMacSystemFont, system-ui, "Segoe UI", Roboto,
+    Helvetica, Arial, sans-serif;
+  --bolt-font-heading-1-size: 24px;
+  --bolt-font-heading-1-line-height: 32px;
+  --bolt-font-heading-1-weight: 600;
+  --bolt-font-heading-2-font-family:
+    Inter, -apple-system, BlinkMacSystemFont, system-ui, "Segoe UI", Roboto,
+    Helvetica, Arial, sans-serif;
+  --bolt-font-heading-2-size: 20px;
+  --bolt-font-heading-2-line-height: 28px;
+  --bolt-font-heading-2-weight: 600;
+  --bolt-font-heading-3-font-family:
+    Inter, -apple-system, BlinkMacSystemFont, system-ui, "Segoe UI", Roboto,
+    Helvetica, Arial, sans-serif;
+  --bolt-font-heading-3-size: 16px;
+  --bolt-font-heading-3-line-height: 24px;
+  --bolt-font-heading-3-weight: 600;
+  --bolt-font-heading-4-font-family:
+    Inter, -apple-system, BlinkMacSystemFont, system-ui, "Segoe UI", Roboto,
+    Helvetica, Arial, sans-serif;
+  --bolt-font-heading-4-size: 14px;
+  --bolt-font-heading-4-line-height: 20px;
+  --bolt-font-heading-4-weight: 600;
+  --bolt-font-heading-5-font-family:
+    Inter, -apple-system, BlinkMacSystemFont, system-ui, "Segoe UI", Roboto,
+    Helvetica, Arial, sans-serif;
+  --bolt-font-heading-5-size: 11px;
+  --bolt-font-heading-5-line-height: 16px;
+  --bolt-font-heading-5-weight: 600;
+  --bolt-font-heading-5-text-transform: uppercase;
+  --bolt-font-heading-1-xxlarge-font-family:
+    "Agrandir Variable", -apple-system, BlinkMacSystemFont, system-ui,
+    "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --bolt-font-heading-1-xxlarge-size: 64px;
+  --bolt-font-heading-1-xxlarge-line-height: 60px;
+  --bolt-font-heading-1-xxlarge-weight: 600;
+  --bolt-font-heading-1-xlarge-font-family:
+    "Agrandir Variable", -apple-system, BlinkMacSystemFont, system-ui,
+    "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --bolt-font-heading-1-xlarge-size: 48px;
+  --bolt-font-heading-1-xlarge-line-height: 48px;
+  --bolt-font-heading-1-xlarge-weight: 600;
+  --bolt-font-heading-1-large-font-family:
+    "Agrandir Variable", -apple-system, BlinkMacSystemFont, system-ui,
+    "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --bolt-font-heading-1-large-size: 32px;
+  --bolt-font-heading-1-large-line-height: 36px;
+  --bolt-font-heading-1-large-weight: 600;
+  --bolt-font-numbers-large-font-family:
+    ui-monospace, Menlo, Monaco, "Cascadia Mono", "Segoe UI Mono",
+    "Roboto Mono", "Courier New", monospace;
+  --bolt-font-numbers-large-size: 20px;
+  --bolt-font-numbers-large-line-height: 28px;
+  --bolt-font-numbers-medium-font-family:
+    ui-monospace, Menlo, Monaco, "Cascadia Mono", "Segoe UI Mono",
+    "Roboto Mono", "Courier New", monospace;
+  --bolt-font-numbers-medium-size: 16px;
+  --bolt-font-numbers-medium-line-height: 24px;
+  --bolt-font-numbers-small-font-family:
+    ui-monospace, Menlo, Monaco, "Cascadia Mono", "Segoe UI Mono",
+    "Roboto Mono", "Courier New", monospace;
+  --bolt-font-numbers-small-size: 14px;
+  --bolt-font-numbers-small-line-height: 20px;
+  --bolt-font-numbers-xsmall-font-family:
+    ui-monospace, Menlo, Monaco, "Cascadia Mono", "Segoe UI Mono",
+    "Roboto Mono", "Courier New", monospace;
+  --bolt-font-numbers-xsmall-size: 12px;
+  --bolt-font-numbers-xsmall-line-height: 20px;
+  --bolt-border-primary: #9e9e99;
+  --bolt-border-primary-hovered: #454644;
+  --bolt-border-primary-disabled: #dad9d7;
+  --bolt-border-secondary: #dad9d7;
+  --bolt-border-secondary-hovered: #9e9e99;
+  --bolt-border-secondary-disabled: #f6f5f4;
+  --bolt-border-tertiary: #eeedeb;
+  --bolt-border-tertiary-hovered: #c4c3c0;
+  --bolt-border-tertiary-disabled: #fafafa;
+  --bolt-border-highlight: #006dff;
+  --bolt-border-highlight-muted: #b2d3ff;
+  --bolt-border-highlight-hovered: #0051bf;
+  --bolt-border-critical: #fba3a4;
+  --bolt-border-critical-muted: #fcc2c2;
+  --bolt-border-critical-hovered: #e62728;
+  --bolt-border-critical-disabled: #f8d6d9;
+  --bolt-border-warning: #f8da8a;
+  --bolt-border-warning-muted: #fbe9b9;
+  --bolt-border-warning-hovered: #fcca4a;
+  --bolt-border-success: #4cc875;
+  --bolt-border-success-muted: #b2e7bd;
+  --bolt-border-success-hovered: #00ae49;
+  --bolt-border-informative: #a25cff;
+  --bolt-border-informative-muted: #d5b9fa;
+  --bolt-border-informative-hovered: #8c40f2;
+  --bolt-border-radius-sm: 0.5rem;
+  --bolt-border-radius-md: 0.75rem;
+  --bolt-border-radius-lg: 1rem;
+  --bolt-border-radius-xl: 1.5rem;
+  --bolt-border-radius-full: 100vh;
+  --bolt-button-bg-primary: #006dff;
+  --bolt-button-bg-primary-hovered: #0051bf;
+  --bolt-button-bg-primary-pressed: #0f4085;
+  --bolt-button-bg-primary-disabled: #dad9d7;
+  --bolt-button-bg-secondary: rgba(255, 255, 255, 0.01);
+  --bolt-button-bg-secondary-hovered: #eeedeb;
+  --bolt-button-bg-secondary-pressed: #dad9d7;
+  --bolt-button-bg-secondary-disabled: #eeedeb;
+  --bolt-button-bg-critical: #e62728;
+  --bolt-button-bg-critical-hovered: #a81421;
+  --bolt-button-bg-critical-pressed: #6b0811;
+  --bolt-button-bg-critical-disabled: #fcf1f2;
+  --bolt-button-bg-inverse-secondary: #11190c;
+  --bolt-button-bg-inverse-secondary-hovered: #242621;
+  --bolt-button-bg-inverse-secondary-pressed: #333432;
+  --bolt-button-bg-inverse-secondary-disabled: #242621;
+  --bolt-button-fg-primary: #ffffff;
+  --bolt-button-fg-primary-hovered: #e1ff00;
+  --bolt-button-fg-primary-pressed: #e1ff00;
+  --bolt-button-fg-primary-disabled: #9e9e99;
+  --bolt-button-fg-secondary: #454644;
+  --bolt-button-fg-secondary-hovered: #454644;
+  --bolt-button-fg-secondary-pressed: #454644;
+  --bolt-button-fg-secondary-disabled: #9e9e99;
+  --bolt-button-fg-tertiary: #454644;
+  --bolt-button-fg-tertiary-hovered: #454644;
+  --bolt-button-fg-tertiary-pressed: #454644;
+  --bolt-button-fg-tertiary-disabled: #9e9e99;
+  --bolt-content-primary: #000000;
+  --bolt-content-secondary: #454644;
+  --bolt-content-tertiary: #6f6f67;
+  --bolt-content-disabled: #9e9e99;
+  --bolt-content-placeholder: #c4c3c0;
+  --bolt-content-disabled-on-surface: #6f6f67;
+  --bolt-content-placeholder-on-surface: #9e9e99;
+  --bolt-content-on-color: #ffffff;
+  --bolt-content-accent-on-color: #e1ff00;
+  --bolt-content-interactive: #006dff;
+  --bolt-content-interactive-on-surface: #0051bf;
+  --bolt-content-interactive-disabled: #80b6ff;
+  --bolt-content-critical: #e62728;
+  --bolt-content-critical-on-surface: #a81421;
+  --bolt-content-critical-disabled: #fba3a4;
+  --bolt-content-warning: #9a6f00;
+  --bolt-content-warning-on-surface: #745300;
+  --bolt-content-success: #00ae49;
+  --bolt-content-success-on-surface: #00793c;
+  --bolt-content-informative: #8c40f2;
+  --bolt-content-informative-on-surface: #752fd0;
+  --bolt-content-inverse-primary: #ffffff;
+  --bolt-content-inverse-secondary: #dad9d7;
+  --bolt-content-inverse-tertiary: #9e9e99;
+  --bolt-content-inverse-disabled: #6f6f67;
+  --bolt-content-inverse-placeholder: #454644;
+  --bolt-control-border: #6f6f67;
+  --bolt-control-border-hovered: #454644;
+  --bolt-control-border-pressed: #333432;
+  --bolt-control-border-disabled: #c4c3c0;
+  --bolt-control-bg-on: #11190c;
+  --bolt-control-bg-on-hovered: #454644;
+  --bolt-control-bg-on-pressed: #000000;
+  --bolt-control-bg-on-disabled: #c4c3c0;
+  --bolt-control-bg-off: #9e9e99;
+  --bolt-control-bg-off-hovered: #6f6f67;
+  --bolt-control-bg-off-pressed: #454644;
+  --bolt-control-bg-off-disabled: #dad9d7;
+  --bolt-control-bg-critical: #e62728;
+  --bolt-control-bg-critical-hovered: #a81421;
+  --bolt-control-bg-critical-pressed: #6b0811;
+  --bolt-control-bg-critical-disabled: #fcf1f2;
+  --bolt-control-fg-on: #ffffff;
+  --bolt-control-fg-on-hovered: #e1ff00;
+  --bolt-control-fg-on-disabled: #ffffff;
+  --bolt-control-fg-off: #ffffff;
+  --bolt-control-fg-off-hovered: #e1ff00;
+  --bolt-control-fg-off-disabled: #ffffff;
+  --bolt-overlay-dark: rgba(0, 0, 0, 0.6);
+  --bolt-overlay-light: rgba(0, 0, 0, 0.3);
+  --bolt-space-1: 0.25rem;
+  --bolt-space-2: 0.5rem;
+  --bolt-space-3: 0.75rem;
+  --bolt-space-4: 1rem;
+  --bolt-space-5: 1.25rem;
+  --bolt-space-6: 1.5rem;
+  --bolt-space-8: 2rem;
+  --bolt-space-10: 2.5rem;
+  --bolt-space-12: 3rem;
+  --bolt-surface-primary: #ffffff;
+  --bolt-surface-primary-hovered: #f6f5f4;
+  --bolt-surface-primary-pressed: #eeedeb;
+  --bolt-surface-disabled: #fafafa;
+  --bolt-surface-secondary: #fafafa;
+  --bolt-surface-secondary-hovered: #f6f5f4;
+  --bolt-surface-secondary-pressed: #eeedeb;
+  --bolt-surface-tertiary: #f6f5f4;
+  --bolt-surface-tertiary-hovered: #eeedeb;
+  --bolt-surface-tertiary-pressed: #dad9d7;
+  --bolt-surface-quaternary: #eeedeb;
+  --bolt-surface-quaternary-hovered: #dad9d7;
+  --bolt-surface-quaternary-pressed: #c4c3c0;
+  --bolt-surface-brand-primary: #cfc9bc;
+  --bolt-surface-brand-primary-hovered: #a6a491;
+  --bolt-surface-brand-primary-pressed: #7c7a6a;
+  --bolt-surface-highlight: #edf5ff;
+  --bolt-surface-highlight-hovered: #cce2ff;
+  --bolt-surface-highlight-pressed: #b2d3ff;
+  --bolt-surface-critical: #fcf1f2;
+  --bolt-surface-critical-hovered: #fbeaec;
+  --bolt-surface-critical-pressed: #f8d6d9;
+  --bolt-surface-warning: #fefaef;
+  --bolt-surface-warning-hovered: #fdf6e3;
+  --bolt-surface-warning-pressed: #fcf0d0;
+  --bolt-surface-success: #e0f6e2;
+  --bolt-surface-success-hovered: #ccefd2;
+  --bolt-surface-success-pressed: #b2e7bd;
+  --bolt-surface-informative: #f2eafd;
+  --bolt-surface-informative-hovered: #e8d8fc;
+  --bolt-surface-informative-pressed: #d5b9fa;
+  --bolt-surface-inverse-primary: #1f211c;
+  --bolt-surface-inverse-primary-hovered: #242621;
+  --bolt-surface-inverse-primary-pressed: #333432;
+  --bolt-surface-inverse-secondary: #242621;
+  --bolt-surface-inverse-secondary-hovered: #333432;
+  --bolt-surface-inverse-secondary-pressed: #454644;
+  --bolt-surface-inverse-tertiary: #333432;
+  --bolt-surface-inverse-tertiary-hovered: #454644;
+  --bolt-surface-inverse-tertiary-pressed: #6f6f67;
+  --bolt-surface-inverse-highlight: #006dff;
+  --bolt-surface-inverse-highlight-hovered: #0051bf;
+  --bolt-surface-inverse-highlight-pressed: #0f4085;
+  --bolt-surface-inverse-critical: #e62728;
+  --bolt-surface-inverse-critical-hovered: #a81421;
+  --bolt-surface-inverse-critical-pressed: #6b0811;
+  --bolt-surface-inverse-warning: #e8ab0d;
+  --bolt-surface-inverse-warning-hovered: #9a6f00;
+  --bolt-surface-inverse-warning-pressed: #745300;
+  --bolt-surface-inverse-success: #00ae49;
+  --bolt-surface-inverse-success-hovered: #00793c;
+  --bolt-surface-inverse-success-pressed: #00582c;
+  --bolt-surface-inverse-informative: #8c40f2;
+  --bolt-surface-inverse-informative-hovered: #752fd0;
+  --bolt-surface-inverse-informative-pressed: #572a92;
+}

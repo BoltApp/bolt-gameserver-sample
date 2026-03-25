@@ -1,5 +1,5 @@
 import { render } from "preact";
-import "./index.css";
+import "./design/tokens.css";
 import { App } from "./app.tsx";
 import { BoltSDK } from "@boltpay/bolt-js";
 
