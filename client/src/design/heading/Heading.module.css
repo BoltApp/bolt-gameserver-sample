@@ -1,0 +1,20 @@
+.heading1 {
+  font-size: var(--bolt-font-heading-1-size);
+  line-height: 0;
+  font-weight: var(--bolt-font-heading-1-weight);
+}
+.heading1.large {
+  font-size: var(--bolt-font-heading-1-large-size);
+  line-height: 0;
+}
+
+.heading1.xlarge {
+  font-size: var(--bolt-font-heading-1-xlarge-size);
+  line-height: 0;
+}
+
+.heading2 {
+  font-size: var(--bolt-font-heading-2-size);
+  line-height: 0;
+  font-weight: var(--bolt-font-heading-2-weight);
+}

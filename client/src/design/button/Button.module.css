@@ -1,0 +1,14 @@
+.button {
+  border-radius: 100vh;
+  padding: var(--bolt-space-3) var(--bolt-space-5);
+  background-color: var(--bolt-surface-inverse-primary);
+  color: var(--bolt-content-inverse-primary);
+}
+
+.button:hover {
+  background-color: var(--bolt-surface-inverse-primary-hovered);
+}
+
+.button:active {
+  background-color: var(--bolt-surface-inverse-primary-pressed);
+}

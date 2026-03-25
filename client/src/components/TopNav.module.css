@@ -1,0 +1,32 @@
+.topNav {
+  padding: var(--bolt-space-4) var(--bolt-space-8);
+  background-color: var(--bolt-surface-primary);
+  box-shadow: var(--global-shadow2);
+}
+
+.navLeft {
+  display: flex;
+  align-items: center;
+  gap: var(--bolt-space-4);
+}
+
+.navLinks {
+  margin-top: 0.5rem;
+  display: flex;
+  gap: var(--bolt-space-4);
+}
+
+.navLink {
+  color: var(--bolt-content-primary);
+  text-decoration: none;
+}
+
+.active::after {
+  content: "";
+  display: block;
+  margin: var(--bolt-space-1) auto 0;
+  height: 4px;
+  width: 100%;
+  background-color: var(--bolt-border-highlight);
+  border-radius: 100vh;
+}

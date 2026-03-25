@@ -1,59 +1,31 @@
 import { Link } from "@tanstack/react-router";
-import { useFakeLogin, useUserProfile } from "../endpoints";
 
-import GameLogo from "../assets/Character_l_Sample01.png";
-import { GemIcon } from "./GemIcon";
+import BoltLightningGames from "../assets/lightning-games.svg";
+
+import styles from "./TopNav.module.css";
 
 export function TopNav() {
-  const { data: userProfile, isLoading, error } = useUserProfile();
-  const { mutate: fakeLogin, isPending } = useFakeLogin();
-
-  async function handleSignIn() {
-    fakeLogin();
-  }
-
   return (
-    <nav className="app-nav">
-      <div className="nav-container">
-        <div className="nav-left">
-          <div className="nav-brand">
-            <Link to="/" className="nav-brand-link">
-              <img src={GameLogo} alt="Game Logo" className="nav-logo" />
-              Knights of Valor
+    <nav className={styles.topNav}>
+      <div className={styles.navContainer}>
+        <div className={styles.navLeft}>
+          <div className={styles.navBrand}>
+            <Link to="/" className={styles.navBrandLink}>
+              <img
+                src={BoltLightningGames}
+                alt="Game Logo"
+                className={styles.navLogo}
+              />
             </Link>
           </div>
-          <div className="nav-links mobile-hidden">
+          <div className={`${styles.navLinks}`}>
             <Link
-              to="/store"
-              className="nav-link"
-              activeProps={{ className: "active" }}
-            >
-              Shop
-            </Link>
-            <Link
-              to="/game"
-              className="nav-link"
-              activeProps={{ className: "active" }}
-            >
-              Game
+              to="/"
+              className={styles.navLink}
+              activeProps={{ className: styles.active }}>
+              Products
             </Link>
           </div>
-        </div>
-        <div className="nav-user-info">
-          {isLoading || isPending ? (
-            <div className="nav-loading">Loading...</div>
-          ) : error || !userProfile ? (
-            <button className="nav-signin-btn" onClick={handleSignIn}>
-              Sign In
-            </button>
-          ) : (
-            <div className="nav-user-profile">
-              <div className="nav-username">{userProfile.username}</div>
-              <div className="nav-gems">
-                <GemIcon size={24} /> {userProfile.gems}
-              </div>
-            </div>
-          )}
         </div>
       </div>
     </nav>

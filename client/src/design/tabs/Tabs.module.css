@@ -1,0 +1,86 @@
+.root {
+  width: 100%;
+}
+
+.tabList {
+  position: relative;
+  display: flex;
+  gap: 0;
+  border-bottom: 1px solid var(--bolt-border-secondary);
+  align-items: center;
+}
+
+.centered {
+  justify-content: center;
+}
+
+.tab {
+  /* Reset button styles */
+  background: none;
+  border: none;
+  cursor: pointer;
+  outline: none;
+
+  /* Typography */
+  font-family: var(--bolt-font-body-medium-font-family);
+  font-size: var(--bolt-font-body-medium-size);
+  line-height: var(--bolt-font-body-medium-line-height);
+  font-weight: 500;
+
+  /* Spacing */
+  padding: var(--bolt-space-3) var(--bolt-space-5);
+
+  /* Colors - inactive state */
+  color: var(--bolt-content-tertiary);
+
+  /* Transitions */
+  transition: color 0.2s ease;
+}
+
+.tab:hover:not([aria-selected="true"]) {
+  color: var(--bolt-content-tertiary);
+}
+
+.tab[aria-selected="true"] {
+  color: var(--bolt-content-primary);
+}
+
+.tab:focus-visible {
+  outline: 2px solid var(--bolt-border-highlight);
+  outline-offset: -2px;
+  border-radius: var(--bolt-border-radius-sm);
+}
+
+.indicator {
+  position: absolute;
+  left: 0;
+  height: 3px;
+  bottom: -1px;
+  background-color: var(--bolt-border-highlight);
+  width: var(--active-tab-width, 0);
+  translate: var(--active-tab-left, 0);
+  transition:
+    translate 0.25s cubic-bezier(0.4, 0, 0.2, 1),
+    width 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  will-change: translate, width;
+}
+
+.panelContainer {
+  position: relative;
+}
+
+.tabPanel {
+  padding: var(--bolt-space-6) 0;
+  outline: none;
+  transition: opacity 0.15s ease-in-out;
+}
+
+.tabPanel[hidden] {
+  display: none;
+}
+
+.tabPanel:focus-visible {
+  outline: 2px solid var(--bolt-border-highlight);
+  outline-offset: 2px;
+  border-radius: var(--bolt-border-radius-sm);
+}
