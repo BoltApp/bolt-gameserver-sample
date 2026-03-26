@@ -11,9 +11,10 @@ import { zappyBirdRoute, zappyLayoutRoute } from "./routes/zappy-bird";
 import { useUserProfile } from "./endpoints";
 import { useBoltSessionVerification } from "./hooks/useBoltSessionVerification";
 import { productsRoute } from "./routes/products";
+import { sdksRoute } from "./routes/sdks";
 
 const routeTree = rootRoute.addChildren([
-  standardLayoutRoute.addChildren([productsRoute]),
+  standardLayoutRoute.addChildren([productsRoute, sdksRoute]),
   zappyLayoutRoute.addChildren([zappyBirdRoute]),
 ]);
 

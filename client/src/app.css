@@ -9,7 +9,8 @@
 }
 
 body {
-  all: unset;
+  margin: 0;
+  padding: 0;
 }
 
 p {

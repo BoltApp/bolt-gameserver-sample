@@ -1,3 +1,4 @@
+import type { JSX } from "preact/jsx-runtime";
 import { Button } from "../../design/button/Button";
 import { Heading1 } from "../../design/heading/Heading";
 import { TextBlock } from "../../design/text-block/TextBlock";
@@ -8,31 +9,34 @@ export interface SectionProps {
   iconUrl: string;
   title: string;
   description: string;
-  experienceUrl: string;
-  previewAdUrl: string;
-  previewGameUrl: string;
+  experience: {
+    url: string;
+    label: string;
+  };
+  preview: JSX.Element | JSX.Element[];
 }
 
 export function Section(props: SectionProps) {
-  const { iconUrl, title, description, previewAdUrl, previewGameUrl } = props;
+  const { iconUrl, title, description, experience, preview } = props;
   return (
     <section className={styles.section}>
       <div className={styles.sectionContent}>
-        <img src={iconUrl} width={88} height={88} alt="Swipe-able Ads" />
+        <img src={iconUrl} height={80} alt="Swipe-able Ads" />
         <Heading1 large>{title}</Heading1>
         <TextBlock size="large">{description}</TextBlock>
 
-        <Button>View Experience</Button>
+        <Button>{experience.label}</Button>
       </div>
 
-      <div className={styles.preview}>
-        <img src={previewAdUrl} className={styles.previewAd} alt="Preview Ad" />
-        <img
-          src={previewGameUrl}
-          className={styles.previewGame}
-          alt="Preview Game"
-        />
-      </div>
+      {preview}
     </section>
   );
+}
+
+export interface SectionsProps {
+  children: JSX.Element | JSX.Element[];
+}
+
+export function Sections({ children }: SectionsProps) {
+  return <div className={styles.sections}>{children}</div>;
 }

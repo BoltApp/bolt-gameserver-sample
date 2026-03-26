@@ -1,3 +1,9 @@
+.sections {
+  display: grid;
+  grid-template-columns: 1fr max-content;
+  gap: 7rem;
+}
+
 .section {
   display: grid;
   grid-template-columns: subgrid;
@@ -14,29 +20,6 @@
 
 .sectionContent button {
   margin-top: var(--bolt-space-6);
-}
-
-.preview {
-  display: flex;
-  align-items: center;
-}
-
-.preview img {
-  user-select: none;
-  pointer-events: none;
-}
-.previewAd {
-  opacity: 1;
-  height: 400px;
-  z-index: 1;
-  border-radius: var(--bolt-border-radius-lg);
-  box-shadow: var(--global-shadow3);
-}
-
-.previewGame {
-  opacity: 0.5;
-  height: 250px;
-  margin-left: -80px;
 }
 
 @media (width < 768px) {

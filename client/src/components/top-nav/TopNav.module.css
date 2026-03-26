@@ -7,18 +7,22 @@
 .navLeft {
   display: flex;
   align-items: center;
-  gap: var(--bolt-space-4);
+  gap: 4rem;
 }
 
 .navLinks {
   margin-top: 0.5rem;
   display: flex;
-  gap: var(--bolt-space-4);
+  gap: var(--bolt-space-8);
 }
 
 .navLink {
-  color: var(--bolt-content-primary);
+  color: var(--bolt-content-secondary);
   text-decoration: none;
+}
+
+.active {
+  color: var(--bolt-content-primary);
 }
 
 .active::after {

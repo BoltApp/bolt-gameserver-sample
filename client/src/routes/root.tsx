@@ -2,7 +2,7 @@ import { createRootRoute, Outlet, createRoute } from "@tanstack/react-router";
 
 import { ToastContainer } from "react-toastify";
 
-import { TopNav } from "../components/TopNav";
+import { TopNav } from "../components/top-nav/TopNav";
 
 export const rootRoute = createRootRoute({
   component: () => <Outlet />,
