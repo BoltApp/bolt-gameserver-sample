@@ -3,10 +3,8 @@ import { Section, Sections } from "../../components/section/Section";
 import { Heading1 } from "../../design/heading/Heading";
 import { TextBlock } from "../../design/text-block/TextBlock";
 
-import IconUnity from "../../assets/icon-unity.png";
 import PreviewUnity from "../../assets/preview-unity.png";
 
-import IconJS from "../../assets/icon-js.png";
 import PreviewJS from "../../assets/preview-js.jpg";
 
 import styles from "./DeveloperSDKs.module.css";
@@ -27,14 +25,13 @@ export function DevelopmentSDKs() {
 
         <Sections>
           <Section
-            iconUrl={IconUnity}
-            iconSize={64}
             title="Unity SDK"
             description="Drop-in monetization for Unity games. Full documentation, sample scenes, and compatibility with Unity 2020.3+"
             action={
               <LinkButton
                 href="https://github.com/BoltApp/bolt-unity-sdk"
-                target="_blank">
+                target="_blank"
+                rel="noopener noreferrer">
                 Go to Unity SDK
               </LinkButton>
             }
@@ -48,14 +45,13 @@ export function DevelopmentSDKs() {
           />
 
           <Section
-            iconUrl={IconJS}
-            iconSize={64}
             title="TypeScript SDK"
             description="Integrate BoltPlay's monetization and engagement tools into any HTML5 game with our TypeScript SDK."
             action={
               <LinkButton
                 href="https://github.com/BoltApp/bolt-frontend-sdk"
-                target="_blank">
+                target="_blank"
+                rel="noopener noreferrer">
                 Go to TypeScript SDK
               </LinkButton>
             }

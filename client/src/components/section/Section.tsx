@@ -5,7 +5,7 @@ import { TextBlock } from "../../design/text-block/TextBlock";
 import styles from "./Section.module.css";
 
 export interface SectionProps {
-  iconUrl: string;
+  iconUrl?: string;
   iconSize?: number;
   title: string;
   description: string;
@@ -18,7 +18,7 @@ export function Section(props: SectionProps) {
   return (
     <section className={styles.section}>
       <div className={styles.sectionContent}>
-        <img src={iconUrl} height={iconSize ?? 80} alt={title} />
+        {iconUrl && <img src={iconUrl} height={iconSize ?? 80} alt={title} />}
         <Heading1 large>{title}</Heading1>
         <TextBlock size="large">{description}</TextBlock>
 
