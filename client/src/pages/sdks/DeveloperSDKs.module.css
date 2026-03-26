@@ -5,3 +5,7 @@
   border: 0;
   border-top: 1px solid var(--bolt-border-secondary);
 }
+
+.previewImage {
+  width: 400px;
+}

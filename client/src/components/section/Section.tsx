@@ -1,5 +1,4 @@
 import type { JSX } from "preact/jsx-runtime";
-import { Button } from "../../design/button/Button";
 import { Heading1 } from "../../design/heading/Heading";
 import { TextBlock } from "../../design/text-block/TextBlock";
 
@@ -7,25 +6,23 @@ import styles from "./Section.module.css";
 
 export interface SectionProps {
   iconUrl: string;
+  iconSize?: number;
   title: string;
   description: string;
-  experience: {
-    url: string;
-    label: string;
-  };
+  action: JSX.Element;
   preview: JSX.Element | JSX.Element[];
 }
 
 export function Section(props: SectionProps) {
-  const { iconUrl, title, description, experience, preview } = props;
+  const { iconUrl, iconSize, title, description, action, preview } = props;
   return (
     <section className={styles.section}>
       <div className={styles.sectionContent}>
-        <img src={iconUrl} height={80} alt="Swipe-able Ads" />
+        <img src={iconUrl} height={iconSize ?? 80} alt={title} />
         <Heading1 large>{title}</Heading1>
         <TextBlock size="large">{description}</TextBlock>
 
-        <Button>{experience.label}</Button>
+        {action}
       </div>
 
       {preview}

@@ -7,7 +7,7 @@ import PreviewSwipeableGame from "../../assets/preview-swipeable-game.png";
 
 import IconCarouselAds from "../../assets/icon-carousel-ads.png";
 import PreviewCarouselAd from "../../assets/preview-carousel-ad.png";
-import PreviewCarouselGame from "../../assets/preview-video-game.jpg";
+import PreviewCarouselGame from "../../assets/preview-carousel-game.jpg";
 
 import IconVideoAds from "../../assets/icon-video-ads.png";
 import PreviewVideoAd from "../../assets/preview-video-ad.png";
@@ -23,6 +23,8 @@ import styles from "./Product.module.css";
 import { Heading1 } from "../../design/heading/Heading";
 import { TextBlock } from "../../design/text-block/TextBlock";
 import { PageLayout } from "../../components/page-layout/PageLayout";
+import { AdAction } from "./ad-action/AdAction";
+import { CheckoutAction } from "./ad-action/CheckoutAction";
 
 export default function Products() {
   return (
@@ -67,10 +69,12 @@ function AdsProductContent() {
         iconUrl={IconSwipeableAds}
         title="Swipe-able Ads"
         description="Players swipe on product cards to like and dislike products to drive higher engagement and in-ad checkout"
-        experience={{
-          url: "",
-          label: "View Experience",
-        }}
+        action={
+          <AdAction
+            url="https://play.staging-bolt.com/interactive"
+            label="View Experience"
+          />
+        }
         preview={
           <Preview adUrl={PreviewSwipeableAd} gameUrl={PreviewSwipeableGame} />
         }
@@ -79,10 +83,12 @@ function AdsProductContent() {
         iconUrl={IconCarouselAds}
         title="Carousel Ads"
         description="Showcase multiple products in a single scrollable placement, ideal for eCommerce brands and promotions with multiple offers"
-        experience={{
-          url: "",
-          label: "View Experience",
-        }}
+        action={
+          <AdAction
+            url="https://play.staging-bolt.com/carousel"
+            label="View Experience"
+          />
+        }
         preview={
           <Preview adUrl={PreviewCarouselAd} gameUrl={PreviewCarouselGame} />
         }
@@ -91,10 +97,12 @@ function AdsProductContent() {
         iconUrl={IconVideoAds}
         title="Video Ads"
         description="Full-screen video that plays at natural session breaks, with end cards for direct calls to action"
-        experience={{
-          url: "",
-          label: "View Experience",
-        }}
+        action={
+          <AdAction
+            url="https://play.staging-bolt.com/video"
+            label="View Experience"
+          />
+        }
         preview={<Preview adUrl={PreviewVideoAd} gameUrl={PreviewVideoGame} />}
       />
     </Sections>
@@ -108,10 +116,7 @@ function CheckoutProductContent() {
         iconUrl={IconCheckoutProduct}
         title="Checkout Product"
         description="Collect payments in-game without redirecting your user out of the experience"
-        experience={{
-          url: "",
-          label: "View Experience",
-        }}
+        action={<CheckoutAction label="View Experience" />}
         preview={
           <Preview
             adUrl={PreviewCheckoutProduct}

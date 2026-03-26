@@ -10,6 +10,7 @@ import IconJS from "../../assets/icon-js.png";
 import PreviewJS from "../../assets/preview-js.jpg";
 
 import styles from "./DeveloperSDKs.module.css";
+import { LinkButton } from "../../design/button/Button";
 
 export function DevelopmentSDKs() {
   return (
@@ -27,27 +28,43 @@ export function DevelopmentSDKs() {
         <Sections>
           <Section
             iconUrl={IconUnity}
+            iconSize={64}
             title="Unity SDK"
             description="Drop-in monetization for Unity games. Full documentation, sample scenes, and compatibility with Unity 2020.3+"
-            experience={{
-              url: "",
-              label: "Go to Unity SDK",
-            }}
+            action={
+              <LinkButton
+                href="https://github.com/BoltApp/bolt-unity-sdk"
+                target="_blank">
+                Go to Unity SDK
+              </LinkButton>
+            }
             preview={
-              <img src={PreviewUnity} width="400px" alt="Unity SDK Preview" />
+              <img
+                src={PreviewUnity}
+                className={styles.previewImage}
+                alt="Unity SDK Preview"
+              />
             }
           />
 
           <Section
             iconUrl={IconJS}
+            iconSize={64}
             title="TypeScript SDK"
             description="Integrate BoltPlay's monetization and engagement tools into any HTML5 game with our TypeScript SDK."
-            experience={{
-              url: "",
-              label: "Go to TypeScript SDK",
-            }}
+            action={
+              <LinkButton
+                href="https://github.com/BoltApp/bolt-frontend-sdk"
+                target="_blank">
+                Go to TypeScript SDK
+              </LinkButton>
+            }
             preview={
-              <img src={PreviewJS} width="400px" alt="TypeScript SDK Preview" />
+              <img
+                src={PreviewJS}
+                className={styles.previewImage}
+                alt="TypeScript SDK Preview"
+              />
             }
           />
         </Sections>

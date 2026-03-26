@@ -19,7 +19,7 @@
   background-image: url("../../assets/brand-background-top-corner.svg");
   background-size: contain;
   background-repeat: no-repeat;
-  filter: blur(2px);
+  filter: blur(4px);
   pointer-events: none;
   z-index: 0;
 }

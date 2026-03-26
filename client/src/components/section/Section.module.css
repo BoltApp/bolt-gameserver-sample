@@ -2,6 +2,7 @@
   display: grid;
   grid-template-columns: 1fr max-content;
   gap: 7rem;
+  margin-block-start: 4.5rem;
 }
 
 .section {
@@ -18,7 +19,11 @@
   width: fit-content;
 }
 
-.sectionContent button {
+.sectionContent > img:first-child {
+  margin-bottom: var(--bolt-space-2);
+}
+
+.sectionContent > :is(button, a) {
   margin-top: var(--bolt-space-6);
 }
 

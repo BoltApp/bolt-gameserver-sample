@@ -1,11 +1,14 @@
 .preview {
   display: flex;
   align-items: center;
+  position: relative;
+  width: 300px;
 }
 
 .preview img {
   user-select: none;
   pointer-events: none;
+  flex-shrink: 0;
 }
 .previewAd {
   opacity: 1;
@@ -18,5 +21,8 @@
 .previewGame {
   opacity: 0.5;
   height: 250px;
-  margin-left: -80px;
+  width: 200px;
+  object-fit: cover;
+  position: absolute;
+  right: 0;
 }

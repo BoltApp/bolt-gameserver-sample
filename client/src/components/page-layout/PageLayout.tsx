@@ -5,7 +5,7 @@ export interface PageLayoutProps {
   children: JSX.Element;
 }
 
-export function PageLayout({ children }: PageLayoutProps) {
+function PageLayoutRoot({ children }: PageLayoutProps) {
   return <div className={styles.pageLayout}>{children}</div>;
 }
 
@@ -25,5 +25,7 @@ function Hero({ children }: PageLayoutHeroProps) {
   return <section className={styles.hero}>{children}</section>;
 }
 
-PageLayout.Hero = Hero;
-PageLayout.Content = Content;
+export const PageLayout = Object.assign(PageLayoutRoot, {
+  Hero,
+  Content,
+});

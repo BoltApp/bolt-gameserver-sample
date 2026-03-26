@@ -3,6 +3,12 @@
   padding: var(--bolt-space-3) var(--bolt-space-5);
   background-color: var(--bolt-surface-inverse-primary);
   color: var(--bolt-content-inverse-primary);
+  font-size: var(--bolt-font-body-small-size);
+  text-decoration: none;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--bolt-space-2);
 }
 
 .button:hover {
@@ -11,4 +17,8 @@
 
 .button:active {
   background-color: var(--bolt-surface-inverse-primary-pressed);
+}
+
+.button:disabled {
+  cursor: not-allowed;
 }
