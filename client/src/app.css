@@ -9,7 +9,14 @@
 }
 
 body {
-  all: unset;
+  margin: 0;
+  padding: 0;
+}
+
+body.modal-open {
+  position: fixed;
+  width: 100%;
+  overflow: hidden;
 }
 
 p {

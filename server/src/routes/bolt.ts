@@ -81,7 +81,8 @@ router.get("/products/:sku/checkout-link", async (req, res) => {
   }
 });
 
-router.post("/products/:sku/payment-link", authenticateToken, (req, res) => {
+// removed authenticateToken for demo
+router.post("/products/:sku/payment-link", (req, res) => {
   try {
     const { sku } = req.params;
 
@@ -90,15 +91,15 @@ router.post("/products/:sku/payment-link", authenticateToken, (req, res) => {
       return res.status(404).json({ error: "Product sku not found" });
     }
 
-    const paymentLinkRequest: CreatePaymentLinkRequest = {
+    // Don't type as CreatePaymentLinkRequest because of redirect_url optionality
+    const paymentLinkRequest: any = {
       item: {
         price: Math.floor(product.price * 100),
         name: product.name,
         currency: "USD",
         image_url: getAssetUrlForSku(sku),
       },
-      redirect_url: "https://example.com/checkout/success",
-      user_id: req.user!.id,
+      user_id: "user_123",
       game_id: env.bolt.gameId,
       metadata: {
         sku: product.sku,
@@ -106,7 +107,7 @@ router.post("/products/:sku/payment-link", authenticateToken, (req, res) => {
     };
 
     boltApi.gaming
-      .createPaymentLink(paymentLinkRequest)
+      .createPaymentLink(paymentLinkRequest as CreatePaymentLinkRequest)
       .then((response) => {
         console.log("Created payment link:", response);
         res.json({ success: true, data: response });

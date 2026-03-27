@@ -1,0 +1,42 @@
+/* taken from the ad site */
+
+.globalModal {
+  background: transparent;
+  border-width: 0;
+  box-sizing: content-box;
+  flex-direction: column;
+  max-height: 100dvh; /* override dialog defaults */
+  max-width: 100dvw; /* override dialog defaults */
+  height: 100dvh;
+  margin: auto;
+  width: 100dvw;
+  padding: 0;
+  position: relative;
+  overflow: visible;
+
+  /* Establish container for all child elements to use container queries */
+  container-type: size;
+  container-name: modal;
+}
+
+.globalModal[open] {
+  display: flex;
+  align-items: flex-end;
+  gap: var(--bolt-space-4);
+}
+
+.globalModal::backdrop {
+  background: rgba(0, 0, 0, 0.8);
+}
+
+@media (width >= 768px) and (height >= 500px) {
+  /* Default: Portrait mode */
+  .globalModal {
+    aspect-ratio: 9 / 16;
+    border-radius: 10px;
+    max-height: calc(100dvh - 4rem);
+    max-width: calc(100dvw - 4rem);
+    height: auto;
+    width: auto;
+  }
+}

@@ -1,0 +1,38 @@
+.sections {
+  display: grid;
+  grid-template-columns: 1fr max-content;
+  gap: 7rem;
+  margin-block-start: 4.5rem;
+}
+
+.section {
+  display: grid;
+  grid-template-columns: subgrid;
+  grid-column: 1 / -1;
+}
+
+.sectionContent {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  width: fit-content;
+}
+
+.sectionContent > img:first-child {
+  margin-bottom: var(--bolt-space-2);
+}
+
+.sectionContent > :is(button, a) {
+  margin-top: var(--bolt-space-6);
+}
+
+@media (width < 768px) {
+  .section {
+    grid-template-columns: 1fr;
+  }
+
+  .preview {
+    margin-top: var(--bolt-space-10);
+  }
+}

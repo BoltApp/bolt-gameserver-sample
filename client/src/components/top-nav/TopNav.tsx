@@ -1,6 +1,6 @@
 import { Link } from "@tanstack/react-router";
 
-import BoltLightningGames from "../assets/lightning-games.svg";
+import BoltLightningGames from "../../assets/lightning-games.svg";
 
 import styles from "./TopNav.module.css";
 
@@ -24,6 +24,12 @@ export function TopNav() {
               className={styles.navLink}
               activeProps={{ className: styles.active }}>
               Products
+            </Link>
+            <Link
+              to="/sdks"
+              className={styles.navLink}
+              activeProps={{ className: styles.active }}>
+              Development SDKs
             </Link>
           </div>
         </div>

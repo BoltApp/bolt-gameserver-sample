@@ -70,7 +70,7 @@
 }
 
 .tabPanel {
-  padding: var(--bolt-space-6) 0;
+  margin: var(--bolt-space-6) 0;
   outline: none;
   transition: opacity 0.15s ease-in-out;
 }

@@ -2,23 +2,30 @@
   padding: var(--bolt-space-4) var(--bolt-space-8);
   background-color: var(--bolt-surface-primary);
   box-shadow: var(--global-shadow2);
+  position: sticky;
+  top: 0;
+  z-index: 100;
 }
 
 .navLeft {
   display: flex;
   align-items: center;
-  gap: var(--bolt-space-4);
+  gap: 4rem;
 }
 
 .navLinks {
   margin-top: 0.5rem;
   display: flex;
-  gap: var(--bolt-space-4);
+  gap: var(--bolt-space-8);
 }
 
 .navLink {
-  color: var(--bolt-content-primary);
+  color: var(--bolt-content-secondary);
   text-decoration: none;
+}
+
+.active {
+  color: var(--bolt-content-primary);
 }
 
 .active::after {
