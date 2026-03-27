@@ -7,21 +7,74 @@
   z-index: 100;
 }
 
+@media (width < 768px) {
+  .topNav {
+    padding: var(--bolt-space-3) var(--bolt-space-4);
+  }
+}
+
+.navContainer {
+  display: flex;
+  align-items: center;
+}
+
 .navLeft {
   display: flex;
   align-items: center;
-  gap: 4rem;
+  gap: 1.5rem;
+}
+
+.navBrand {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.navBrandLink {
+  display: flex;
+  align-items: center;
+  color: var(--bolt-content-primary);
+}
+
+.navLogoFull {
+  height: 24px;
+  display: block;
+}
+
+.navLogoIcon {
+  height: 24px;
+  width: 24px;
+  display: none;
+}
+
+@media (max-width: 640px) {
+  .navLogoFull {
+    display: none;
+  }
+
+  .navLogoIcon {
+    display: block;
+  }
 }
 
 .navLinks {
   margin-top: 0.5rem;
   display: flex;
-  gap: var(--bolt-space-8);
+  gap: var(--bolt-space-6);
+  flex-wrap: wrap;
+}
+
+@media (width < 480px) {
+  .navLinks {
+    gap: var(--bolt-space-4);
+  }
 }
 
 .navLink {
   color: var(--bolt-content-secondary);
   text-decoration: none;
+  white-space: nowrap;
+  font-size: clamp(0.8rem, 2.5vw, 1rem);
 }
 
 .active {
