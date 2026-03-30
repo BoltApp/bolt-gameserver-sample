@@ -1,5 +1,6 @@
 import { Link } from "@tanstack/react-router";
 
+import BoltIcon from "../../assets/bolt.svg";
 import BoltLightningGames from "../../assets/lightning-games.svg";
 
 import styles from "./TopNav.module.css";
@@ -14,7 +15,12 @@ export function TopNav() {
               <img
                 src={BoltLightningGames}
                 alt="Game Logo"
-                className={styles.navLogo}
+                className={styles.navLogoFull}
+              />
+              <img
+                src={BoltIcon}
+                alt="Game Logo"
+                className={styles.navLogoIcon}
               />
             </Link>
           </div>

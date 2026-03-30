@@ -30,6 +30,7 @@
 @media (width < 768px) {
   .section {
     grid-template-columns: 1fr;
+    gap: var(--bolt-space-10);
   }
 
   .preview {

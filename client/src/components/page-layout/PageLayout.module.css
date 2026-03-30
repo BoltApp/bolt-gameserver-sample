@@ -56,3 +56,11 @@
 
   margin-bottom: var(--bolt-space-8);
 }
+
+.hero h1 {
+  text-align: center;
+}
+
+.hero p {
+  text-align: center;
+}
