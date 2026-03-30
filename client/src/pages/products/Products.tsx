@@ -1,23 +1,20 @@
 import Tabs from "../../design/tabs/Tabs";
 import { Section, Sections } from "../../components/section/Section";
-
-import IconSwipeableAds from "../../assets/icon-swipeable-ads.png";
-import PreviewSwipeableAd from "../../assets/preview-swipeable-ad.png";
-import PreviewSwipeableGame from "../../assets/preview-swipeable-game.png";
-
-import IconCarouselAds from "../../assets/icon-carousel-ads.png";
-import PreviewCarouselAd from "../../assets/preview-carousel-ad.png";
-import PreviewCarouselGame from "../../assets/preview-carousel-game.jpg";
-
-import IconVideoAds from "../../assets/icon-video-ads.png";
-import PreviewVideoAd from "../../assets/preview-video-ad.png";
-import PreviewVideoGame from "../../assets/preview-video-game.jpg";
-
-import IconGameController from "../../assets/icon-game-controller.png";
-
-import IconCheckoutProduct from "../../assets/icon-checkout-product.png";
-import PreviewCheckoutProduct from "../../assets/preview-checkout-product.png";
-import PreviewCheckoutGame from "../../assets/preview-checkout-game.png";
+import {
+  IconSwipeableAds,
+  IconCarouselAds,
+  IconVideoAds,
+  IconGameController,
+  IconCheckoutProduct,
+  PreviewSwipeableAdSrcSet,
+  PreviewCarouselAdSrcSet,
+  PreviewVideoAdSrcSet,
+  PreviewCheckoutProductSrcSet,
+  PreviewSwipeableGameSrcSet,
+  PreviewCarouselGameSrcSet,
+  PreviewVideoGameSrcSet,
+  PreviewCheckoutGameSrcSet,
+} from "../../assets/product-images";
 
 import styles from "./Product.module.css";
 import { Heading1 } from "../../design/heading/Heading";
@@ -76,7 +73,10 @@ function AdsProductContent() {
           />
         }
         preview={
-          <Preview adUrl={PreviewSwipeableAd} gameUrl={PreviewSwipeableGame} />
+          <Preview
+            adSrcSet={PreviewSwipeableAdSrcSet}
+            gameSrcSet={PreviewSwipeableGameSrcSet}
+          />
         }
       />
       <Section
@@ -90,7 +90,10 @@ function AdsProductContent() {
           />
         }
         preview={
-          <Preview adUrl={PreviewCarouselAd} gameUrl={PreviewCarouselGame} />
+          <Preview
+            adSrcSet={PreviewCarouselAdSrcSet}
+            gameSrcSet={PreviewCarouselGameSrcSet}
+          />
         }
       />
       <Section
@@ -103,7 +106,12 @@ function AdsProductContent() {
             label="View Experience"
           />
         }
-        preview={<Preview adUrl={PreviewVideoAd} gameUrl={PreviewVideoGame} />}
+        preview={
+          <Preview
+            adSrcSet={PreviewVideoAdSrcSet}
+            gameSrcSet={PreviewVideoGameSrcSet}
+          />
+        }
       />
     </Sections>
   );
@@ -119,8 +127,8 @@ function CheckoutProductContent() {
         action={<CheckoutAction label="View Experience" />}
         preview={
           <Preview
-            adUrl={PreviewCheckoutProduct}
-            gameUrl={PreviewCheckoutGame}
+            adSrcSet={PreviewCheckoutProductSrcSet}
+            gameSrcSet={PreviewCheckoutGameSrcSet}
           />
         }
       />
@@ -128,11 +136,21 @@ function CheckoutProductContent() {
   );
 }
 
-function Preview({ adUrl, gameUrl }: { adUrl: string; gameUrl: string }) {
+function Preview({ adSrcSet, gameSrcSet }: { adSrcSet: string; gameSrcSet: string }) {
   return (
     <div className={styles.preview}>
-      <img src={adUrl} className={styles.previewAd} alt="Preview Ad" />
-      <img src={gameUrl} className={styles.previewGame} alt="Preview Game" />
+      <img
+        srcSet={adSrcSet}
+        sizes="300px"
+        className={styles.previewAd}
+        alt="Preview Ad"
+      />
+      <img
+        srcSet={gameSrcSet}
+        sizes="200px"
+        className={styles.previewGame}
+        alt="Preview Game"
+      />
     </div>
   );
 }

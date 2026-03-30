@@ -1,5 +1,6 @@
 import { defineConfig, loadEnv } from 'vite'
 import preact from '@preact/preset-vite'
+import { imagetools } from 'vite-imagetools'
 
 // https://vite.dev/config/
 export default defineConfig(({ mode }) => {
@@ -7,7 +8,7 @@ export default defineConfig(({ mode }) => {
   const port = env.PORT ? parseInt(env.PORT) : 4264
   
   return {
-    plugins: [preact()],
+    plugins: [preact(), imagetools()],
     resolve: {
       alias: {
         '@shared-types': '../src/server/types/shared'
