@@ -25,6 +25,7 @@ export default defineConfig(({ mode }) => {
       allowedHosts: [
         'localhost',
         '.ngrok.io',
+        '.ngrok.app',
         'dev.bolt.me',
       ]
     }
