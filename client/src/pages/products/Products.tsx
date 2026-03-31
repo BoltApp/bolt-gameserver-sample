@@ -71,7 +71,7 @@ function AdsProductContent() {
         description="Players swipe on product cards to like and dislike products to drive higher engagement and in-ad checkout"
         action={
           <AdAction
-            url="https://play.staging-bolt.com/interactive"
+            url="https://play.staging-bolt.com/interactive?fullscreen=true"
             label="View Experience"
           />
         }
@@ -85,7 +85,7 @@ function AdsProductContent() {
         description="Showcase multiple products in a single scrollable placement, ideal for eCommerce brands and promotions with multiple offers"
         action={
           <AdAction
-            url="https://play.staging-bolt.com/carousel"
+            url="https://play.staging-bolt.com/carousel?fullscreen=true"
             label="View Experience"
           />
         }
@@ -99,7 +99,7 @@ function AdsProductContent() {
         description="Full-screen video that plays at natural session breaks, with end cards for direct calls to action"
         action={
           <AdAction
-            url="https://play.staging-bolt.com/video"
+            url="https://play.staging-bolt.com/video?fullscreen=true"
             label="View Experience"
           />
         }
