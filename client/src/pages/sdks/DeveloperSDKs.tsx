@@ -14,12 +14,12 @@ export function DevelopmentSDKs() {
   return (
     <PageLayout>
       <PageLayout.Content>
-        <PageLayout.Hero>
+        <PageLayout.Intro>
           <Heading1 xlarge>Developer SDKs</Heading1>
           <TextBlock size="xlarge">
             Integrate ads into your game to generate additional revenue
           </TextBlock>
-        </PageLayout.Hero>
+        </PageLayout.Intro>
 
         <hr className={styles.divider} />
 

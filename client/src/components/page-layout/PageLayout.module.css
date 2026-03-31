@@ -5,8 +5,28 @@
   background-color: var(--surface-purple);
   overflow: hidden;
   min-height: 100vh;
-  display: flex;
+  display: grid;
+  grid-template-columns:
+    minmax(5rem, 1fr) [banner-start] minmax(0, 182.5px) [content-start] minmax(
+      0,
+      915px
+    )
+    [content-end] minmax(0, 182.5px) [banner-end] minmax(5rem, 1fr);
   justify-content: center;
+}
+
+@media (width < 768px) {
+  /* in small screens, the banner becomes more confined than the content */
+  .pageLayout {
+    grid-template-columns:
+      1.5rem [content-start] 1rem
+      [banner-start] minmax(0, 915px)
+      [banner-end] 1rem [content-end] 1.5rem;
+  }
+}
+
+.pageLayout > * {
+  z-index: 1;
 }
 
 .pageLayout::before {
@@ -41,14 +61,17 @@
 
 .content {
   position: relative;
-  max-width: 915px;
   width: 100%;
-  margin-inline: 2rem;
   margin-block: 6rem;
   z-index: 1;
+  grid-column: content;
 }
 
-.hero {
+.content.noMarginTop {
+  margin-top: 0;
+}
+
+.intro {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -57,10 +80,10 @@
   margin-bottom: var(--bolt-space-8);
 }
 
-.hero h1 {
+.intro h1 {
   text-align: center;
 }
 
-.hero p {
+.intro p {
   text-align: center;
 }

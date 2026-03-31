@@ -1,15 +1,17 @@
 .heading1 {
   font-size: var(--bolt-font-heading-1-size);
-  line-height: 1.2;
+  line-height: var(--bolt-font-heading-1-line-height);
   font-weight: var(--bolt-font-heading-1-weight);
   margin-block: 0;
 }
 .heading1.large {
   font-size: var(--bolt-font-heading-1-large-size);
+  line-height: var(--bolt-font-heading-1-large-line-height);
 }
 
 .heading1.xlarge {
   font-size: var(--bolt-font-heading-1-xlarge-size);
+  line-height: var(--bolt-font-heading-1-xlarge-line-height);
 }
 
 .heading2 {
