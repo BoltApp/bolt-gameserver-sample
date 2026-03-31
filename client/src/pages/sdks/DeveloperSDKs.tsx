@@ -3,9 +3,7 @@ import { Section, Sections } from "../../components/section/Section";
 import { Heading1 } from "../../design/heading/Heading";
 import { TextBlock } from "../../design/text-block/TextBlock";
 
-import PreviewUnity from "../../assets/preview-unity.png";
-
-import PreviewJS from "../../assets/preview-js.jpg";
+import { PreviewUnitySrcSet, PreviewJSSrcSet } from "../../assets/sdk-images";
 
 import styles from "./DeveloperSDKs.module.css";
 import { LinkButton } from "../../design/button/Button";
@@ -37,7 +35,8 @@ export function DevelopmentSDKs() {
             }
             preview={
               <img
-                src={PreviewUnity}
+                srcSet={PreviewUnitySrcSet}
+                sizes="400px"
                 className={styles.previewImage}
                 alt="Unity SDK Preview"
               />
@@ -57,7 +56,8 @@ export function DevelopmentSDKs() {
             }
             preview={
               <img
-                src={PreviewJS}
+                srcSet={PreviewJSSrcSet}
+                sizes="400px"
                 className={styles.previewImage}
                 alt="TypeScript SDK Preview"
               />

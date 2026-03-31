@@ -27,7 +27,8 @@
     "noUnusedParameters": true,
     "erasableSyntaxOnly": true,
     "noFallthroughCasesInSwitch": true,
-    "noUncheckedSideEffectImports": true
+    "noUncheckedSideEffectImports": false
   },
-  "include": ["src", "../server/src"]
+  "include": ["src", "../server/src"],
+  "files": ["src/globals.d.ts"]
 }
