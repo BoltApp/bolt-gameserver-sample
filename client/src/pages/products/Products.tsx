@@ -10,7 +10,7 @@ import PreviewCarouselAd from "../../assets/preview-carousel-ad.png";
 import PreviewCarouselGame from "../../assets/preview-carousel-game.jpg";
 
 import IconVideoAds from "../../assets/icon-video-ads.png";
-import PreviewVideoAd from "../../assets/preview-video-ad.png";
+import PreviewVideoAd from "../../assets/preview-video-ad.jpg";
 import PreviewVideoGame from "../../assets/preview-video-game.jpg";
 
 import IconGameController from "../../assets/icon-game-controller.png";

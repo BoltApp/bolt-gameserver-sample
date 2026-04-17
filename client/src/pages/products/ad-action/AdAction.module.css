@@ -1,5 +1,6 @@
 .closeButton {
   z-index: 10;
+  align-self: flex-end;
   border: 1px solid var(--bolt-border-primary);
   border-radius: 100vh;
   background: var(--bolt-surface-primary);
@@ -29,6 +30,9 @@
   height: 100%;
   border: none;
   display: block;
+}
+
+.iframeCheckout {
   background-color: var(--bolt-surface-primary);
 }
 

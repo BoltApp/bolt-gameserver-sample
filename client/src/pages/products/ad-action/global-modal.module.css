@@ -3,7 +3,7 @@
 .globalModal {
   background: transparent;
   border-width: 0;
-  box-sizing: content-box;
+  box-sizing: border-box;
   flex-direction: column;
   max-height: 100dvh; /* override dialog defaults */
   max-width: 100dvw; /* override dialog defaults */
@@ -21,7 +21,7 @@
 
 .globalModal[open] {
   display: flex;
-  align-items: flex-end;
+  align-items: stretch;
   gap: var(--bolt-space-4);
 }
 

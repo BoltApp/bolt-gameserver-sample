@@ -92,7 +92,7 @@ export function AdAction({ url, label }: AdActionProps) {
           ref={iframeRef}
           src={url}
           className={localStyles.iframe}
-          sandbox="allow-scripts allow-same-origin allow-forms"
+          sandbox="allow-scripts allow-same-origin allow-forms allow-popups"
           allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
           title={label}
         />

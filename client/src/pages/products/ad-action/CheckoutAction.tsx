@@ -90,7 +90,7 @@ export function CheckoutAction({ label }: AdActionProps) {
         {isModalOpen && (
           <iframe
             src={paymentUrl}
-            className={localStyles.iframe}
+            className={`${localStyles.iframe} ${localStyles.iframeCheckout}`}
             sandbox="allow-scripts allow-same-origin allow-forms"
             allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
             title={label}
