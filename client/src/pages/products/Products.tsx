@@ -19,6 +19,9 @@ import IconCheckoutProduct from "../../assets/icon-checkout-product.png";
 import PreviewCheckoutProduct from "../../assets/preview-checkout-product.png";
 import PreviewCheckoutGame from "../../assets/preview-checkout-game.png";
 
+import GrunsSwipeable from "../../assets/gruns-swipeable.png";
+import tetris from "../../assets/tetris.png";
+
 import styles from "./Product.module.css";
 import { Heading1 } from "../../design/heading/Heading";
 import { TextBlock } from "../../design/text-block/TextBlock";
@@ -29,8 +32,29 @@ import { CheckoutAction } from "./ad-action/CheckoutAction";
 export default function Products() {
   return (
     <PageLayout>
-      <PageLayout.Content>
-        <PageLayout.Hero>
+      <section className={styles.hero}>
+        <div className={styles.heroContent}>
+          <Heading1 xlarge>Reach New Audiences with Gaming Ads</Heading1>
+          <TextBlock size="large">
+            Connect your brand with millions of customers through rewarded
+            in-game ads. Turning playtime into measurable revenue.
+          </TextBlock>
+        </div>
+        <div className={styles.heroSample}>
+          <img
+            src={tetris}
+            className={styles.heroGame}
+            alt="Tetris Ad Preview"
+          />
+          <img
+            src={GrunsSwipeable}
+            className={styles.heroAd}
+            alt="Gruns Swipeable Ad Preview"
+          />
+        </div>
+      </section>
+      <PageLayout.Content noMarginTop>
+        <PageLayout.Intro>
           <img
             width={88}
             height={88}
@@ -41,7 +65,7 @@ export default function Products() {
           <TextBlock size="xlarge">
             Explore the different products BoltPlay offers within gaming
           </TextBlock>
-        </PageLayout.Hero>
+        </PageLayout.Intro>
         <Tabs
           center
           items={[
